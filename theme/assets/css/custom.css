@@ -1,0 +1,29 @@
+/* Dark mode overrides */
+html.dark-mode {
+  --wp--preset--color--surface: #111827;
+  --wp--preset--color--surface-dim: #1f2937;
+  --wp--preset--color--on-surface: #f9fafb;
+  --wp--preset--color--on-surface-muted: #9ca3af;
+  --wp--preset--color--primary: #60a5fa;
+  --wp--preset--color--primary-light: #93c5fd;
+  color-scheme: dark;
+}
+
+html.dark-mode img {
+  opacity: 0.9;
+}
+
+/* Dark mode toggle button */
+.rockaden-dark-toggle {
+  background: none;
+  border: 1px solid currentColor;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.rockaden-dark-toggle:hover {
+  opacity: 0.8;
+}
