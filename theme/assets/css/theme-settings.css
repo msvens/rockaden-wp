@@ -1,0 +1,55 @@
+/**
+ * Rockaden Theme Settings – admin page styles.
+ */
+
+.rockaden-settings-wrap h2 {
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 1px solid #c3c4c7;
+}
+
+.rockaden-settings-wrap h2:first-of-type {
+  border-top: none;
+  margin-top: 1em;
+}
+
+/* Nav repeater rows */
+.rockaden-nav-repeater {
+  margin-bottom: 0.5em;
+}
+
+.rockaden-nav-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+  flex-wrap: wrap;
+}
+
+.rockaden-nav-row input.regular-text {
+  width: 180px;
+  flex: 0 0 auto;
+}
+
+.rockaden-nav-row .rockaden-page-select {
+  width: 180px;
+  flex: 0 0 auto;
+}
+
+.rockaden-nav-row .rockaden-remove-row {
+  color: #b32d2e;
+  border-color: #b32d2e;
+  font-weight: bold;
+  line-height: 1;
+  padding: 0 8px;
+  min-height: 30px;
+}
+
+.rockaden-nav-row .rockaden-remove-row:hover {
+  background: #b32d2e;
+  color: #fff;
+}
+
+.rockaden-add-row {
+  margin-top: 0.25em;
+}

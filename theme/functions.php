@@ -5,6 +5,35 @@
 
 defined('ABSPATH') || exit;
 
+// Include theme classes.
+require_once get_theme_file_path('inc/class-theme-settings.php');
+require_once get_theme_file_path('inc/class-theme-setup.php');
+
+// Theme activation: create stub pages + default settings.
+add_action('after_switch_theme', ['Rockaden_Theme_Setup', 'activate']);
+
+// Admin settings page.
+add_action('admin_menu', ['Rockaden_Theme_Settings', 'register_page']);
+add_action('admin_enqueue_scripts', ['Rockaden_Theme_Settings', 'enqueue_admin_assets']);
+add_action('admin_post_rockaden_save_settings', ['Rockaden_Theme_Settings', 'handle_save']);
+
+
+/**
+ * Inline <head> script to apply dark mode class before render (prevents flash).
+ * Also outputs the logo URL as a CSS custom property.
+ */
+add_action('wp_head', function (): void {
+    $logo_url = esc_url(get_theme_file_uri('assets/images/logo.png'));
+    ?>
+    <script>
+    (function(){var t=localStorage.getItem('theme');var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d)document.documentElement.classList.add('dark');})();
+    </script>
+    <style>
+    :root { --rockaden-logo-url: url('<?php echo $logo_url; ?>'); }
+    </style>
+    <?php
+}, 1);
+
 /**
  * Enqueue custom styles (dark mode, etc.).
  */
@@ -27,6 +56,26 @@ add_action('wp_enqueue_scripts', function (): void {
         [],
         wp_get_theme()->get('Version'),
         true
+    );
+});
+
+/**
+ * Enqueue navigation script (Mer dropdown + mobile drawer).
+ * Pass settings to JS via wp_localize_script.
+ */
+add_action('wp_enqueue_scripts', function (): void {
+    wp_enqueue_script(
+        'rockaden-navigation',
+        get_theme_file_uri('assets/js/navigation.js'),
+        ['rockaden-dark-mode'],
+        wp_get_theme()->get('Version'),
+        true
+    );
+
+    wp_localize_script(
+        'rockaden-navigation',
+        'rockadenNav',
+        Rockaden_Theme_Settings::get_frontend_config()
     );
 });
 

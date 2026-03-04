@@ -1,29 +1,468 @@
-/* Dark mode overrides */
-html.dark-mode {
-  --wp--preset--color--surface: #111827;
+/* =========================================================
+   Rockaden Theme – custom.css
+   Dark mode, fixed header, navigation, cards, footer
+   ========================================================= */
+
+/* --- Dark mode overrides --- */
+html.dark {
+  --wp--preset--color--surface: #121212;
   --wp--preset--color--surface-dim: #1f2937;
-  --wp--preset--color--on-surface: #f9fafb;
+  --wp--preset--color--on-surface: #e5e7eb;
   --wp--preset--color--on-surface-muted: #9ca3af;
   --wp--preset--color--primary: #60a5fa;
   --wp--preset--color--primary-light: #93c5fd;
+  --wp--preset--color--border: #374151;
   color-scheme: dark;
 }
 
-html.dark-mode img {
+html.dark img {
   opacity: 0.9;
 }
 
-/* Dark mode toggle button */
-.rockaden-dark-toggle {
-  background: none;
-  border: 1px solid currentColor;
-  color: inherit;
-  cursor: pointer;
-  padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
+/* --- Sticky footer layout --- */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 3rem; /* fixed header height */
 }
 
-.rockaden-dark-toggle:hover {
-  opacity: 0.8;
+body > .wp-site-blocks {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: calc(100vh - 3rem);
+}
+
+body > .wp-site-blocks > main,
+body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-footer) {
+  flex: 1;
+  padding: 3rem 1rem;
+}
+
+/* --- Fixed header --- */
+.rockaden-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: 3rem;
+  background-color: var(--wp--preset--color--surface);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+}
+
+.rockaden-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3rem;
+  padding: 0 1.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* WP admin-bar offset */
+.admin-bar .rockaden-header {
+  top: 32px;
+}
+
+.admin-bar body {
+  padding-top: calc(3rem + 32px);
+}
+
+@media screen and (max-width: 782px) {
+  .admin-bar .rockaden-header {
+    top: 46px;
+  }
+  .admin-bar body {
+    padding-top: calc(3rem + 46px);
+  }
+}
+
+/* --- Brand --- */
+.rockaden-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.rockaden-brand-logo {
+  display: block;
+  width: 2.25rem;
+  height: 2.25rem;
+  background-image: var(--rockaden-logo-url);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.rockaden-brand-text {
+  display: flex;
+  flex-direction: column;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 300;
+  font-size: 0.875rem;
+  line-height: 1.15;
+  color: var(--wp--preset--color--on-surface);
+  text-decoration: none;
+}
+
+.rockaden-brand-text:hover {
+  text-decoration: none;
+  color: var(--wp--preset--color--on-surface);
+}
+
+/* --- Center navigation (desktop) --- */
+.rockaden-nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+
+.rockaden-nav-link {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--wp--preset--color--on-surface-muted);
+  text-decoration: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.rockaden-nav-link:hover {
+  color: var(--wp--preset--color--on-surface);
+  background-color: var(--wp--preset--color--surface-dim);
+  text-decoration: none;
+}
+
+/* Header without border (controlled by settings) */
+.rockaden-header--no-border {
+  border-bottom: none;
+}
+
+/* --- Actions (right side) --- */
+.rockaden-actions {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* "Mer" button */
+.rockaden-more-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--wp--preset--color--on-surface-muted);
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.rockaden-more-btn:hover {
+  color: var(--wp--preset--color--on-surface);
+  background-color: var(--wp--preset--color--surface-dim);
+}
+
+/* Hamburger button (mobile only) */
+.rockaden-hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--wp--preset--color--on-surface-muted);
+  padding: 0.375rem;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.rockaden-hamburger-btn:hover {
+  color: var(--wp--preset--color--on-surface);
+  background-color: var(--wp--preset--color--surface-dim);
+}
+
+/* --- More dropdown --- */
+.rockaden-more-dropdown {
+  position: absolute;
+  top: 3rem;
+  right: 1.5rem;
+  width: 13rem;
+  background-color: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
+  padding: 0.25rem 0;
+  z-index: 60;
+}
+
+html.dark .rockaden-more-dropdown {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+}
+
+.rockaden-more-dropdown a {
+  display: block;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--wp--preset--color--on-surface-muted);
+  text-decoration: none;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.rockaden-more-dropdown a:hover {
+  color: var(--wp--preset--color--on-surface);
+  background-color: var(--wp--preset--color--surface-dim);
+  text-decoration: none;
+}
+
+.rockaden-dropdown-divider {
+  border-top: 1px solid var(--wp--preset--color--border);
+  margin: 0.25rem 0;
+}
+
+.rockaden-dropdown-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--wp--preset--color--on-surface-muted);
+}
+
+/* --- Toggle switch (dark mode) --- */
+.rockaden-toggle-switch {
+  position: relative;
+  background: var(--wp--preset--color--border);
+  border: none;
+  border-radius: 999px;
+  width: 2.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 0;
+}
+
+html.dark .rockaden-toggle-switch {
+  background: var(--wp--preset--color--on-surface-muted);
+}
+
+.rockaden-toggle-knob {
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1rem;
+  height: 1rem;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+html.dark .rockaden-toggle-knob {
+  transform: translateX(1rem);
+  background: var(--wp--preset--color--on-surface);
+}
+
+/* --- Mobile overlay & drawer --- */
+.rockaden-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 55;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.rockaden-mobile-overlay.is-open {
+  opacity: 1;
+}
+
+.rockaden-mobile-drawer {
+  position: fixed;
+  top: 3rem;
+  right: 0;
+  width: 14rem;
+  height: calc(100vh - 3rem);
+  background-color: var(--wp--preset--color--surface);
+  border-left: 1px solid var(--wp--preset--color--border);
+  box-shadow: -4px 0 12px rgb(0 0 0 / 0.08);
+  z-index: 56;
+  overflow-y: auto;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+html.dark .rockaden-mobile-drawer {
+  box-shadow: -4px 0 12px rgb(0 0 0 / 0.3);
+}
+
+.rockaden-mobile-drawer.is-open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.admin-bar .rockaden-mobile-overlay {
+  top: 0;
+}
+
+.admin-bar .rockaden-mobile-drawer {
+  top: calc(3rem + 32px);
+  height: calc(100vh - 3rem - 32px);
+}
+
+@media screen and (max-width: 782px) {
+  .admin-bar .rockaden-mobile-drawer {
+    top: calc(3rem + 46px);
+    height: calc(100vh - 3rem - 46px);
+  }
+}
+
+.rockaden-drawer-link {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--wp--preset--color--on-surface-muted);
+  text-decoration: none;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.rockaden-drawer-link:hover {
+  color: var(--wp--preset--color--on-surface);
+  background-color: var(--wp--preset--color--surface-dim);
+  text-decoration: none;
+}
+
+.rockaden-drawer-divider {
+  border-top: 1px solid var(--wp--preset--color--border);
+  margin: 0.25rem 1rem;
+}
+
+.rockaden-drawer-label {
+  display: block;
+  padding: 0.5rem 1.25rem 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--wp--preset--color--on-surface-muted);
+  opacity: 0.6;
+}
+
+.rockaden-drawer-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--wp--preset--color--on-surface-muted);
+}
+
+/* --- Responsive: mobile breakpoint (768px) --- */
+@media screen and (max-width: 767px) {
+  .rockaden-nav {
+    display: none !important;
+  }
+
+  .rockaden-more-btn {
+    display: none !important;
+  }
+
+  .rockaden-hamburger-btn {
+    display: flex;
+  }
+
+  .rockaden-more-dropdown {
+    display: none !important;
+  }
+}
+
+/* Desktop: hide hamburger, show nav */
+@media screen and (min-width: 768px) {
+  .rockaden-hamburger-btn {
+    display: none;
+  }
+
+  .rockaden-mobile-overlay,
+  .rockaden-mobile-drawer {
+    display: none !important;
+  }
+}
+
+/* --- Cards --- */
+.rockaden-card {
+  background-color: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 0.5rem;
+  transition: box-shadow 0.2s;
+}
+
+.rockaden-card:hover {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.08);
+}
+
+html.dark .rockaden-card:hover {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+}
+
+/* --- Footer --- */
+.rockaden-footer {
+  border-top: 1px solid var(--wp--preset--color--border);
+  margin-top: auto;
+}
+
+.rockaden-footer a {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: var(--wp--preset--color--on-surface-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.rockaden-footer a:hover {
+  color: var(--wp--preset--color--on-surface);
+  text-decoration: none;
+}
+
+/* --- Sidebar navigation --- */
+.rockaden-sidebar-nav {
+  border-right: 1px solid var(--wp--preset--color--border);
+  padding-right: 1.5rem;
+}
+
+.rockaden-sidebar-nav .wp-block-navigation-item a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: var(--wp--preset--color--on-surface-muted);
+  text-decoration: none;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+  transition: color 0.15s, background-color 0.15s;
+}
+
+.rockaden-sidebar-nav .wp-block-navigation-item a:hover {
+  color: var(--wp--preset--color--on-surface);
+  background-color: var(--wp--preset--color--surface-dim);
+}
+
+/* --- Info panel --- */
+.rockaden-info-panel {
+  background-color: var(--wp--preset--color--surface-dim);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
 }
