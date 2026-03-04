@@ -35,11 +35,12 @@ Ported from `/Users/msvens/projects/github.com/msvens/rockaden2` (PayloadCMS + N
 
 ### Theme (rockaden-theme)
 - Block theme (FSE) with theme.json v3
-- Colors: dark blue (#1e3a5f) primary, gold (#c9a84c) accent
+- Colors: blue-600 (#2563eb) primary, gray palette (matching rockaden2 design)
+- Typography: Geist Sans variable font, weight 300 headings, letter-spacing 0.025em
 - Templates: index, single, page, archive
-- Parts: header (dark blue nav bar), footer
-- Patterns: hero, news-grid
-- Dark mode: CSS custom properties + localStorage toggle in assets/js/dark-mode.js
+- Parts: header (white bg, fixed, uppercase nav, dark toggle), footer (minimal centered links)
+- Patterns: hero, news-grid, page-with-sidebar, page-three-column
+- Dark mode: `html.dark` class, localStorage `theme` key, system preference default, flicker-free inline script
 
 ## Development
 
@@ -73,15 +74,17 @@ pnpm package              # Creates dist/rockaden-chess.zip + dist/rockaden-them
 - All REST endpoints tested: training groups CRUD, participants, sessions, attendance, games, notes, events
 - SSF proxy works against live member.schack.se (federation + district/clubs)
 
-### Phase 3: Admin Training UI — TODO
-- Port training React components from rockaden2 to @wordpress/components
-- Build training manager SPA (group list → group detail → session detail)
-- Wire up @wordpress/api-fetch for REST calls
+### Phase 3: Admin Training UI — DONE
+- Training manager SPA with group list, group detail, session detail views
+- CreateGroupModal with WP DateTimePicker, inline date pickers
+- @wordpress/api-fetch for REST calls, @wordpress/components UI
 
-### Phase 4: Theme — TODO
-- Complete theme.json, header/footer refinement
-- Dark mode toggle integration
-- Block patterns styling
+### Phase 4: Theme — DONE
+- Restyled to match rockaden2 design (Geist font, gray/blue palette, light weights)
+- Fixed header with uppercase nav, sun/moon dark toggle
+- Dark mode with system preference default, flicker-free inline script
+- Card styles, sidebar nav, page layout patterns (2-col, 3-col)
+- Minimal footer with centered links
 
 ### Phase 5: Gutenberg Blocks — TODO
 - Calendar block (server render + React hydration)
@@ -89,6 +92,9 @@ pnpm package              # Creates dist/rockaden-chess.zip + dist/rockaden-them
 - Training Group block
 
 ### Phase 6: Polish — TODO
+- Define per-heading-level font sizes in theme.json (H1→xxx-large, H2→xx-large, H3→x-large, etc.) so headings are consistent without manual sizing
+- Dark-mode-safe color strategy: consider disabling custom colors (`"color": { "custom": false }`) to force palette-only; document "always use palette colors" for content editors
+- Evaluate adding page templates (e.g., page-with-sidebar.html) vs relying on patterns
 - Swedish .po/.mo translations
 - WP-CLI seed command (training groups, participants, sessions, events — needed for quick setup after wp-env destroy)
 - Documentation
