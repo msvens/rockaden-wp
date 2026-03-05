@@ -99,6 +99,8 @@ pnpm package              # Creates dist/rockaden-chess.zip + dist/rockaden-them
 - WP-CLI seed command (training groups, participants, sessions, events — needed for quick setup after wp-env destroy)
 - Edit Group Modal: allow editing the linked event inline (change schedule, location, recurrence) — currently only group fields are editable
 - Add Participant Modal: keep search box open after adding a participant so multiple can be added without reopening
+- Define per-heading-level spacing/margins in theme.json or CSS so page content doesn't have excessive gap below the page heading
+- Add block theme support for hiding page headings (useful for pages where the content starts with its own heading or doesn't need the default page title)
 - Documentation
 
 ## Key Files
