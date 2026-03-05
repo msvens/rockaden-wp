@@ -86,7 +86,7 @@ pnpm package              # Creates dist/rockaden-chess.zip + dist/rockaden-them
 - Card styles, sidebar nav, page layout patterns (2-col, 3-col)
 - Minimal footer with centered links
 
-### Phase 5: Gutenberg Blocks — TODO
+### Phase 5: Gutenberg Blocks — DONE
 - Calendar block (server render + React hydration)
 - Standings block (server render)
 - Training Group block
@@ -97,6 +97,8 @@ pnpm package              # Creates dist/rockaden-chess.zip + dist/rockaden-them
 - Evaluate adding page templates (e.g., page-with-sidebar.html) vs relying on patterns
 - Swedish .po/.mo translations
 - WP-CLI seed command (training groups, participants, sessions, events — needed for quick setup after wp-env destroy)
+- Edit Group Modal: allow editing the linked event inline (change schedule, location, recurrence) — currently only group fields are editable
+- Add Participant Modal: keep search box open after adding a participant so multiple can be added without reopening
 - Documentation
 
 ## Key Files
