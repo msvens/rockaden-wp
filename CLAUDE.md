@@ -91,7 +91,7 @@ pnpm package              # Creates dist/rockaden-chess.zip + dist/rockaden-them
 - Standings block (server render)
 - Training Group block
 
-### Phase 6: Polish — TODO
+### Phase 6: Polish — DONE
 - Define per-heading-level font sizes in theme.json (H1→xxx-large, H2→xx-large, H3→x-large, etc.) so headings are consistent without manual sizing
 - Dark-mode-safe color strategy: consider disabling custom colors (`"color": { "custom": false }`) to force palette-only; document "always use palette colors" for content editors
 - Evaluate adding page templates (e.g., page-with-sidebar.html) vs relying on patterns

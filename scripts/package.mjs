@@ -11,7 +11,7 @@ if (!existsSync(dist)) mkdirSync(dist);
 
 console.log('Packaging plugin...');
 execSync(
-  `cd "${join(root, 'plugin')}" && zip -r "${join(dist, 'rockaden-chess.zip')}" . -x "node_modules/*" "src/*" "js/*" "package.json" "webpack.config.js" "tsconfig.json" ".npmrc"`,
+  `cd "${join(root, 'plugin')}" && zip -r "${join(dist, 'rockaden-chess.zip')}" . -x "node_modules/*" "js/*" "vendor/*" "package.json" "webpack.config.js" "tsconfig.json" ".npmrc" "composer.json" "composer.lock" "phpstan.neon" "phpstan-bootstrap.php" "phpcs.xml" ".eslintrc.json"`,
   { stdio: 'inherit' },
 );
 
