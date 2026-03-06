@@ -8,6 +8,8 @@
       "wideSize": "1280px"
     },
     "color": {
+      "custom": false,
+      "customGradient": false,
       "palette": [
         { "slug": "primary", "color": "#2563eb", "name": "Primary" },
         { "slug": "primary-light", "color": "#60a5fa", "name": "Primary Light" },
@@ -88,6 +90,36 @@
           "letterSpacing": "0.025em"
         }
       },
+      "h1": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--xxx-large)"
+        }
+      },
+      "h2": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--xx-large)"
+        }
+      },
+      "h3": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--x-large)"
+        }
+      },
+      "h4": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--large)"
+        }
+      },
+      "h5": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--medium)"
+        }
+      },
+      "h6": {
+        "typography": {
+          "fontSize": "var(--wp--preset--font-size--small)"
+        }
+      },
       "button": {
         "color": {
           "background": "var(--wp--preset--color--primary)",
@@ -107,6 +139,9 @@
       "blockGap": "1.5rem"
     }
   },
+  "customTemplates": [
+    { "name": "page-no-title", "title": "Page (No Title)", "postTypes": ["page"] }
+  ],
   "templateParts": [
     { "name": "header", "title": "Header", "area": "header" },
     { "name": "footer", "title": "Footer", "area": "footer" }
