@@ -15,7 +15,8 @@
       var clone = template.content.cloneNode(true);
       var inputs = clone.querySelectorAll('input');
       if (inputs[0]) inputs[0].name = prefix + '_label[]';
-      if (inputs[1]) inputs[1].name = prefix + '_url[]';
+      if (inputs[1]) inputs[1].name = prefix + '_label_en[]';
+      if (inputs[2]) inputs[2].name = prefix + '_url[]';
       container.appendChild(clone);
     });
   });

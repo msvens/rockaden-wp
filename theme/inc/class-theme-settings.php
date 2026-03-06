@@ -18,8 +18,9 @@ class Rockaden_Theme_Settings {
 	 */
 	public static function defaults(): array {
 		return [
-			'show_header_border' => true,
-			'show_dark_toggle'   => true,
+			'show_header_border'   => true,
+			'show_dark_toggle'     => true,
+			'show_language_toggle' => true,
 			'main_nav'           => [
 				['label' => 'Nyheter',   'url' => '/'],
 				['label' => 'Kalender',  'url' => '/kalender'],
@@ -50,10 +51,11 @@ class Rockaden_Theme_Settings {
 	public static function get_frontend_config(): array {
 		$opts = self::get_options();
 		return [
-			'mainNav'          => $opts['main_nav'],
-			'moreNav'          => $opts['more_nav'],
-			'showDarkToggle'   => (bool) $opts['show_dark_toggle'],
-			'showHeaderBorder' => (bool) $opts['show_header_border'],
+			'mainNav'            => $opts['main_nav'],
+			'moreNav'            => $opts['more_nav'],
+			'showDarkToggle'     => (bool) $opts['show_dark_toggle'],
+			'showHeaderBorder'   => (bool) $opts['show_header_border'],
+			'showLanguageToggle' => (bool) $opts['show_language_toggle'],
 		];
 	}
 
@@ -113,12 +115,13 @@ class Rockaden_Theme_Settings {
 		$options = [];
 
 		// Checkboxes.
-		$options['show_header_border'] = ! empty($_POST['show_header_border']);
-		$options['show_dark_toggle']   = ! empty($_POST['show_dark_toggle']);
+		$options['show_header_border']   = ! empty($_POST['show_header_border']);
+		$options['show_dark_toggle']     = ! empty($_POST['show_dark_toggle']);
+		$options['show_language_toggle'] = ! empty($_POST['show_language_toggle']);
 
 		// Navigation items.
-		$options['main_nav'] = self::sanitize_nav_items($_POST['main_nav_label'] ?? [], $_POST['main_nav_url'] ?? []);
-		$options['more_nav'] = self::sanitize_nav_items($_POST['more_nav_label'] ?? [], $_POST['more_nav_url'] ?? []);
+		$options['main_nav'] = self::sanitize_nav_items($_POST['main_nav_label'] ?? [], $_POST['main_nav_url'] ?? [], $_POST['main_nav_label_en'] ?? []);
+		$options['more_nav'] = self::sanitize_nav_items($_POST['more_nav_label'] ?? [], $_POST['more_nav_url'] ?? [], $_POST['more_nav_label_en'] ?? []);
 
 		update_option(self::OPTION_KEY, $options);
 
@@ -132,19 +135,24 @@ class Rockaden_Theme_Settings {
 	/**
 	 * Sanitize parallel arrays of labels and URLs into nav items.
 	 */
-	private static function sanitize_nav_items(array $labels, array $urls): array {
+	private static function sanitize_nav_items(array $labels, array $urls, array $labels_en = []): array {
 		$items = [];
 		$count = min(count($labels), count($urls));
 		for ($i = 0; $i < $count; $i++) {
-			$label = sanitize_text_field($labels[$i]);
-			$url   = sanitize_text_field($urls[$i]);
+			$label    = sanitize_text_field($labels[$i]);
+			$url      = sanitize_text_field($urls[$i]);
+			$label_en = sanitize_text_field($labels_en[$i] ?? '');
 			if ($label === '' && $url === '') {
 				continue;
 			}
-			$items[] = [
+			$item = [
 				'label' => $label,
 				'url'   => $url,
 			];
+			if ($label_en !== '') {
+				$item['labelEn'] = $label_en;
+			}
+			$items[] = $item;
 		}
 		return $items;
 	}
@@ -192,6 +200,16 @@ class Rockaden_Theme_Settings {
 							</label>
 						</td>
 					</tr>
+					<tr>
+						<th scope="row">Show language toggle</th>
+						<td>
+							<label>
+								<input type="checkbox" name="show_language_toggle" value="1"
+									<?php checked($options['show_language_toggle']); ?> />
+								Show the SV/EN language switcher in the Mer menu
+							</label>
+						</td>
+					</tr>
 				</table>
 
 				<!-- Main Navigation -->
@@ -202,7 +220,10 @@ class Rockaden_Theme_Settings {
 						<div class="rockaden-nav-row">
 							<input type="text" name="main_nav_label[]"
 								value="<?php echo esc_attr($item['label']); ?>"
-								placeholder="Label" class="regular-text" />
+								placeholder="Label (SV)" class="regular-text" />
+							<input type="text" name="main_nav_label_en[]"
+								value="<?php echo esc_attr($item['labelEn'] ?? ''); ?>"
+								placeholder="Label (EN)" class="regular-text rockaden-label-en-input" />
 							<input type="text" name="main_nav_url[]"
 								value="<?php echo esc_attr($item['url']); ?>"
 								placeholder="/url" class="regular-text rockaden-url-input" />
@@ -230,7 +251,10 @@ class Rockaden_Theme_Settings {
 						<div class="rockaden-nav-row">
 							<input type="text" name="more_nav_label[]"
 								value="<?php echo esc_attr($item['label']); ?>"
-								placeholder="Label" class="regular-text" />
+								placeholder="Label (SV)" class="regular-text" />
+							<input type="text" name="more_nav_label_en[]"
+								value="<?php echo esc_attr($item['labelEn'] ?? ''); ?>"
+								placeholder="Label (EN)" class="regular-text rockaden-label-en-input" />
 							<input type="text" name="more_nav_url[]"
 								value="<?php echo esc_attr($item['url']); ?>"
 								placeholder="/url" class="regular-text rockaden-url-input" />
@@ -256,7 +280,8 @@ class Rockaden_Theme_Settings {
 			<!-- Hidden template for new rows (used by JS) -->
 			<template id="rockaden-nav-row-template">
 				<div class="rockaden-nav-row">
-					<input type="text" name="" placeholder="Label" class="regular-text" />
+					<input type="text" name="" placeholder="Label (SV)" class="regular-text" />
+					<input type="text" name="" placeholder="Label (EN)" class="regular-text rockaden-label-en-input" />
 					<input type="text" name="" placeholder="/url" class="regular-text rockaden-url-input" />
 					<select class="rockaden-page-select">
 						<option value="">— Select page —</option>

@@ -7,7 +7,72 @@
   var mainNav = config.mainNav || [];
   var moreNav = config.moreNav || [];
   var showDarkToggle = config.showDarkToggle !== false;
+  var showLangToggle = !!config.showLanguageToggle && config.showLanguageToggle !== '0';
   var showBorder = config.showHeaderBorder !== false;
+
+  /* ---- Language helpers ---- */
+  function currentLang() {
+    return typeof window.rockadenGetLanguage === 'function'
+      ? window.rockadenGetLanguage() : 'sv';
+  }
+
+  function navLabel(item) {
+    var lang = currentLang();
+    return (lang === 'en' && item.labelEn) ? item.labelEn : item.label;
+  }
+
+  function setTranslatedText(el, item) {
+    el.setAttribute('data-label-sv', item.label);
+    el.setAttribute('data-label-en', item.labelEn || item.label);
+    el.textContent = navLabel(item);
+  }
+
+  function updateNavLabels() {
+    var lang = currentLang();
+    document.querySelectorAll('[data-label-sv]').forEach(function (el) {
+      el.textContent = lang === 'en'
+        ? (el.getAttribute('data-label-en') || el.getAttribute('data-label-sv'))
+        : el.getAttribute('data-label-sv');
+    });
+  }
+
+  /* ---- Language switcher builder ---- */
+  function buildLangSwitcher() {
+    var activeLang = currentLang();
+
+    var row = document.createElement('div');
+    row.className = 'rockaden-dropdown-toggle-row';
+
+    var langLabel = document.createElement('span');
+    langLabel.setAttribute('data-label-sv', 'Språk');
+    langLabel.setAttribute('data-label-en', 'Language');
+    langLabel.textContent = activeLang === 'en' ? 'Language' : 'Språk';
+    row.appendChild(langLabel);
+
+    var switcher = document.createElement('div');
+    switcher.className = 'rockaden-lang-switcher';
+
+    ['sv', 'en'].forEach(function (lang) {
+      var btn = document.createElement('button');
+      btn.className = 'rockaden-lang-btn' + (lang === activeLang ? ' is-active' : '');
+      btn.textContent = lang.toUpperCase();
+      btn.setAttribute('aria-label', 'Switch to ' + lang.toUpperCase());
+      btn.addEventListener('click', function () {
+        if (typeof window.rockadenSetLanguage === 'function') {
+          window.rockadenSetLanguage(lang);
+        }
+        // Update active state on all switcher buttons in the page.
+        document.querySelectorAll('.rockaden-lang-btn').forEach(function (b) {
+          b.classList.toggle('is-active', b.textContent === lang.toUpperCase());
+        });
+        updateNavLabels();
+      });
+      switcher.appendChild(btn);
+    });
+
+    row.appendChild(switcher);
+    return row;
+  }
 
   var navContainer = document.getElementById('rockaden-main-nav');
   var actionsContainer = document.getElementById('rockaden-actions');
@@ -23,8 +88,8 @@
   mainNav.forEach(function (item) {
     var a = document.createElement('a');
     a.href = item.url;
-    a.textContent = item.label;
     a.className = 'rockaden-nav-link';
+    setTranslatedText(a, item);
     navContainer.appendChild(a);
   });
 
@@ -32,12 +97,14 @@
   // "Mer" button (if moreNav has items or dark toggle is shown).
   var moreBtn = null;
   var moreDropdown = null;
-  if (moreNav.length > 0 || showDarkToggle) {
+  if (moreNav.length > 0 || showDarkToggle || showLangToggle) {
     moreBtn = document.createElement('button');
     moreBtn.className = 'rockaden-more-btn';
     moreBtn.setAttribute('aria-expanded', 'false');
     moreBtn.setAttribute('aria-label', 'More menu');
-    moreBtn.textContent = 'Mer';
+    moreBtn.setAttribute('data-label-sv', 'Mer');
+    moreBtn.setAttribute('data-label-en', 'More');
+    moreBtn.textContent = currentLang() === 'en' ? 'More' : 'Mer';
     actionsContainer.appendChild(moreBtn);
   }
 
@@ -62,29 +129,41 @@
     moreNav.forEach(function (item) {
       var a = document.createElement('a');
       a.href = item.url;
-      a.textContent = item.label;
+      setTranslatedText(a, item);
       moreDropdown.appendChild(a);
     });
 
-    if (showDarkToggle) {
+    if (showDarkToggle || showLangToggle) {
       if (moreNav.length > 0) {
         var divider = document.createElement('div');
         divider.className = 'rockaden-dropdown-divider';
         moreDropdown.appendChild(divider);
       }
+    }
 
+    if (showDarkToggle) {
       var toggleRow = document.createElement('div');
       toggleRow.className = 'rockaden-dropdown-toggle-row';
-      toggleRow.innerHTML =
-        '<span>Mörkt läge</span>' +
-        '<button class="rockaden-toggle-switch" aria-label="Toggle dark mode">' +
-        '<span class="rockaden-toggle-knob"></span></button>';
-      toggleRow.querySelector('.rockaden-toggle-switch').addEventListener('click', function () {
+      var darkLabel = document.createElement('span');
+      darkLabel.setAttribute('data-label-sv', 'Mörkt läge');
+      darkLabel.setAttribute('data-label-en', 'Dark mode');
+      darkLabel.textContent = currentLang() === 'en' ? 'Dark mode' : 'Mörkt läge';
+      toggleRow.appendChild(darkLabel);
+      var darkBtn = document.createElement('button');
+      darkBtn.className = 'rockaden-toggle-switch';
+      darkBtn.setAttribute('aria-label', 'Toggle dark mode');
+      darkBtn.innerHTML = '<span class="rockaden-toggle-knob"></span>';
+      darkBtn.addEventListener('click', function () {
         if (typeof window.rockadenToggleDark === 'function') {
           window.rockadenToggleDark();
         }
       });
+      toggleRow.appendChild(darkBtn);
       moreDropdown.appendChild(toggleRow);
+    }
+
+    if (showLangToggle) {
+      moreDropdown.appendChild(buildLangSwitcher());
     }
 
     header.appendChild(moreDropdown);
@@ -126,8 +205,8 @@
   mainNav.forEach(function (item) {
     var a = document.createElement('a');
     a.href = item.url;
-    a.textContent = item.label;
     a.className = 'rockaden-drawer-link';
+    setTranslatedText(a, item);
     drawerItems.appendChild(a);
   });
 
@@ -136,37 +215,51 @@
     d1.className = 'rockaden-drawer-divider';
     drawerItems.appendChild(d1);
 
-    var label = document.createElement('span');
-    label.className = 'rockaden-drawer-label';
-    label.textContent = 'Mer';
-    drawerItems.appendChild(label);
+    var moreLabel = document.createElement('span');
+    moreLabel.className = 'rockaden-drawer-label';
+    moreLabel.setAttribute('data-label-sv', 'Mer');
+    moreLabel.setAttribute('data-label-en', 'More');
+    moreLabel.textContent = currentLang() === 'en' ? 'More' : 'Mer';
+    drawerItems.appendChild(moreLabel);
 
     moreNav.forEach(function (item) {
       var a = document.createElement('a');
       a.href = item.url;
-      a.textContent = item.label;
       a.className = 'rockaden-drawer-link';
+      setTranslatedText(a, item);
       drawerItems.appendChild(a);
     });
   }
 
-  if (showDarkToggle) {
+  if (showDarkToggle || showLangToggle) {
     var d2 = document.createElement('div');
     d2.className = 'rockaden-drawer-divider';
     drawerItems.appendChild(d2);
+  }
 
+  if (showDarkToggle) {
     var drawerToggle = document.createElement('div');
     drawerToggle.className = 'rockaden-drawer-toggle-row';
-    drawerToggle.innerHTML =
-      '<span>Mörkt läge</span>' +
-      '<button class="rockaden-toggle-switch" aria-label="Toggle dark mode">' +
-      '<span class="rockaden-toggle-knob"></span></button>';
-    drawerToggle.querySelector('.rockaden-toggle-switch').addEventListener('click', function () {
+    var drawerDarkLabel = document.createElement('span');
+    drawerDarkLabel.setAttribute('data-label-sv', 'Mörkt läge');
+    drawerDarkLabel.setAttribute('data-label-en', 'Dark mode');
+    drawerDarkLabel.textContent = currentLang() === 'en' ? 'Dark mode' : 'Mörkt läge';
+    drawerToggle.appendChild(drawerDarkLabel);
+    var drawerDarkBtn = document.createElement('button');
+    drawerDarkBtn.className = 'rockaden-toggle-switch';
+    drawerDarkBtn.setAttribute('aria-label', 'Toggle dark mode');
+    drawerDarkBtn.innerHTML = '<span class="rockaden-toggle-knob"></span>';
+    drawerDarkBtn.addEventListener('click', function () {
       if (typeof window.rockadenToggleDark === 'function') {
         window.rockadenToggleDark();
       }
     });
+    drawerToggle.appendChild(drawerDarkBtn);
     drawerItems.appendChild(drawerToggle);
+  }
+
+  if (showLangToggle) {
+    drawerItems.appendChild(buildLangSwitcher());
   }
 
   /* ---- Drawer open/close ---- */
