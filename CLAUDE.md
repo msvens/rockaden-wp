@@ -101,6 +101,7 @@ pnpm package              # Creates dist/rockaden-chess.zip + dist/rockaden-them
 - Add Participant Modal: keep search box open after adding a participant so multiple can be added without reopening
 - Define per-heading-level spacing/margins in theme.json or CSS so page content doesn't have excessive gap below the page heading
 - Add block theme support for hiding page headings (useful for pages where the content starts with its own heading or doesn't need the default page title)
+- Training group visibility controls: per-group toggles for showing/hiding participants list and tournament standings in the public view (privacy for junior groups, secret standings). Part of a larger effort around user roles and public vs. authenticated content.
 - Documentation
 
 ## Key Files
