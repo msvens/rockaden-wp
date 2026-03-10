@@ -140,7 +140,8 @@
     }
   },
   "customTemplates": [
-    { "name": "page-no-title", "title": "Page (No Title)", "postTypes": ["page"] }
+    { "name": "page-no-title", "title": "Page (No Title)", "postTypes": ["page"] },
+    { "name": "page-section", "title": "Page (Section Nav)", "postTypes": ["page"] }
   ],
   "templateParts": [
     { "name": "header", "title": "Header", "area": "header" },
