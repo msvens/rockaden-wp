@@ -28,6 +28,7 @@
       ]
     },
     "typography": {
+      "defaultFontSizes": false,
       "fontFamilies": [
         {
           "fontFamily": "'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
@@ -70,11 +71,14 @@
     "elements": {
       "link": {
         "color": {
-          "text": "var(--wp--preset--color--primary)"
+          "text": "var(--wp--preset--color--on-surface)"
         },
         ":hover": {
+          "color": {
+            "text": "var(--wp--preset--color--primary)"
+          },
           "typography": {
-            "textDecoration": "underline"
+            "textDecoration": "none"
           }
         },
         "typography": {
@@ -122,16 +126,32 @@
       },
       "button": {
         "color": {
-          "background": "var(--wp--preset--color--primary)",
-          "text": "#ffffff"
+          "background": "transparent",
+          "text": "var(--wp--preset--color--on-surface-muted)"
         },
         ":hover": {
           "color": {
-            "background": "var(--wp--preset--color--primary-light)"
+            "background": "var(--wp--preset--color--surface-dim)",
+            "text": "var(--wp--preset--color--on-surface)"
           }
         },
         "border": {
-          "radius": "0.25rem"
+          "radius": "0.25rem",
+          "color": "var(--wp--preset--color--border)",
+          "width": "1px",
+          "style": "solid"
+        },
+        "typography": {
+          "fontSize": "0.8125rem",
+          "fontWeight": "500"
+        },
+        "spacing": {
+          "padding": {
+            "top": "0.25rem",
+            "bottom": "0.25rem",
+            "left": "0.75rem",
+            "right": "0.75rem"
+          }
         }
       }
     },

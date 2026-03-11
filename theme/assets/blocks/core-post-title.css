@@ -1,0 +1,9 @@
+/* Post title in list context: remove bottom margin */
+:root :where(.rockaden-post-content .wp-block-post-title) {
+	margin-block-end: 0;
+}
+
+/* Page/post title: tighter bottom margin */
+:root :where(.wp-block-post-title) {
+	margin-block-end: 0.25rem;
+}

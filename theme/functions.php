@@ -41,7 +41,7 @@ add_action('wp_enqueue_scripts', function (): void {
     wp_enqueue_style(
         'rockaden-custom',
         get_theme_file_uri('assets/css/custom.css'),
-        [],
+        ['global-styles'],
         wp_get_theme()->get('Version')
     );
 });
@@ -67,6 +67,35 @@ add_action('wp_enqueue_scripts', function (): void {
         'rockaden-language',
         get_theme_file_uri('assets/js/language.js'),
         [],
+        wp_get_theme()->get('Version'),
+        true
+    );
+});
+
+/**
+ * Expose comment_count on the posts REST API endpoint.
+ */
+add_action('rest_api_init', function (): void {
+    register_rest_field('post', 'comment_count', [
+        'get_callback' => function ($post) {
+            return (int) get_comments_number($post['id']);
+        },
+        'schema' => [
+            'type'        => 'integer',
+            'description' => 'Number of comments',
+            'context'     => ['view'],
+        ],
+    ]);
+});
+
+/**
+ * Enqueue i18n post script (dates + "Läs mer" translation).
+ */
+add_action('wp_enqueue_scripts', function (): void {
+    wp_enqueue_script(
+        'rockaden-i18n-post',
+        get_theme_file_uri('assets/js/i18n-post.js'),
+        ['rockaden-language'],
         wp_get_theme()->get('Version'),
         true
     );
@@ -100,3 +129,31 @@ add_action('init', function (): void {
         'label' => __('Rockaden', 'rockaden-theme'),
     ]);
 });
+
+/**
+ * Register per-block CSS files for core block overrides.
+ * Each file loads only when its block is present on the page,
+ * and automatically after global styles (correct cascade order).
+ */
+add_action('init', function (): void {
+    $blocks = [
+        'core/post-template',
+        'core/post-excerpt',
+        'core/post-author',
+        'core/post-title',
+        'core/query',
+        'core/heading',
+    ];
+    foreach ($blocks as $block) {
+        $slug = str_replace('/', '-', $block);
+        $path = "assets/blocks/{$slug}.css";
+        if (file_exists(get_theme_file_path($path))) {
+            wp_enqueue_block_style($block, [
+                'handle' => "rockaden-block-{$slug}",
+                'src'    => get_theme_file_uri($path),
+                'path'   => get_theme_file_path($path),
+            ]);
+        }
+    }
+});
+

@@ -1,0 +1,42 @@
+/* --- Post list sidebar: mobile-first --- */
+/* Author block uses display:contents on mobile (set in core-query.css),
+   so avatar and name are separate flex children of the sidebar. */
+:root :where(.rockaden-post-sidebar .wp-block-post-author) {
+	margin: 0;
+}
+
+:root :where(.rockaden-post-sidebar .wp-block-post-author__avatar img) {
+	border-radius: 50%;
+}
+
+:root :where(.rockaden-post-sidebar .wp-block-post-author__name),
+:root :where(.rockaden-post-sidebar .wp-block-post-author__name a) {
+	color: var(--wp--preset--color--on-surface-muted);
+	font-size: var(--wp--preset--font-size--small);
+}
+
+:root :where(.rockaden-post-sidebar .wp-block-post-author__name a:hover) {
+	color: var(--wp--preset--color--on-surface);
+}
+
+/* Desktop: stack avatar above name */
+@media (min-width: 768px) {
+	:root :where(.rockaden-post-sidebar .wp-block-post-author) {
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+}
+
+/* --- Card meta row (news-grid) --- */
+:root :where(.rockaden-card-meta .wp-block-post-author) {
+	margin: 0;
+}
+
+:root :where(.rockaden-card-meta .wp-block-post-author__name),
+:root :where(.rockaden-card-meta .wp-block-post-author__name a) {
+	color: var(--wp--preset--color--on-surface-muted);
+}
+
+:root :where(.rockaden-card-meta .wp-block-post-author__name a:hover) {
+	color: var(--wp--preset--color--on-surface);
+}

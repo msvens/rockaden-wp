@@ -1,0 +1,11 @@
+/* Post list dividers — applied to <li> elements WP wraps each post in */
+:root :where(.rockaden-post-list .wp-block-post-template > li) {
+	border-bottom: 1px solid var(--wp--preset--color--border);
+	padding-bottom: 1rem;
+	margin-bottom: 0;
+}
+
+:root :where(.rockaden-post-list .wp-block-post-template > li:last-child) {
+	border-bottom: none;
+	padding-bottom: 0;
+}

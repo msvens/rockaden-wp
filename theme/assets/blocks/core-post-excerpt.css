@@ -1,0 +1,26 @@
+/* Excerpt block inside post list content column */
+:root :where(.rockaden-post-content .wp-block-post-excerpt) {
+	margin-block: 0;
+}
+
+/* "Las mer" button (matches calendar today-btn style) */
+:root :where(.rockaden-post-content .wp-block-post-excerpt__more-link) {
+	display: inline-block;
+	font-size: 0.8125rem;
+	font-weight: 500;
+	padding: 0.25rem 0.75rem;
+	border: 1px solid var(--wp--preset--color--border);
+	border-radius: 0.25rem;
+	background: transparent;
+	color: var(--wp--preset--color--on-surface-muted);
+	cursor: pointer;
+	transition: color 0.15s, background-color 0.15s, border-color 0.15s;
+	margin-top: 0.25rem;
+}
+
+:root :where(.rockaden-post-content .wp-block-post-excerpt__more-link:hover) {
+	color: var(--wp--preset--color--on-surface);
+	background-color: var(--wp--preset--color--surface-dim);
+	border-color: var(--wp--preset--color--on-surface-muted);
+	text-decoration: none;
+}
