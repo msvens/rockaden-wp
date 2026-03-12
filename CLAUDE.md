@@ -25,7 +25,7 @@ Ported from `/Users/msvens/projects/github.com/msvens/rockaden2` (PayloadCMS + N
   - `training-sessions/{id}/attendance`, `/games/{idx}`, `/notes`
   - `events?month=YYYY-MM` — with server-side recurring event expansion
 - **Admin pages**: React training manager (mount point in TrainingAdmin.php), Settings page (SSF club ID)
-- **Gutenberg blocks**: calendar, standings, training-group (skeleton editors, block.json registered)
+- **Gutenberg blocks**: calendar, ranking-list, standings, training-group, training-groups (block.json registered)
 - **wp-scripts** build with custom webpack.config.js (5 entry points)
 - **Shared TypeScript** (`plugin/js/shared/`):
   - `roundRobin.ts` — Berger method pairing generator + standings computation
@@ -34,12 +34,13 @@ Ported from `/Users/msvens/projects/github.com/msvens/rockaden2` (PayloadCMS + N
   - `types.ts` — CalendarEvent, EventCategory, Language
 
 ### Theme (rockaden-theme)
-- Block theme (FSE) with theme.json v3
+- Block theme (FSE) with theme.json v3, `functions.php` for setup + block registration
 - Colors: blue-600 (#2563eb) primary, gray palette (matching rockaden2 design)
 - Typography: Geist Sans variable font, weight 300 headings, letter-spacing 0.025em
-- Templates: index, single, page, archive
+- Templates: index, single, page, archive, page-section, author
 - Parts: header (white bg, fixed, uppercase nav, dark toggle), footer (minimal centered links)
 - Patterns: hero, news-grid, page-with-sidebar, page-three-column
+- **Theme blocks**: `rockaden/section-nav` — server-rendered sidebar navigation from page hierarchy (`theme/blocks/section-nav/`)
 - Dark mode: `html.dark` class, localStorage `theme` key, system preference default, flicker-free inline script
 
 ## Development

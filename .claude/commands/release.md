@@ -9,21 +9,31 @@ Create a new release tag and push it: $ARGUMENTS
    - If arguments contain a version (e.g., `0.3.0` or `v0.3.0`), use that
    - Otherwise, bump the minor version by 1 (e.g., `v0.1.0` → `v0.2.0`)
    - Ensure the version starts with `v` prefix
+   - The bare version (without `v`) is used for file updates
 
 2. **Verify state**
    - Run `git status` to ensure working tree is clean (no uncommitted changes)
    - If dirty, abort and tell user to commit first (suggest `/co`)
    - Confirm we're on `main` branch
 
-3. **Show what will be released**
+3. **Bump version strings in source files**
+   Update the version number (without `v` prefix) in these files:
+   - `plugin/rockaden-chess.php` — both the `Version:` header comment and the `define( 'RC_VERSION', '...' )` line
+   - `plugin/phpstan-bootstrap.php` — the `define( 'RC_VERSION', '...' )` line
+   - `theme/style.css` — the `Version:` header line
+
+   Stage and commit these changes with message: `Bump version to <version>`
+
+4. **Show what will be released**
    - Run `git log --oneline <latest-tag>..HEAD` to show commits since last release
    - Display the new version number
    - Ask user to confirm before tagging
 
-4. **Create and push tag**
+5. **Create and push tag**
    - Run `git tag <version>`
-   - Run `git push origin <version>`
-   - Report success with tag name and link to GitHub Actions
+   - Run `git push origin main` (push the version bump commit)
+   - Run `git push origin <version>` (push the tag)
+   - Report success with tag name
 
 ## Important
 
@@ -31,6 +41,7 @@ Create a new release tag and push it: $ARGUMENTS
 - **Never force-push tags** — if tag exists, abort and inform user
 - Tag format is always `vX.Y.Z` (semver with `v` prefix)
 - The `.github/workflows/release.yml` will automatically build and create a GitHub Release
+- **No Claude attribution** in the version bump commit
 
 ## Example usage
 
