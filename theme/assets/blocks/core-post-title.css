@@ -7,3 +7,8 @@
 :root :where(.wp-block-post-title) {
 	margin-block-end: 0.25rem;
 }
+
+/* Post title links: use text color, not global link color */
+:root :where(.wp-block-post-title a) {
+	color: var(--wp--preset--color--on-surface);
+}

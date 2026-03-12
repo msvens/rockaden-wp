@@ -19,7 +19,12 @@
       <!-- wp:group {"className":"rockaden-card","style":{"spacing":{"padding":{"top":"1.5rem","bottom":"1.5rem","left":"1.5rem","right":"1.5rem"}}},"layout":{"type":"flex","orientation":"vertical"}} -->
       <div class="wp-block-group rockaden-card" style="padding:1.5rem">
         <!-- wp:post-title {"isLink":true,"style":{"typography":{"fontWeight":"300","letterSpacing":"0.025em"}},"fontSize":"large"} /-->
-        <!-- wp:post-date {"style":{"color":{"text":"var(--wp--preset--color--on-surface-muted)"}},"fontSize":"small"} /-->
+        <!-- wp:group {"className":"rockaden-card-meta","layout":{"type":"flex","flexWrap":"wrap"},"style":{"spacing":{"blockGap":"0.5rem"}}} -->
+        <div class="wp-block-group rockaden-card-meta">
+          <!-- wp:post-date {"style":{"color":{"text":"var(--wp--preset--color--on-surface-muted)"}},"fontSize":"small"} /-->
+          <!-- wp:post-author {"showAvatar":false,"showBio":false,"byline":"","isLink":true,"fontSize":"small","style":{"color":{"text":"var(--wp--preset--color--on-surface-muted)"}}} /-->
+        </div>
+        <!-- /wp:group -->
         <!-- wp:post-excerpt {"excerptLength":20,"style":{"color":{"text":"var(--wp--preset--color--on-surface-muted)"}}} /-->
       </div>
       <!-- /wp:group -->

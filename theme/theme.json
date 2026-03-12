@@ -71,7 +71,7 @@
     "elements": {
       "link": {
         "color": {
-          "text": "var(--wp--preset--color--on-surface)"
+          "text": "var(--wp--preset--color--primary)"
         },
         ":hover": {
           "color": {

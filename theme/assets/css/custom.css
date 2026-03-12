@@ -534,11 +534,13 @@ html.dark .rockaden-card:hover {
   flex-basis: 100%;
 }
 
-.rockaden-post-sidebar .wp-block-post-terms a {
+.rockaden-post-sidebar .wp-block-post-terms a,
+.rockaden-post-sidebar .wp-block-post-author a {
   color: var(--wp--preset--color--on-surface-muted);
 }
 
-.rockaden-post-sidebar .wp-block-post-terms a:hover {
+.rockaden-post-sidebar .wp-block-post-terms a:hover,
+.rockaden-post-sidebar .wp-block-post-author a:hover {
   color: var(--wp--preset--color--on-surface);
 }
 
@@ -614,6 +616,10 @@ html.dark .rockaden-card:hover {
   max-height: 10rem;
 }
 
+.wp-block-post-comments-form .logged-in-as {
+  display: none;
+}
+
 .wp-block-post-comments-form .comment-notes,
 .wp-block-post-comments-form .comment-form-cookies-consent label {
   font-size: var(--wp--preset--font-size--small);
@@ -660,6 +666,15 @@ html.dark .rockaden-card:hover {
   background-color: var(--wp--preset--color--surface-dim);
   border-color: var(--wp--preset--color--on-surface-muted);
   text-decoration: none;
+}
+
+/* --- Card meta links (news-grid) --- */
+.rockaden-card-meta a {
+  color: var(--wp--preset--color--on-surface-muted);
+}
+
+.rockaden-card-meta a:hover {
+  color: var(--wp--preset--color--on-surface);
 }
 
 /* --- Author header (author.html) --- */

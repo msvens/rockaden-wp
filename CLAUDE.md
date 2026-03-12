@@ -104,6 +104,9 @@ pnpm package              # Creates dist/rockaden-chess.zip + dist/rockaden-them
 - Training group visibility controls: per-group toggles for showing/hiding participants list and tournament standings in the public view (privacy for junior groups, secret standings). Part of a larger effort around user roles and public vs. authenticated content.
 - Documentation
 
+### Phase 7: Polish Round 2
+- Audit link styles for consistency: define clear rules for inline content links (blue, hover behavior), navigational links (post titles, nav, footer — muted/text color), and ensure all link contexts follow the same pattern across light and dark mode
+
 ## Key Files
 - `plugin/rockaden-chess.php` — Plugin entry point + autoloader
 - `plugin/src/Api/TrainingApi.php` — Main REST API (training CRUD)
