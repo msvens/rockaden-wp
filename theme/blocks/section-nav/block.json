@@ -7,13 +7,13 @@
   "category": "widgets",
   "icon": "list-view",
   "description": "Auto-generates sidebar navigation from page hierarchy (parent + children).",
-  "textdomain": "rockaden-chess",
+  "textdomain": "rockaden-theme",
   "supports": {
     "html": false,
     "inserter": false,
     "align": false
   },
   "render": "file:./render.php",
-  "viewStyle": "file:../../../build/blocks/section-nav/view.css",
-  "viewScript": "file:../../../build/blocks/section-nav/view.js"
+  "viewStyle": "file:./section-nav.css",
+  "viewScript": "file:./view.js"
 }

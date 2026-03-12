@@ -131,6 +131,13 @@ add_action('init', function (): void {
 });
 
 /**
+ * Register theme blocks.
+ */
+add_action('init', function (): void {
+    register_block_type(get_theme_file_path('blocks/section-nav'));
+});
+
+/**
  * Register per-block CSS files for core block overrides.
  * Each file loads only when its block is present on the page,
  * and automatically after global styles (correct cascade order).
