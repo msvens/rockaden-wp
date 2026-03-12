@@ -26,6 +26,7 @@
           <!-- wp:post-terms {"term":"category","fontSize":"small","style":{"color":{"text":"var(--wp--preset--color--on-surface-muted)"}}} /-->
         </div>
         <!-- /wp:group -->
+        <!-- wp:post-featured-image {"isLink":true,"sizeSlug":"medium","className":"rockaden-post-thumb","style":{"border":{"radius":"0.25rem"}}} /-->
         <!-- wp:group {"className":"rockaden-post-content","layout":{"type":"flex","orientation":"vertical"},"style":{"spacing":{"blockGap":"0.5rem"},"layout":{"selfStretch":"fill","flexSize":""}}} -->
         <div class="wp-block-group rockaden-post-content">
           <!-- wp:post-title {"isLink":true,"style":{"typography":{"fontSize":"1.125rem","fontWeight":"500"}}} /-->
@@ -36,10 +37,10 @@
       <!-- /wp:group -->
     <!-- /wp:post-template -->
 
-    <!-- wp:query-pagination -->
-      <!-- wp:query-pagination-previous /-->
+    <!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"}} -->
+      <!-- wp:query-pagination-previous {"label":"‹"} /-->
       <!-- wp:query-pagination-numbers /-->
-      <!-- wp:query-pagination-next /-->
+      <!-- wp:query-pagination-next {"label":"›"} /-->
     <!-- /wp:query-pagination -->
   </div>
   <!-- /wp:query -->
