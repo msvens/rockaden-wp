@@ -553,22 +553,35 @@ html.dark .rockaden-card:hover {
   min-width: 0;
 }
 
-/* Featured image thumbnail in post listings */
+/* Featured image thumbnail in post listings — mobile: stacked */
+.rockaden-post-item {
+  flex-direction: column;
+}
+
 .rockaden-post-thumb {
-  max-width: 60%;
-  margin: 0 auto;
+  align-self: center;
+  max-width: 70%;
 }
 
 .rockaden-post-thumb img {
   width: 100%;
   height: auto;
+  max-height: 200px;
   object-fit: cover;
-  aspect-ratio: 4 / 3;
 }
 
-/* Desktop: side-by-side columns, vertical sidebar */
+/* Desktop: restore full thumbnail sizing */
+@media (min-width: 768px) {
+  .rockaden-post-thumb img {
+    max-height: none;
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* Desktop: side-by-side columns */
 @media (min-width: 768px) {
   .rockaden-post-item {
+    flex-direction: row;
     flex-wrap: nowrap;
   }
 
@@ -591,10 +604,10 @@ html.dark .rockaden-card:hover {
   }
 
   .rockaden-post-thumb {
+    align-self: auto;
     flex-shrink: 0;
     width: 13rem;
     max-width: none;
-    margin: 0;
   }
 }
 
