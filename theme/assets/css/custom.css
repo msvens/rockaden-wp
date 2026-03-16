@@ -904,7 +904,7 @@ html.dark .rockaden-card:hover {
 .rc-sidebar .rc-sidebar-card {
   background-color: var(--wp--preset--color--surface-dim);
   border-radius: 0.5rem;
-  padding: 1.25rem;
+  padding: 0.75rem;
   align-self: stretch;
 }
 

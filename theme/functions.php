@@ -30,7 +30,7 @@ add_action('wp_head', function (): void {
     $logo_url = esc_url(get_theme_file_uri('assets/images/logo.png'));
     ?>
     <script>
-    (function(){var t=localStorage.getItem('theme');var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d)document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-lang',localStorage.getItem('language')||'sv');})();
+    (function(){var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-lang',localStorage.getItem('language')||'sv');})();
     </script>
     <style>
     :root { --rockaden-logo-url: url('<?php echo $logo_url; ?>'); }
