@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "rockaden/sidebar-panel",
+  "version": "0.1.0",
+  "title": "Sidebar Panel",
+  "category": "widgets",
+  "icon": "columns",
+  "description": "Renders the sidebar template part with visibility controls.",
+  "textdomain": "rockaden-theme",
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "align": false
+  },
+  "render": "file:./render.php"
+}

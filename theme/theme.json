@@ -160,12 +160,11 @@
     }
   },
   "customTemplates": [
-    { "name": "page-no-title", "title": "Page (No Title)", "postTypes": ["page"] },
-    { "name": "page-section", "title": "Page (Section Nav)", "postTypes": ["page"] },
-    { "name": "page-section-no-title", "title": "Page (Section Nav, No Title)", "postTypes": ["page"] }
+    { "name": "page-section", "title": "Page (Section Nav)", "postTypes": ["page"] }
   ],
   "templateParts": [
     { "name": "header", "title": "Header", "area": "header" },
-    { "name": "footer", "title": "Footer", "area": "footer" }
+    { "name": "footer", "title": "Footer", "area": "footer" },
+    { "name": "sidebar", "title": "Sidebar", "area": "uncategorized" }
   ]
 }
