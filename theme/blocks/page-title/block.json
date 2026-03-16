@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "rockaden/page-title",
+  "version": "0.1.0",
+  "title": "Page Title (Conditional)",
+  "category": "widgets",
+  "icon": "heading",
+  "description": "Renders the page title unless hidden via per-page setting.",
+  "textdomain": "rockaden-theme",
+  "supports": {
+    "html": false,
+    "inserter": false,
+    "align": false
+  },
+  "render": "file:./render.php"
+}

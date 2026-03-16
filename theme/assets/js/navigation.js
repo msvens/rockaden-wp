@@ -6,9 +6,9 @@
   var config = window.rockadenNav || {};
   var mainNav = config.mainNav || [];
   var moreNav = config.moreNav || [];
-  var showDarkToggle = config.showDarkToggle !== false;
+  var showDarkToggle = config.showDarkToggle !== false && config.showDarkToggle !== '';
   var showLangToggle = !!config.showLanguageToggle && config.showLanguageToggle !== '0';
-  var showBorder = config.showHeaderBorder !== false;
+  var showBorder = config.showHeaderBorder !== false && config.showHeaderBorder !== '';
 
   /* ---- Language helpers ---- */
   function currentLang() {
@@ -74,10 +74,21 @@
     return row;
   }
 
+  var headerStyle = config.headerStyle || 'contrast';
+  var headerDensity = config.headerDensity || 'normal';
+  var headerBorderWidth = config.headerBorderWidth || 'thin';
+
   var navContainer = document.getElementById('rockaden-main-nav');
   var actionsContainer = document.getElementById('rockaden-actions');
   var header = document.querySelector('.rockaden-header');
   if (!navContainer || !actionsContainer || !header) return;
+
+  /* ---- Header data attributes (density + style on <html> for global access) ---- */
+  document.documentElement.setAttribute('data-header-density', headerDensity);
+  document.documentElement.setAttribute('data-header-style', headerStyle);
+  if (headerBorderWidth === 'medium') {
+    document.documentElement.style.setProperty('--rc-header-border-width', '2px');
+  }
 
   /* ---- Header border ---- */
   if (!showBorder) {

@@ -17,6 +17,10 @@ add_action('admin_menu', ['Rockaden_Theme_Settings', 'register_page']);
 add_action('admin_enqueue_scripts', ['Rockaden_Theme_Settings', 'enqueue_admin_assets']);
 add_action('admin_post_rockaden_save_settings', ['Rockaden_Theme_Settings', 'handle_save']);
 
+// Page display meta box (title visibility + sidebar override).
+add_action('add_meta_boxes', ['Rockaden_Theme_Settings', 'register_page_display_meta_box']);
+add_action('save_post_page', ['Rockaden_Theme_Settings', 'save_page_display_meta']);
+
 
 /**
  * Inline <head> script to apply dark mode class before render (prevents flash).
@@ -135,6 +139,8 @@ add_action('init', function (): void {
  */
 add_action('init', function (): void {
     register_block_type(get_theme_file_path('blocks/section-nav'));
+    register_block_type(get_theme_file_path('blocks/sidebar-panel'));
+    register_block_type(get_theme_file_path('blocks/page-title'));
 });
 
 /**

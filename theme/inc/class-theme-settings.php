@@ -18,9 +18,13 @@ class Rockaden_Theme_Settings {
 	 */
 	public static function defaults(): array {
 		return [
+			'header_style'         => 'contrast',
+			'header_density'       => 'normal',
+			'header_border_width'  => 'thin',
 			'show_header_border'   => true,
 			'show_dark_toggle'     => true,
 			'show_language_toggle' => true,
+			'sidebar_enabled'      => 'none',
 			'main_nav'           => [
 				['label' => 'Nyheter',   'url' => '/'],
 				['label' => 'Kalender',  'url' => '/kalender'],
@@ -56,6 +60,9 @@ class Rockaden_Theme_Settings {
 			'showDarkToggle'     => (bool) $opts['show_dark_toggle'],
 			'showHeaderBorder'   => (bool) $opts['show_header_border'],
 			'showLanguageToggle' => (bool) $opts['show_language_toggle'],
+			'headerStyle'        => $opts['header_style'],
+			'headerDensity'      => $opts['header_density'],
+			'headerBorderWidth'  => $opts['header_border_width'],
 		];
 	}
 
@@ -114,10 +121,28 @@ class Rockaden_Theme_Settings {
 
 		$options = [];
 
+		// Header style.
+		$style = sanitize_text_field($_POST['header_style'] ?? 'contrast');
+		$options['header_style'] = in_array($style, ['default', 'contrast'], true) ? $style : 'contrast';
+
+		// Header density.
+		$density = sanitize_text_field($_POST['header_density'] ?? 'normal');
+		$options['header_density'] = in_array($density, ['compact', 'normal', 'large'], true) ? $density : 'normal';
+
+		// Header border width.
+		$border_width = sanitize_text_field($_POST['header_border_width'] ?? 'thin');
+		$options['header_border_width'] = in_array($border_width, ['thin', 'medium'], true) ? $border_width : 'thin';
+
 		// Checkboxes.
 		$options['show_header_border']   = ! empty($_POST['show_header_border']);
 		$options['show_dark_toggle']     = ! empty($_POST['show_dark_toggle']);
 		$options['show_language_toggle'] = ! empty($_POST['show_language_toggle']);
+
+		// Sidebar visibility.
+		$sidebar_value = sanitize_text_field($_POST['sidebar_enabled'] ?? 'none');
+		$options['sidebar_enabled'] = in_array($sidebar_value, ['none', 'landing', 'all'], true)
+			? $sidebar_value
+			: 'none';
 
 		// Navigation items.
 		$options['main_nav'] = self::sanitize_nav_items($_POST['main_nav_label'] ?? [], $_POST['main_nav_url'] ?? [], $_POST['main_nav_label_en'] ?? []);
@@ -158,6 +183,79 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
+	 * Register page display meta box on pages.
+	 */
+	public static function register_page_display_meta_box(): void {
+		add_meta_box(
+			'rc_page_display',
+			'Rockaden Display',
+			[self::class, 'render_page_display_meta_box'],
+			'page',
+			'side',
+			'default'
+		);
+	}
+
+	/**
+	 * Render page display meta box (title visibility + sidebar override).
+	 */
+	public static function render_page_display_meta_box(\WP_Post $post): void {
+		$hide_title = get_post_meta($post->ID, 'rc_hide_title', true);
+		$sidebar    = get_post_meta($post->ID, 'rc_sidebar_override', true);
+		wp_nonce_field('rc_page_display_save', 'rc_page_display_nonce');
+		?>
+		<p>
+			<label>
+				<input type="checkbox" name="rc_hide_title" value="1"
+					<?php checked($hide_title, '1'); ?> />
+				Hide page title
+			</label>
+		</p>
+		<p>
+			<label for="rc_sidebar_override"><strong>Sidebar</strong></label><br>
+			<select name="rc_sidebar_override" id="rc_sidebar_override" style="width:100%">
+				<option value="" <?php selected($sidebar, ''); ?>>Default (use global setting)</option>
+				<option value="show" <?php selected($sidebar, 'show'); ?>>Show</option>
+				<option value="hide" <?php selected($sidebar, 'hide'); ?>>Hide</option>
+			</select>
+		</p>
+		<?php
+	}
+
+	/**
+	 * Save page display meta.
+	 */
+	public static function save_page_display_meta(int $post_id): void {
+		if (! isset($_POST['rc_page_display_nonce'])) {
+			return;
+		}
+		if (! wp_verify_nonce($_POST['rc_page_display_nonce'], 'rc_page_display_save')) {
+			return;
+		}
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+			return;
+		}
+		if (! current_user_can('edit_post', $post_id)) {
+			return;
+		}
+
+		// Hide title.
+		if (! empty($_POST['rc_hide_title'])) {
+			update_post_meta($post_id, 'rc_hide_title', '1');
+		} else {
+			delete_post_meta($post_id, 'rc_hide_title');
+		}
+
+		// Sidebar override.
+		$sidebar = sanitize_text_field($_POST['rc_sidebar_override'] ?? '');
+		if (in_array($sidebar, ['show', 'hide'], true)) {
+			update_post_meta($post_id, 'rc_sidebar_override', $sidebar);
+		} else {
+			delete_post_meta($post_id, 'rc_sidebar_override');
+		}
+	}
+
+	/**
 	 * Render the settings page.
 	 */
 	public static function render_page(): void {
@@ -181,6 +279,26 @@ class Rockaden_Theme_Settings {
 				<h2>Header</h2>
 				<table class="form-table">
 					<tr>
+						<th scope="row">Header style</th>
+						<td>
+							<select name="header_style">
+								<option value="default" <?php selected($options['header_style'], 'default'); ?>>Default</option>
+								<option value="contrast" <?php selected($options['header_style'], 'contrast'); ?>>Contrast</option>
+							</select>
+							<p class="description">Contrast uses a darker background in light mode for a more prominent header.</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Header density</th>
+						<td>
+							<select name="header_density">
+								<option value="compact" <?php selected($options['header_density'], 'compact'); ?>>Compact (48px)</option>
+								<option value="normal" <?php selected($options['header_density'], 'normal'); ?>>Normal (56px)</option>
+								<option value="large" <?php selected($options['header_density'], 'large'); ?>>Large (64px)</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
 						<th scope="row">Show header border</th>
 						<td>
 							<label>
@@ -188,6 +306,15 @@ class Rockaden_Theme_Settings {
 									<?php checked($options['show_header_border']); ?> />
 								Display a bottom border on the header
 							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Border width</th>
+						<td>
+							<select name="header_border_width">
+								<option value="thin" <?php selected($options['header_border_width'], 'thin'); ?>>Thin (1px)</option>
+								<option value="medium" <?php selected($options['header_border_width'], 'medium'); ?>>Medium (2px)</option>
+							</select>
 						</td>
 					</tr>
 					<tr>
@@ -208,6 +335,17 @@ class Rockaden_Theme_Settings {
 									<?php checked($options['show_language_toggle']); ?> />
 								Show the SV/EN language switcher in the Mer menu
 							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Sidebar</th>
+						<td>
+							<select name="sidebar_enabled">
+								<option value="none" <?php selected($options['sidebar_enabled'], 'none'); ?>>Disabled</option>
+								<option value="landing" <?php selected($options['sidebar_enabled'], 'landing'); ?>>Landing page only</option>
+								<option value="all" <?php selected($options['sidebar_enabled'], 'all'); ?>>All pages</option>
+							</select>
+							<p class="description">Show the right sidebar panel. Content is edited via Appearance &rarr; Editor &rarr; Template Parts &rarr; Sidebar.</p>
 						</td>
 					</tr>
 				</table>

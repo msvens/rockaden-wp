@@ -19,19 +19,38 @@ html.dark img {
   opacity: 0.9;
 }
 
+/* --- Header height + font size custom properties (density) --- */
+:root {
+  --rc-header-height: 3.5rem;
+  --rc-header-font-size: 0.875rem;
+  --rc-header-border-width: 1px;
+}
+
+html[data-header-density="compact"] { --rc-header-height: 3rem;  --rc-header-font-size: 0.875rem; }
+html[data-header-density="normal"]  { --rc-header-height: 3.5rem; --rc-header-font-size: 0.9375rem; }
+html[data-header-density="large"]   { --rc-header-height: 4rem;  --rc-header-font-size: 1rem; }
+
+/* Mobile: always use compact height */
+@media screen and (max-width: 767px) {
+  :root {
+    --rc-header-height: 3rem;
+    --rc-header-font-size: 0.875rem;
+  }
+}
+
 /* --- Sticky footer layout --- */
 body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-top: 3rem; /* fixed header height */
+  padding-top: var(--rc-header-height);
 }
 
 body > .wp-site-blocks {
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: calc(100vh - 3rem);
+  min-height: calc(100vh - var(--rc-header-height));
 }
 
 body > .wp-site-blocks > main,
@@ -47,16 +66,16 @@ body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-foo
   left: 0;
   right: 0;
   z-index: 50;
-  height: 3rem;
+  height: var(--rc-header-height);
   background-color: var(--wp--preset--color--surface);
-  border-bottom: 1px solid var(--wp--preset--color--border);
+  border-bottom: var(--rc-header-border-width) solid var(--wp--preset--color--border);
 }
 
 .rockaden-header .rockaden-header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 3rem;
+  height: var(--rc-header-height);
   padding: 0 1.5rem;
   max-width: 1280px;
   margin: 0 auto;
@@ -75,7 +94,7 @@ body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-foo
 }
 
 .admin-bar body {
-  padding-top: calc(3rem + 32px);
+  padding-top: calc(var(--rc-header-height) + 32px);
 }
 
 @media screen and (max-width: 782px) {
@@ -83,7 +102,7 @@ body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-foo
     top: 46px;
   }
   .admin-bar body {
-    padding-top: calc(3rem + 46px);
+    padding-top: calc(var(--rc-header-height) + 46px);
   }
 }
 
@@ -112,7 +131,7 @@ body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-foo
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 300;
-  font-size: var(--wp--preset--font-size--small);
+  font-size: var(--rc-header-font-size);
   line-height: 1.15;
   color: var(--wp--preset--color--on-surface);
   text-decoration: none;
@@ -132,7 +151,7 @@ body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-foo
 
 .rockaden-nav-link {
   font-weight: 500;
-  font-size: var(--wp--preset--font-size--small);
+  font-size: var(--rc-header-font-size);
   color: var(--wp--preset--color--on-surface-muted);
   text-decoration: none;
   padding: 0.375rem 0.75rem;
@@ -148,7 +167,81 @@ body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-foo
 
 /* Header without border (controlled by settings) */
 .rockaden-header--no-border {
-  border-bottom: none;
+  border-bottom: none !important;
+}
+
+/* --- Contrast header style (light mode) --- */
+html[data-header-style="contrast"] .rockaden-header {
+  background-color: var(--wp--preset--color--on-surface);
+  border-bottom-color: rgba(255, 255, 255, 0.15);
+}
+
+html[data-header-style="contrast"] .rockaden-brand-text {
+  color: #ffffff;
+}
+
+html[data-header-style="contrast"] .rockaden-nav-link {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+html[data-header-style="contrast"] .rockaden-nav-link:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+html[data-header-style="contrast"] .rockaden-more-btn {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+html[data-header-style="contrast"] .rockaden-more-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+html[data-header-style="contrast"] .rockaden-hamburger-btn {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+html[data-header-style="contrast"] .rockaden-hamburger-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Contrast style in dark mode — lift header from page background */
+html.dark[data-header-style="contrast"] .rockaden-header {
+  background-color: #1e293b;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+html.dark[data-header-style="contrast"] .rockaden-brand-text {
+  color: #f1f5f9;
+}
+
+html.dark[data-header-style="contrast"] .rockaden-nav-link {
+  color: rgba(241, 245, 249, 0.7);
+}
+
+html.dark[data-header-style="contrast"] .rockaden-nav-link:hover {
+  color: #f1f5f9;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark[data-header-style="contrast"] .rockaden-more-btn {
+  color: rgba(241, 245, 249, 0.7);
+}
+
+html.dark[data-header-style="contrast"] .rockaden-more-btn:hover {
+  color: #f1f5f9;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark[data-header-style="contrast"] .rockaden-hamburger-btn {
+  color: rgba(241, 245, 249, 0.7);
+}
+
+html.dark[data-header-style="contrast"] .rockaden-hamburger-btn:hover {
+  color: #f1f5f9;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 /* --- Actions (right side) --- */
@@ -165,7 +258,7 @@ body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-foo
   border: none;
   cursor: pointer;
   font-family: inherit;
-  font-size: var(--wp--preset--font-size--small);
+  font-size: var(--rc-header-font-size);
   font-weight: 500;
   color: var(--wp--preset--color--on-surface-muted);
   padding: 0.375rem 0.75rem;
@@ -202,7 +295,7 @@ body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-foo
 /* --- More dropdown --- */
 .rockaden-more-dropdown {
   position: absolute;
-  top: 3rem;
+  top: var(--rc-header-height);
   right: 1.5rem;
   width: 13rem;
   margin: 0;
@@ -297,10 +390,10 @@ html.dark .rockaden-toggle-knob {
 
 .rockaden-mobile-drawer {
   position: fixed;
-  top: 3rem;
+  top: var(--rc-header-height);
   right: 0;
   width: 14rem;
-  height: calc(100vh - 3rem);
+  height: calc(100vh - var(--rc-header-height));
   background-color: var(--wp--preset--color--surface);
   border-left: 1px solid var(--wp--preset--color--border);
   box-shadow: -4px 0 12px rgb(0 0 0 / 0.08);
@@ -325,14 +418,14 @@ html.dark .rockaden-mobile-drawer {
 }
 
 .admin-bar .rockaden-mobile-drawer {
-  top: calc(3rem + 32px);
-  height: calc(100vh - 3rem - 32px);
+  top: calc(var(--rc-header-height) + 32px);
+  height: calc(100vh - var(--rc-header-height) - 32px);
 }
 
 @media screen and (max-width: 782px) {
   .admin-bar .rockaden-mobile-drawer {
-    top: calc(3rem + 46px);
-    height: calc(100vh - 3rem - 46px);
+    top: calc(var(--rc-header-height) + 46px);
+    height: calc(100vh - var(--rc-header-height) - 46px);
   }
 }
 
@@ -805,4 +898,35 @@ html.dark .rockaden-card:hover {
 .wp-block-comments-pagination-next:hover {
   color: var(--wp--preset--color--on-surface);
   text-decoration: none;
+}
+
+/* --- Right sidebar panel --- */
+.rc-sidebar .rc-sidebar-card {
+  background-color: var(--wp--preset--color--surface-dim);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  align-self: stretch;
+}
+
+.rc-sidebar-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+/* Collapse sidebar column when panel is hidden */
+.rc-sidebar-column:has(.rc-sidebar-panel--hidden) {
+  display: none;
+}
+
+.rc-content-columns:has(.rc-sidebar-panel--hidden) > .wp-block-column:not(.rc-sidebar-column) {
+  flex-basis: 100% !important;
+}
+
+/* Mobile: sidebar stacks below content with top separator */
+@media screen and (max-width: 767px) {
+  .rc-sidebar-column {
+    border-top: 1px solid var(--wp--preset--color--border);
+    padding-top: 1.5rem;
+    margin-top: 0.5rem;
+  }
 }
