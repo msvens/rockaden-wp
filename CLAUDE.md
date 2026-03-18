@@ -107,6 +107,8 @@ pnpm package              # Creates dist/rockaden-chess.zip + dist/rockaden-them
 
 ### Phase 7: Polish Round 2
 - Audit link styles for consistency: define clear rules for inline content links (blue, hover behavior), navigational links (post titles, nav, footer — muted/text color), and ensure all link contexts follow the same pattern across light and dark mode
+- UI consistency pass: review heading weights/sizes across all contexts (sidebar cards, post lists, page content), ensure font sizes feel proportional at each level, audit spacing/margins for visual rhythm
+- Review typography scale: evaluate if current font sizes (small→xxx-large) provide enough differentiation, especially at H3–H5 levels which are close in size
 
 ## Key Files
 - `plugin/rockaden-chess.php` — Plugin entry point + autoloader
