@@ -3,8 +3,7 @@
  * Sidebar Panel block — server render.
  *
  * Checks global sidebar visibility setting and per-page override,
- * then either renders the sidebar template part or a hidden marker
- * (so CSS can collapse the empty column).
+ * then renders sidebar cards from the rockaden_theme_options option.
  */
 
 defined('ABSPATH') || exit;
@@ -39,7 +38,58 @@ if (! $visible) {
 	return;
 }
 
-// Render the sidebar template part.
-$template_part = '<!-- wp:template-part {"slug":"sidebar"} /-->';
-// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- block markup
-echo do_blocks($template_part);
+$cards = $options['sidebar_cards'] ?? [];
+
+if (empty($cards)) {
+	echo '<div class="rc-sidebar-panel--hidden" hidden></div>';
+	return;
+}
+
+echo '<aside class="rc-sidebar">';
+
+foreach ($cards as $card) {
+	$type       = $card['type'] ?? 'text';
+	$title      = $card['title'] ?? '';
+	$show_title = $card['show_title'] ?? true;
+	$content    = $card['content'] ?? '';
+	$link_url   = $card['link_url'] ?? '';
+	$link_label = $card['link_label'] ?? '';
+	$image_url  = $card['image_url'] ?? '';
+	$full_bleed = ! empty($card['full_bleed']);
+
+	$card_classes = 'rc-sidebar-card';
+	if ($full_bleed && $type === 'image') {
+		$card_classes .= ' rc-sidebar-card--full-bleed';
+	}
+
+	echo '<div class="' . esc_attr($card_classes) . '">';
+
+	if ($show_title && $title !== '') {
+		echo '<h3>' . esc_html($title) . '</h3>';
+	}
+
+	if ($type === 'image' && $image_url !== '') {
+		$img_tag = '<img src="' . esc_url($image_url) . '" alt="' . esc_attr($title) . '" />';
+		if ($link_url !== '') {
+			echo '<a href="' . esc_url($link_url) . '">' . $img_tag . '</a>';
+		} else {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above
+			echo $img_tag;
+		}
+	} else {
+		if ($content !== '') {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitized via wp_kses_post on save
+			echo $content;
+		}
+
+		if ($link_url !== '' && $link_label !== '') {
+			echo '<div class="wp-block-buttons"><div class="wp-block-button is-style-outline has-small-font-size">';
+			echo '<a class="wp-block-button__link wp-element-button" href="' . esc_url($link_url) . '">' . esc_html($link_label) . '</a>';
+			echo '</div></div>';
+		}
+	}
+
+	echo '</div>';
+}
+
+echo '</aside>';

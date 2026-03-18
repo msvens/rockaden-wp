@@ -25,6 +25,38 @@ class Rockaden_Theme_Settings {
 			'show_dark_toggle'     => true,
 			'show_language_toggle' => true,
 			'sidebar_enabled'      => 'none',
+			'sidebar_cards'        => [
+				[
+					'type'       => 'text',
+					'title'      => 'Aktuellt',
+					'show_title' => true,
+					'content'    => '<p>Välkomna till ny säsong på SK Rockaden! Vi tränar varje tisdag 18:00 i Stockholms Schackförbunds lokaler.</p>',
+					'link_url'   => '',
+					'link_label' => '',
+					'image_url'  => '',
+					'full_bleed' => false,
+				],
+				[
+					'type'       => 'text',
+					'title'      => 'Bli medlem',
+					'show_title' => true,
+					'content'    => '<p>Vill du spela schack med oss? Kom på en provträning!</p>',
+					'link_url'   => '/kontakt',
+					'link_label' => 'Kontakta oss',
+					'image_url'  => '',
+					'full_bleed' => false,
+				],
+				[
+					'type'       => 'text',
+					'title'      => 'Hitta oss',
+					'show_title' => true,
+					'content'    => '<p>Stockholms Schackförbund<br>Kungsholmstorg 6<br>112 21 Stockholm</p>',
+					'link_url'   => '',
+					'link_label' => '',
+					'image_url'  => '',
+					'full_bleed' => false,
+				],
+			],
 			'main_nav'           => [
 				['label' => 'Nyheter',   'url' => '/'],
 				['label' => 'Kalender',  'url' => '/kalender'],
@@ -87,6 +119,9 @@ class Rockaden_Theme_Settings {
 			return;
 		}
 
+		wp_enqueue_media();
+		wp_enqueue_editor();
+
 		wp_enqueue_style(
 			'rockaden-theme-settings',
 			get_theme_file_uri('assets/css/theme-settings.css'),
@@ -97,7 +132,7 @@ class Rockaden_Theme_Settings {
 		wp_enqueue_script(
 			'rockaden-theme-settings',
 			get_theme_file_uri('assets/js/theme-settings.js'),
-			[],
+			['jquery'],
 			wp_get_theme()->get('Version'),
 			true
 		);
@@ -144,6 +179,18 @@ class Rockaden_Theme_Settings {
 			? $sidebar_value
 			: 'none';
 
+		// Sidebar cards.
+		$options['sidebar_cards'] = self::sanitize_sidebar_cards(
+			$_POST['sidebar_card_type'] ?? [],
+			$_POST['sidebar_card_title'] ?? [],
+			$_POST['sidebar_card_show_title'] ?? [],
+			$_POST['sidebar_card_content'] ?? [],
+			$_POST['sidebar_card_link_url'] ?? [],
+			$_POST['sidebar_card_link_label'] ?? [],
+			$_POST['sidebar_card_image_url'] ?? [],
+			$_POST['sidebar_card_full_bleed'] ?? []
+		);
+
 		// Navigation items.
 		$options['main_nav'] = self::sanitize_nav_items($_POST['main_nav_label'] ?? [], $_POST['main_nav_url'] ?? [], $_POST['main_nav_label_en'] ?? []);
 		$options['more_nav'] = self::sanitize_nav_items($_POST['more_nav_label'] ?? [], $_POST['more_nav_url'] ?? [], $_POST['more_nav_label_en'] ?? []);
@@ -155,6 +202,40 @@ class Rockaden_Theme_Settings {
 			'updated' => '1',
 		], admin_url('themes.php')));
 		exit;
+	}
+
+	/**
+	 * Sanitize parallel arrays of sidebar card fields into card items.
+	 */
+	private static function sanitize_sidebar_cards(
+		array $types,
+		array $titles,
+		array $show_titles,
+		array $contents,
+		array $link_urls,
+		array $link_labels,
+		array $image_urls,
+		array $full_bleeds
+	): array {
+		$cards = [];
+		$count = count($types);
+		for ($i = 0; $i < $count; $i++) {
+			$type = sanitize_text_field($types[$i] ?? 'text');
+			if (! in_array($type, ['text', 'image'], true)) {
+				$type = 'text';
+			}
+			$cards[] = [
+				'type'       => $type,
+				'title'      => sanitize_text_field($titles[$i] ?? ''),
+				'show_title' => ! empty($show_titles[$i]),
+				'content'    => wp_kses_post($contents[$i] ?? ''),
+				'link_url'   => esc_url_raw($link_urls[$i] ?? ''),
+				'link_label' => sanitize_text_field($link_labels[$i] ?? ''),
+				'image_url'  => esc_url_raw($image_urls[$i] ?? ''),
+				'full_bleed' => ! empty($full_bleeds[$i]),
+			];
+		}
+		return $cards;
 	}
 
 	/**
@@ -345,10 +426,167 @@ class Rockaden_Theme_Settings {
 								<option value="landing" <?php selected($options['sidebar_enabled'], 'landing'); ?>>Landing page only</option>
 								<option value="all" <?php selected($options['sidebar_enabled'], 'all'); ?>>All pages</option>
 							</select>
-							<p class="description">Show the right sidebar panel. Content is edited via Appearance &rarr; Editor &rarr; Template Parts &rarr; Sidebar.</p>
+							<p class="description">Show the right sidebar panel. Configure cards in the Sidebar Cards section below.</p>
 						</td>
 					</tr>
 				</table>
+
+				<!-- Sidebar Cards -->
+				<h2>Sidebar Cards</h2>
+				<p class="description">Cards displayed in the sidebar panel. Drag to reorder, collapse to save space.</p>
+				<div id="rc-sidebar-cards">
+					<?php
+					$cards = $options['sidebar_cards'] ?? [];
+					$editor_settings = [
+						'teeny'         => true,
+						'media_buttons' => false,
+						'textarea_rows' => 5,
+						'quicktags'     => false,
+					];
+					foreach ($cards as $i => $card) :
+						$card_type       = $card['type'] ?? 'text';
+						$card_title      = $card['title'] ?? '';
+						$card_show_title = $card['show_title'] ?? true;
+						$card_content    = $card['content'] ?? '';
+						$card_link       = $card['link_url'] ?? '';
+						$card_label      = $card['link_label'] ?? '';
+						$card_image      = $card['image_url'] ?? '';
+						$card_full_bleed = $card['full_bleed'] ?? false;
+						$preview         = $card_title !== '' ? $card_title : 'New card';
+					?>
+					<div class="rc-card-panel">
+						<div class="rc-card-header">
+							<span class="rc-card-title-preview"><?php echo esc_html($preview); ?></span>
+							<span class="rc-card-type-badge"><?php echo esc_html(ucfirst($card_type)); ?></span>
+							<span class="rc-card-header-actions">
+								<button type="button" class="button-link rc-card-move-up" title="Move up">&uarr;</button>
+								<button type="button" class="button-link rc-card-move-down" title="Move down">&darr;</button>
+								<button type="button" class="button-link rc-card-collapse" title="Collapse">&#9656;</button>
+								<button type="button" class="button-link rc-card-remove" title="Remove">&times;</button>
+							</span>
+						</div>
+						<div class="rc-card-body">
+							<p>
+								<label>Type</label><br>
+								<select name="sidebar_card_type[]" class="rc-card-type-select">
+									<option value="text" <?php selected($card_type, 'text'); ?>>Text</option>
+									<option value="image" <?php selected($card_type, 'image'); ?>>Image</option>
+								</select>
+							</p>
+							<p>
+								<label>Title</label><br>
+								<input type="text" name="sidebar_card_title[]" value="<?php echo esc_attr($card_title); ?>" class="regular-text rc-card-title-input" />
+							</p>
+							<p>
+								<label>Show title on frontend</label><br>
+								<select name="sidebar_card_show_title[]" class="rc-card-show-title-select">
+									<option value="1" <?php selected($card_show_title, true); ?>>Yes</option>
+									<option value="0" <?php selected($card_show_title, false); ?>>No</option>
+								</select>
+							</p>
+							<div class="rc-card-text-fields" <?php if ($card_type === 'image') echo 'style="display:none"'; ?>>
+								<p><label>Content</label></p>
+								<?php wp_editor($card_content, 'sidebar_card_content_' . $i, array_merge($editor_settings, ['textarea_name' => 'sidebar_card_content[]'])); ?>
+							</div>
+							<div class="rc-card-image-fields" <?php if ($card_type !== 'image') echo 'style="display:none"'; ?>>
+								<p>
+									<label>Image</label><br>
+									<input type="hidden" name="sidebar_card_image_url[]" value="<?php echo esc_attr($card_image); ?>" class="rc-card-image-url" />
+									<button type="button" class="button rc-card-select-image">Select Image</button>
+									<button type="button" class="button rc-card-remove-image" <?php if ($card_image === '') echo 'style="display:none"'; ?>>Remove</button>
+								</p>
+								<?php if ($card_image !== '') : ?>
+								<div class="rc-card-image-preview">
+									<img src="<?php echo esc_url($card_image); ?>" alt="" />
+								</div>
+								<?php else : ?>
+								<div class="rc-card-image-preview"></div>
+								<?php endif; ?>
+								<p>
+									<label>Full card image</label><br>
+									<select name="sidebar_card_full_bleed[]" class="rc-card-full-bleed-select">
+										<option value="0" <?php selected($card_full_bleed, false); ?>>No</option>
+										<option value="1" <?php selected($card_full_bleed, true); ?>>Yes — remove padding and background</option>
+									</select>
+								</p>
+							</div>
+							<p class="rc-card-link-url-field">
+								<label>Link URL</label><br>
+								<input type="text" name="sidebar_card_link_url[]" value="<?php echo esc_attr($card_link); ?>" class="regular-text" placeholder="/page-url or https://..." />
+							</p>
+							<p class="rc-card-link-label-field" <?php if ($card_type === 'image') echo 'style="display:none"'; ?>>
+								<label>Link Label</label><br>
+								<input type="text" name="sidebar_card_link_label[]" value="<?php echo esc_attr($card_label); ?>" class="regular-text" placeholder="Button text" />
+							</p>
+						</div>
+					</div>
+					<?php endforeach; ?>
+				</div>
+				<button type="button" class="button" id="rc-add-sidebar-card">+ Add Card</button>
+
+				<!-- Template for new sidebar cards (JS clones this) -->
+				<template id="rc-sidebar-card-template">
+					<div class="rc-card-panel">
+						<div class="rc-card-header">
+							<span class="rc-card-title-preview">New card</span>
+							<span class="rc-card-type-badge">Text</span>
+							<span class="rc-card-header-actions">
+								<button type="button" class="button-link rc-card-move-up" title="Move up">&uarr;</button>
+								<button type="button" class="button-link rc-card-move-down" title="Move down">&darr;</button>
+								<button type="button" class="button-link rc-card-collapse" title="Collapse">&#9656;</button>
+								<button type="button" class="button-link rc-card-remove" title="Remove">&times;</button>
+							</span>
+						</div>
+						<div class="rc-card-body">
+							<p>
+								<label>Type</label><br>
+								<select name="sidebar_card_type[]" class="rc-card-type-select">
+									<option value="text">Text</option>
+									<option value="image">Image</option>
+								</select>
+							</p>
+							<p>
+								<label>Title</label><br>
+								<input type="text" name="sidebar_card_title[]" value="" class="regular-text rc-card-title-input" />
+							</p>
+							<p>
+								<label>Show title on frontend</label><br>
+								<select name="sidebar_card_show_title[]" class="rc-card-show-title-select">
+									<option value="1" selected>Yes</option>
+									<option value="0">No</option>
+								</select>
+							</p>
+							<div class="rc-card-text-fields">
+								<p><label>Content</label></p>
+								<textarea name="sidebar_card_content[]" class="rc-card-content-textarea" rows="5" style="width:100%"></textarea>
+							</div>
+							<div class="rc-card-image-fields" style="display:none">
+								<p>
+									<label>Image</label><br>
+									<input type="hidden" name="sidebar_card_image_url[]" value="" class="rc-card-image-url" />
+									<button type="button" class="button rc-card-select-image">Select Image</button>
+									<button type="button" class="button rc-card-remove-image" style="display:none">Remove</button>
+								</p>
+								<div class="rc-card-image-preview"></div>
+								<p>
+									<label>Full card image</label><br>
+									<select name="sidebar_card_full_bleed[]" class="rc-card-full-bleed-select">
+										<option value="0" selected>No</option>
+										<option value="1">Yes — remove padding and background</option>
+									</select>
+								</p>
+							</div>
+							<p class="rc-card-link-url-field">
+								<label>Link URL</label><br>
+								<input type="text" name="sidebar_card_link_url[]" value="" class="regular-text" placeholder="/page-url or https://..." />
+							</p>
+							<p class="rc-card-link-label-field">
+								<label>Link Label</label><br>
+								<input type="text" name="sidebar_card_link_label[]" value="" class="regular-text" placeholder="Button text" />
+							</p>
+						</div>
+					</div>
+				</template>
 
 				<!-- Main Navigation -->
 				<h2>Main Navigation</h2>

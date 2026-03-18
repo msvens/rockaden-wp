@@ -6,7 +6,7 @@
   "title": "Sidebar Panel",
   "category": "widgets",
   "icon": "columns",
-  "description": "Renders the sidebar template part with visibility controls.",
+  "description": "Renders sidebar cards from theme settings with visibility controls.",
   "textdomain": "rockaden-theme",
   "supports": {
     "html": false,

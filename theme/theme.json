@@ -168,7 +168,6 @@
   ],
   "templateParts": [
     { "name": "header", "title": "Header", "area": "header" },
-    { "name": "footer", "title": "Footer", "area": "footer" },
-    { "name": "sidebar", "title": "Sidebar", "area": "uncategorized" }
+    { "name": "footer", "title": "Footer", "area": "footer" }
   ]
 }

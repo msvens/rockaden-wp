@@ -901,16 +901,43 @@ html.dark .rockaden-card:hover {
 }
 
 /* --- Right sidebar panel --- */
+.rc-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
 .rc-sidebar .rc-sidebar-card {
   background-color: var(--wp--preset--color--surface-dim);
   border-radius: 0.5rem;
   padding: 0.75rem;
   align-self: stretch;
+  font-size: var(--wp--preset--font-size--small);
 }
 
 .rc-sidebar-card h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
+  font-size: var(--wp--preset--font-size--small);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+}
+
+.rc-sidebar-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
+}
+
+.rc-sidebar .rc-sidebar-card.rc-sidebar-card--full-bleed {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.rc-sidebar-card--full-bleed img {
+  border-radius: 0;
 }
 
 /* Collapse sidebar column when panel is hidden */

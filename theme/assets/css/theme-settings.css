@@ -53,3 +53,112 @@
 .rockaden-add-row {
   margin-top: 0.25em;
 }
+
+/* --- Sidebar card repeater --- */
+#rc-sidebar-cards {
+  margin-bottom: 0.75em;
+}
+
+.rc-card-panel {
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+  margin-bottom: 0.75em;
+  background: #fff;
+}
+
+.rc-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 8px 12px;
+  background: #f6f7f7;
+  border-bottom: 1px solid #c3c4c7;
+  cursor: pointer;
+  user-select: none;
+}
+
+.rc-card-panel .rc-card-body {
+  display: none;
+}
+
+.rc-card-panel.is-expanded .rc-card-body {
+  display: block;
+}
+
+.rc-card-panel:not(.is-expanded) .rc-card-header {
+  border-bottom: none;
+}
+
+.rc-card-title-preview {
+  font-weight: 600;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rc-card-type-badge {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: #dcdcde;
+  color: #50575e;
+  padding: 1px 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.rc-card-header-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.rc-card-header-actions .button-link {
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 6px;
+  color: #50575e;
+  text-decoration: none;
+  border-radius: 3px;
+}
+
+.rc-card-header-actions .button-link:hover {
+  color: #135e96;
+  background: #e0e0e0;
+}
+
+.rc-card-header-actions .rc-card-remove:hover {
+  color: #b32d2e;
+}
+
+.rc-card-body {
+  padding: 12px 16px;
+}
+
+.rc-card-panel.is-collapsed .rc-card-body {
+  display: none;
+}
+
+.rc-card-body label {
+  font-weight: 600;
+}
+
+.rc-card-body .description {
+  font-weight: 400;
+}
+
+.rc-card-image-preview {
+  margin-top: 8px;
+}
+
+.rc-card-image-preview img {
+  max-width: 200px;
+  max-height: 150px;
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+}
+
+#rc-add-sidebar-card {
+  margin-top: 0.25em;
+}
