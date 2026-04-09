@@ -37,9 +37,9 @@
   /* Page dropdown → URL field */
   document.addEventListener('change', function (e) {
     if (!e.target.classList.contains('rockaden-page-select')) return;
-    var row = e.target.closest('.rockaden-nav-row');
-    if (!row) return;
-    var urlInput = row.querySelector('.rockaden-url-input');
+    var container = e.target.closest('.rockaden-nav-row') || e.target.closest('td');
+    if (!container) return;
+    var urlInput = container.querySelector('.rockaden-url-input');
     if (!urlInput) return;
 
     var value = e.target.value;

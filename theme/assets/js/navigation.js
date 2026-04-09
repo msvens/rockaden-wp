@@ -74,6 +74,8 @@
     return row;
   }
 
+  var ctaButton = config.ctaButton || null;
+
   var headerStyle = config.headerStyle || 'contrast';
   var headerDensity = config.headerDensity || 'normal';
   var headerBorderWidth = config.headerBorderWidth || 'thin';
@@ -105,6 +107,15 @@
   });
 
   /* ---- Build actions ---- */
+  // CTA button (always visible, even on mobile).
+  if (ctaButton && ctaButton.url) {
+    var ctaLink = document.createElement('a');
+    ctaLink.href = ctaButton.url;
+    ctaLink.className = 'rockaden-cta-btn';
+    setTranslatedText(ctaLink, ctaButton);
+    actionsContainer.appendChild(ctaLink);
+  }
+
   // "Mer" button (if moreNav has items or dark toggle is shown).
   var moreBtn = null;
   var moreDropdown = null;

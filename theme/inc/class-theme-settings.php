@@ -57,6 +57,9 @@ class Rockaden_Theme_Settings {
 					'full_bleed' => false,
 				],
 			],
+			'cta_label'          => 'Bli medlem',
+			'cta_label_en'       => 'Join',
+			'cta_url'            => '',
 			'main_nav'           => [
 				['label' => 'Nyheter',   'url' => '/'],
 				['label' => 'Kalender',  'url' => '/kalender'],
@@ -86,9 +89,20 @@ class Rockaden_Theme_Settings {
 	 */
 	public static function get_frontend_config(): array {
 		$opts = self::get_options();
+		$cta = [];
+		$cta_url = trim($opts['cta_url']);
+		if ($cta_url !== '') {
+			$cta = [
+				'label'   => $opts['cta_label'],
+				'labelEn' => $opts['cta_label_en'],
+				'url'     => $cta_url,
+			];
+		}
+
 		return [
 			'mainNav'            => $opts['main_nav'],
 			'moreNav'            => $opts['more_nav'],
+			'ctaButton'          => $cta,
 			'showDarkToggle'     => (bool) $opts['show_dark_toggle'],
 			'showHeaderBorder'   => (bool) $opts['show_header_border'],
 			'showLanguageToggle' => (bool) $opts['show_language_toggle'],
@@ -172,6 +186,11 @@ class Rockaden_Theme_Settings {
 		$options['show_header_border']   = ! empty($_POST['show_header_border']);
 		$options['show_dark_toggle']     = ! empty($_POST['show_dark_toggle']);
 		$options['show_language_toggle'] = ! empty($_POST['show_language_toggle']);
+
+		// CTA button.
+		$options['cta_label']    = sanitize_text_field($_POST['cta_label'] ?? 'Bli medlem');
+		$options['cta_label_en'] = sanitize_text_field($_POST['cta_label_en'] ?? 'Join');
+		$options['cta_url']      = sanitize_text_field($_POST['cta_url'] ?? '');
 
 		// Sidebar visibility.
 		$sidebar_value = sanitize_text_field($_POST['sidebar_enabled'] ?? 'none');
@@ -427,6 +446,40 @@ class Rockaden_Theme_Settings {
 								<option value="all" <?php selected($options['sidebar_enabled'], 'all'); ?>>All pages</option>
 							</select>
 							<p class="description">Show the right sidebar panel. Configure cards in the Sidebar Cards section below.</p>
+						</td>
+					</tr>
+				</table>
+
+				<!-- CTA Button -->
+				<h2>CTA Button</h2>
+				<p class="description">A prominent call-to-action button in the header, always visible (including on mobile). Leave the URL empty to hide it.</p>
+				<table class="form-table">
+					<tr>
+						<th scope="row">Label (SV)</th>
+						<td>
+							<input type="text" name="cta_label" value="<?php echo esc_attr($options['cta_label']); ?>" class="regular-text" />
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Label (EN)</th>
+						<td>
+							<input type="text" name="cta_label_en" value="<?php echo esc_attr($options['cta_label_en']); ?>" class="regular-text" />
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Link</th>
+						<td>
+							<input type="text" name="cta_url" value="<?php echo esc_attr($options['cta_url']); ?>" class="regular-text rockaden-url-input" placeholder="/bli-medlem" />
+							<select class="rockaden-page-select" data-target-url="cta_url">
+								<option value="">— Select page —</option>
+								<?php foreach ($pages as $page) : ?>
+									<option value="<?php echo esc_attr(wp_make_link_relative(get_permalink($page))); ?>"
+										<?php selected(wp_make_link_relative(get_permalink($page)), $options['cta_url']); ?>>
+										<?php echo esc_html($page->post_title); ?>
+									</option>
+								<?php endforeach; ?>
+								<option value="__custom__">Custom URL</option>
+							</select>
 						</td>
 					</tr>
 				</table>

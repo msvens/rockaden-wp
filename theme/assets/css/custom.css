@@ -252,6 +252,53 @@ html.dark[data-header-style="contrast"] .rockaden-hamburger-btn:hover {
   gap: 0.5rem;
 }
 
+/* CTA button (always visible, including mobile) */
+.rockaden-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: inherit;
+  font-size: var(--rc-header-font-size);
+  font-weight: 500;
+  color: var(--wp--preset--color--on-surface-muted);
+  background: transparent;
+  border: 1px solid var(--wp--preset--color--border);
+  text-decoration: none;
+  padding: 0.3rem 0.875rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s, background-color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.rockaden-cta-btn:hover {
+  color: var(--wp--preset--color--on-surface);
+  background-color: var(--wp--preset--color--surface-dim);
+  border-color: var(--wp--preset--color--on-surface-muted);
+  text-decoration: none;
+}
+
+/* Contrast header: light text/border on dark background */
+html[data-header-style="contrast"] .rockaden-cta-btn {
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+html[data-header-style="contrast"] .rockaden-cta-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+html.dark[data-header-style="contrast"] .rockaden-cta-btn {
+  color: rgba(241, 245, 249, 0.7);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+html.dark[data-header-style="contrast"] .rockaden-cta-btn:hover {
+  color: #f1f5f9;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
 /* "Mer" button */
 .rockaden-more-btn {
   background: none;

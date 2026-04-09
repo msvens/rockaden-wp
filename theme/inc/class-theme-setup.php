@@ -19,6 +19,7 @@ class Rockaden_Theme_Setup {
 		'Medlemmar'    => 'medlemmar',
 		'Om Rockaden'  => 'om-rockaden',
 		'Kontakt'      => 'kontakt',
+		'Bli medlem'   => 'bli-medlem',
 	];
 
 	/**
