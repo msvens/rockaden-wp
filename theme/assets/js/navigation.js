@@ -9,6 +9,7 @@
   var showDarkToggle = config.showDarkToggle !== false && config.showDarkToggle !== '';
   var showLangToggle = !!config.showLanguageToggle && config.showLanguageToggle !== '0';
   var showBorder = config.showHeaderBorder !== false && config.showHeaderBorder !== '';
+  var docsUrl = config.docsUrl || '';
 
   /* ---- Language helpers ---- */
   function currentLang() {
@@ -119,7 +120,7 @@
   // "Mer" button (if moreNav has items or dark toggle is shown).
   var moreBtn = null;
   var moreDropdown = null;
-  if (moreNav.length > 0 || showDarkToggle || showLangToggle) {
+  if (moreNav.length > 0 || docsUrl || showDarkToggle || showLangToggle) {
     moreBtn = document.createElement('button');
     moreBtn.className = 'rockaden-more-btn';
     moreBtn.setAttribute('aria-expanded', 'false');
@@ -155,8 +156,15 @@
       moreDropdown.appendChild(a);
     });
 
+    if (docsUrl) {
+      var docsLink = document.createElement('a');
+      docsLink.href = docsUrl;
+      setTranslatedText(docsLink, { label: 'Dokumentation', labelEn: 'Documentation' });
+      moreDropdown.appendChild(docsLink);
+    }
+
     if (showDarkToggle || showLangToggle) {
-      if (moreNav.length > 0) {
+      if (moreNav.length > 0 || docsUrl) {
         var divider = document.createElement('div');
         divider.className = 'rockaden-dropdown-divider';
         moreDropdown.appendChild(divider);
@@ -251,6 +259,19 @@
       setTranslatedText(a, item);
       drawerItems.appendChild(a);
     });
+  }
+
+  if (docsUrl) {
+    if (!moreNav.length) {
+      var d1b = document.createElement('div');
+      d1b.className = 'rockaden-drawer-divider';
+      drawerItems.appendChild(d1b);
+    }
+    var drawerDocsLink = document.createElement('a');
+    drawerDocsLink.href = docsUrl;
+    drawerDocsLink.className = 'rockaden-drawer-link';
+    setTranslatedText(drawerDocsLink, { label: 'Dokumentation', labelEn: 'Documentation' });
+    drawerItems.appendChild(drawerDocsLink);
   }
 
   if (showDarkToggle || showLangToggle) {

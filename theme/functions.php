@@ -135,6 +135,48 @@ add_action('init', function (): void {
 });
 
 /**
+ * Register theme documentation pages with the plugin's docs system.
+ */
+add_action('rc_register_docs', function (): void {
+    if (!class_exists('Rockaden\Docs\DocsRegistry')) {
+        return;
+    }
+    $docs_dir = get_theme_file_path('docs/');
+    $entries  = [
+        [
+            'slug'       => 'sidor-och-mallar',
+            'title_sv'   => 'Sidor och mallar',
+            'title_en'   => 'Pages & templates',
+            'section_sv' => 'Tema',
+            'section_en' => 'Theme',
+            'file'       => $docs_dir . 'sidor-och-mallar.html',
+            'order'      => 10,
+        ],
+        [
+            'slug'       => 'innehall',
+            'title_sv'   => 'Innehåll',
+            'title_en'   => 'Content',
+            'section_sv' => 'Tema',
+            'section_en' => 'Theme',
+            'file'       => $docs_dir . 'innehall.html',
+            'order'      => 20,
+        ],
+        [
+            'slug'       => 'installningar',
+            'title_sv'   => 'Inställningar',
+            'title_en'   => 'Settings',
+            'section_sv' => 'Tema',
+            'section_en' => 'Theme',
+            'file'       => $docs_dir . 'installningar.html',
+            'order'      => 30,
+        ],
+    ];
+    foreach ($entries as $entry) {
+        \Rockaden\Docs\DocsRegistry::register($entry);
+    }
+});
+
+/**
  * Register theme blocks.
  */
 add_action('init', function (): void {

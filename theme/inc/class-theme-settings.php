@@ -99,10 +99,18 @@ class Rockaden_Theme_Settings {
 			];
 		}
 
+		// Documentation link.
+		$docs_url = '';
+		$docs_page_id = (int) get_option('rc_docs_page_id', 0);
+		if ($docs_page_id) {
+			$docs_url = get_permalink($docs_page_id);
+		}
+
 		return [
 			'mainNav'            => $opts['main_nav'],
 			'moreNav'            => $opts['more_nav'],
 			'ctaButton'          => $cta,
+			'docsUrl'            => $docs_url,
 			'showDarkToggle'     => (bool) $opts['show_dark_toggle'],
 			'showHeaderBorder'   => (bool) $opts['show_header_border'],
 			'showLanguageToggle' => (bool) $opts['show_language_toggle'],
