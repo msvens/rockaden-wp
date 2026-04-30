@@ -53,8 +53,8 @@ body > .wp-site-blocks {
   min-height: calc(100vh - var(--rc-header-height));
 }
 
-body > .wp-site-blocks > main,
-body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-footer) {
+body > .wp-site-blocks > main:not(.rockaden-landing),
+body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-footer):not(.rockaden-landing) {
   flex: 1;
   padding: 1.5rem 1rem;
 }
@@ -1003,4 +1003,685 @@ html.dark .rockaden-card:hover {
     padding-top: 1.5rem;
     margin-top: 0.5rem;
   }
+}
+
+/* =========================================================
+   Landing page — full-bleed sections, tightened typography
+   ========================================================= */
+
+:root {
+  --rockaden-cta-yellow: #f7c948;
+  --rockaden-cta-yellow-hover: #e0b03a;
+  --rockaden-landing-max: 1280px;
+}
+
+/* Landing main has no default padding (the rule above excludes
+   .rockaden-landing). margin-block-start zeroes WP's global block-gap rule
+   that adds 1.5rem to any non-first child of .wp-site-blocks; the global
+   rule is `:where(.wp-site-blocks) > * { margin-block-start: 1.5rem }` with
+   specificity 0, so this selector (22) wins without !important.
+   overflow-x:clip prevents the hero's 100vw negative-margin breakout from
+   triggering a horizontal scrollbar. */
+body > .wp-site-blocks > main.rockaden-landing {
+  overflow-x: clip;
+  margin-block-start: 0;
+}
+
+/* Section headings: smaller and tighter than the global h2 (2.25rem). */
+.rockaden-landing-why__heading,
+.rockaden-landing-upcoming__heading,
+.rockaden-landing-news-shop__heading {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+@media screen and (min-width: 768px) {
+  .rockaden-landing-why__heading,
+  .rockaden-landing-upcoming__heading,
+  .rockaden-landing-news-shop__heading {
+    font-size: 1.375rem;
+  }
+}
+
+/* --- Hero ---
+   Full-bleed breakout: WP's layout cascade may keep the cover constrained
+   to its parent (post-content / main) even with alignfull, especially when
+   global `:where(.is-layout-constrained)` rules win over our overrides.
+   The negative-margin trick forces the hero to span 100vw regardless of
+   what any parent's max-width says. */
+.rockaden-landing-hero {
+  position: relative;
+  color: #ffffff;
+  min-height: 0;
+}
+
+.rockaden-landing-hero.wp-block-cover {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: 0;
+  padding: 2.5rem 1.5rem;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+@media screen and (min-width: 768px) {
+  .rockaden-landing-hero.wp-block-cover {
+    padding: 3.5rem 2rem;
+  }
+}
+
+/* Override the default 50% black dim with our on-surface theme color so
+   the hero matches the rest of the dark UI without needing overlayColor
+   in block attributes (which causes save/reparse class mismatches). */
+.rockaden-landing-hero .wp-block-cover__background {
+  background-color: var(--wp--preset--color--on-surface);
+}
+
+.rockaden-landing-hero .wp-block-cover__inner-container {
+  max-width: var(--rockaden-landing-max);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.rockaden-landing-hero__title {
+  color: #ffffff;
+  font-size: 1.75rem;
+  font-weight: 300;
+  letter-spacing: 0.015em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .rockaden-landing-hero__title {
+    font-size: 2.25rem;
+  }
+}
+
+.rockaden-landing-hero__subtitle {
+  color: #ffffff;
+  font-size: 0.9375rem;
+  margin: 0.75rem 0 0;
+  max-width: 36rem;
+}
+
+@media screen and (min-width: 768px) {
+  .rockaden-landing-hero__subtitle {
+    font-size: 1.0625rem;
+  }
+}
+
+.rockaden-landing-hero__buttons {
+  margin-top: 1.25rem !important;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.rockaden-landing-hero .rockaden-cta-primary .wp-block-button__link {
+  background-color: var(--rockaden-cta-yellow);
+  color: #1a1a1a;
+  border: 1px solid var(--rockaden-cta-yellow);
+  padding: 0.5rem 1.1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.rockaden-landing-hero .rockaden-cta-primary .wp-block-button__link:hover {
+  background-color: var(--rockaden-cta-yellow-hover);
+  border-color: var(--rockaden-cta-yellow-hover);
+  color: #1a1a1a;
+}
+
+.rockaden-landing-hero .rockaden-cta-outline .wp-block-button__link {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  padding: 0.5rem 1.1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.rockaden-landing-hero .rockaden-cta-outline .wp-block-button__link:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+/* --- Section wrappers (Why / Upcoming / News-Shop) ---
+   Tight padding + zero block-gap between sections so the page fits more on
+   one screen. WP's global rule `:root :where(.is-layout-constrained) > * {
+   margin-block-start: 1.5rem }` would otherwise add 24px between each
+   section; same specificity (10) as our class selector means our later rule
+   wins without !important. A 1px border separates Why from Upcoming since
+   they share the same gray background. */
+.rockaden-landing-why,
+.rockaden-landing-upcoming,
+.rockaden-landing-news-shop {
+  padding: 1rem 1rem;
+  margin-block-start: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .rockaden-landing-why,
+  .rockaden-landing-upcoming,
+  .rockaden-landing-news-shop {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+
+/* --- Why section ---
+   Mobile: stacked (heading, cards, media) via natural block flow.
+   Desktop (≥768px): CSS Grid with two columns (60/40) and two rows.
+   Heading occupies col1/row1, cards occupy col1/row2, media spans col2/rows1-2,
+   so the image fills the full height of (heading + cards). */
+.rockaden-landing-why {
+  /* No section background — sits on the body (white). A hairline at the
+     bottom separates it from the next white section (News+Shop). */
+  border-bottom: 1px solid var(--wp--preset--color--border);
+  padding: 0.75rem 1rem;
+}
+
+@media screen and (min-width: 768px) {
+  .rockaden-landing-why {
+    padding: 1rem 1.5rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .rockaden-landing-why {
+    display: grid;
+    grid-template-columns: 6fr 4fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "heading media"
+      "cards   media";
+    column-gap: 2rem;
+    row-gap: 0.25rem;
+    align-items: start;
+  }
+  .rockaden-landing-why__heading {
+    grid-area: heading;
+    margin: 0;
+    line-height: 1.2;
+  }
+  .rockaden-landing-why__cards {
+    grid-area: cards;
+  }
+  /* On desktop, take the image out of normal flow so its intrinsic height
+     doesn't push the grid rows past (heading + cards). The figure absolutely
+     fills the media cell, which the grid sizes from column 1's content. */
+  .rockaden-landing-why__media {
+    grid-area: media;
+    position: relative;
+    align-self: stretch;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    min-height: 100%;
+  }
+  .rockaden-landing-why__media .rockaden-landing-why__image {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    border-radius: 0;
+  }
+  .rockaden-landing-why__media .rockaden-landing-why__image img {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+}
+
+.rockaden-landing-why__cards {
+  gap: 0.5rem;
+}
+
+.rockaden-feature-card {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.375rem 0.75rem;
+  background-color: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 0.5rem;
+}
+
+.rockaden-feature-card__icon {
+  font-size: 1.25rem;
+  margin: 0;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.rockaden-feature-card__body {
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.rockaden-feature-card__title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.rockaden-feature-card__text {
+  font-size: 0.8125rem;
+  color: var(--wp--preset--color--on-surface-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.rockaden-landing-why__media {
+  margin: 0;
+  display: flex;
+}
+
+.rockaden-landing-why__image {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.rockaden-landing-why__image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  display: block;
+}
+
+/* --- Upcoming events --- */
+.rockaden-landing-upcoming {
+  background-color: var(--wp--preset--color--surface-dim);
+}
+
+.rockaden-upcoming-events__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+
+@media screen and (min-width: 640px) {
+  .rockaden-upcoming-events__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .rockaden-upcoming-events__list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.rockaden-event-card {
+  display: flex;
+  gap: 0.625rem;
+  align-items: flex-start;
+  padding: 0.5rem 0.625rem;
+  background-color: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 0.5rem;
+}
+
+.rockaden-event-card__date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  padding: 0.375rem 0;
+  background-color: var(--wp--preset--color--surface-dim);
+  border-radius: 0.375rem;
+  line-height: 1.1;
+}
+
+.rockaden-event-card__day {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--wp--preset--color--on-surface);
+}
+
+.rockaden-event-card__month {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--wp--preset--color--on-surface-muted);
+}
+
+.rockaden-event-card__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.rockaden-event-card__title {
+  margin: 0 0 0.125rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
+}
+
+.rockaden-event-card__time {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--wp--preset--color--on-surface-muted);
+}
+
+.rockaden-event-card__link {
+  display: inline-block;
+  margin-top: 0.375rem;
+  font-size: 0.8125rem;
+}
+
+.rockaden-event-card--training { border-left: 3px solid var(--wp--preset--color--cat-training); }
+.rockaden-event-card--tournament { border-left: 3px solid var(--wp--preset--color--cat-tournament); }
+.rockaden-event-card--junior { border-left: 3px solid var(--wp--preset--color--cat-junior); }
+.rockaden-event-card--allsvenskan { border-left: 3px solid var(--wp--preset--color--cat-allsvenskan); }
+.rockaden-event-card--skolschack { border-left: 3px solid var(--wp--preset--color--cat-skolschack); }
+
+/* --- News + Shop two-column --- */
+.rockaden-landing-news-shop {
+  background-color: var(--wp--preset--color--surface);
+}
+
+.rockaden-landing-news-shop__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media screen and (min-width: 1024px) {
+  .rockaden-landing-news-shop__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* The grid wrapper (.rockaden-landing-news-shop__grid) is `is-layout-flow`
+   from wp:group's default layout. WP's global rule
+   `:root :where(.is-layout-flow) > * { margin-block-start: 1.5rem }` then
+   adds 1.5rem above every non-first-child sibling — including the __shop
+   column, which is the second grid child. That 24px top margin is what was
+   pushing "Schackmaterial" 24px below "Senaste nyheter". Zero it on both
+   columns so they sit flush with the top of the grid row. */
+.rockaden-landing-news-shop__news,
+.rockaden-landing-news-shop__shop {
+  margin-block-start: 0;
+}
+
+/* Calendar nested inside the news-shop right column: force a vertical stack
+   regardless of viewport (the global rule otherwise switches to 4 columns
+   at ≥1024px, which is too cramped inside a half-width container). */
+.rockaden-landing-news-shop__shop .rockaden-upcoming-events__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Visual breathing room before the secondary heading ("Kommande aktiviteter")
+   when it follows the shop grid in the same column. */
+.rockaden-landing-news-shop__heading--secondary {
+  margin-top: 1.25rem;
+}
+
+/* News list */
+.rockaden-latest-news__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Flex (not grid) so cards without an image don't squeeze the body into a
+   narrow column; the body just claims the whole row. With media, the image
+   becomes a fixed-width sibling and body fills the rest. */
+.rockaden-news-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0.625rem;
+  background-color: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 0.5rem;
+  transition: box-shadow 0.2s;
+}
+
+@media screen and (min-width: 480px) {
+  .rockaden-news-card {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0.875rem;
+  }
+  .rockaden-news-card__media {
+    flex-shrink: 0;
+    width: 6.5rem;
+    align-self: flex-start;
+  }
+}
+
+.rockaden-news-card:hover {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.06);
+}
+
+html.dark .rockaden-news-card:hover {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+}
+
+.rockaden-news-card__media {
+  display: block;
+}
+
+.rockaden-news-card__media img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 0.375rem;
+  display: block;
+}
+
+.rockaden-news-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.rockaden-news-card__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
+}
+
+.rockaden-news-card__title a {
+  color: var(--wp--preset--color--on-surface);
+}
+
+.rockaden-news-card__title a:hover {
+  color: var(--wp--preset--color--primary);
+}
+
+.rockaden-news-card__date {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--wp--preset--color--on-surface-muted);
+}
+
+/* Clamp visible excerpt to 3 lines; the full text remains in the DOM for SEO. */
+.rockaden-news-card__excerpt {
+  margin: 0.125rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--wp--preset--color--on-surface-muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rockaden-news-card__more {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--wp--preset--color--primary);
+  text-decoration: none;
+}
+
+.rockaden-news-card__more::after {
+  content: " →";
+}
+
+.rockaden-news-card__more:hover {
+  text-decoration: underline;
+}
+
+/* Shop list */
+.rockaden-shop-grid__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.rockaden-shop-grid--grid .rockaden-shop-grid__list {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media screen and (min-width: 768px) {
+  .rockaden-shop-grid--grid .rockaden-shop-grid__list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.rockaden-shop-grid--column .rockaden-shop-grid__list {
+  grid-template-columns: 1fr;
+}
+
+@media screen and (min-width: 480px) {
+  .rockaden-shop-grid--column .rockaden-shop-grid__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.rockaden-shop-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--wp--preset--color--surface);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.rockaden-shop-card__media {
+  aspect-ratio: 1 / 1;
+  background-color: var(--wp--preset--color--surface-dim);
+}
+
+.rockaden-shop-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.rockaden-shop-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.625rem 0.75rem 0.75rem;
+}
+
+.rockaden-shop-card__title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+
+.rockaden-shop-card__price {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.rockaden-shop-card__price-original {
+  color: var(--wp--preset--color--on-surface-muted);
+  margin-right: 0.35rem;
+  font-weight: 400;
+}
+
+.rockaden-shop-card__price-sale {
+  color: var(--wp--preset--color--on-surface);
+  font-weight: 600;
+}
+
+.rockaden-shop-card__buy {
+  align-self: flex-start;
+  background-color: var(--rockaden-cta-yellow);
+  color: #1a1a1a;
+  padding: 0.3rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.15s;
+}
+
+.rockaden-shop-card__buy:hover {
+  background-color: var(--rockaden-cta-yellow-hover);
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+/* "More" link shared by all three blocks */
+.rockaden-more-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--wp--preset--color--primary);
+  text-decoration: none;
+}
+
+.rockaden-more-link::after {
+  content: "→";
+  transition: transform 0.15s;
+}
+
+.rockaden-more-link:hover::after {
+  transform: translateX(2px);
+}
+
+.rockaden-latest-news__more,
+.rockaden-shop-grid__more,
+.rockaden-upcoming-events__more {
+  margin-top: 0.625rem;
+  margin-bottom: 0;
 }
