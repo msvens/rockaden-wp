@@ -82,6 +82,14 @@ class Rockaden_Theme_Setup {
 		if ((int) get_option('page_on_front') === 0) {
 			update_option('page_on_front', (int) $page_id);
 		}
+
+		// Wire the Nyheter stub page as WP's "Posts page" so /nyheter/ serves
+		// the post archive (using home.html / index.html). Only set if the
+		// admin hasn't picked a different posts page.
+		$nyheter = get_page_by_path('nyheter');
+		if ($nyheter && (int) get_option('page_for_posts') === 0) {
+			update_option('page_for_posts', (int) $nyheter->ID);
+		}
 	}
 
 	/**
@@ -143,7 +151,7 @@ class Rockaden_Theme_Setup {
 
 		$defaults             = Rockaden_Theme_Settings::defaults();
 		$defaults['main_nav'] = [
-			['label' => 'Nyheter',   'url' => '/'],
+			['label' => 'Nyheter',   'url' => '/nyheter'],
 			['label' => 'Kalender',  'url' => '/kalender'],
 			['label' => 'Träning',   'url' => '/training'],
 			['label' => 'Medlemmar', 'url' => '/medlemmar'],

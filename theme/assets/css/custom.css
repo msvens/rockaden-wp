@@ -1221,7 +1221,7 @@ body > .wp-site-blocks > main.rockaden-landing {
      the natural aspect ratio). object-fit: cover crops the rest. If the
      editor sets an explicit aspect-ratio in the image inspector, that
      applies up to this max-height cap. */
-  max-height: 320px;
+  max-height: 240px;
   object-fit: cover;
   border-radius: 0.5rem;
   display: block;
@@ -1521,14 +1521,12 @@ html.dark .rockaden-news-card:hover {
   }
 }
 
+/* Column variant always single column — cards become horizontal (image
+   left, info right) so the image stays small relative to the card and
+   the section doesn't blow up vertically. Used on the landing page's
+   right-side shop list. */
 .rockaden-shop-grid--column .rockaden-shop-grid__list {
   grid-template-columns: 1fr;
-}
-
-@media screen and (min-width: 480px) {
-  .rockaden-shop-grid--column .rockaden-shop-grid__list {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 .rockaden-shop-card {
@@ -1540,9 +1538,22 @@ html.dark .rockaden-news-card:hover {
   overflow: hidden;
 }
 
+.rockaden-shop-grid--column .rockaden-shop-card {
+  flex-direction: row;
+  align-items: stretch;
+}
+
 .rockaden-shop-card__media {
+  /* Element is an <a> linking to the single page; needs display:block
+     so width / aspect-ratio apply (anchors are inline by default). */
+  display: block;
   aspect-ratio: 1 / 1;
   background-color: var(--wp--preset--color--surface-dim);
+}
+
+.rockaden-shop-grid--column .rockaden-shop-card__media {
+  flex-shrink: 0;
+  width: 5rem;
 }
 
 .rockaden-shop-card__media img {
@@ -1559,12 +1570,27 @@ html.dark .rockaden-news-card:hover {
   padding: 0.625rem 0.75rem 0.75rem;
 }
 
+.rockaden-shop-grid--column .rockaden-shop-card__body {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+}
+
 .rockaden-shop-card__title {
   margin: 0;
   font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.25;
+}
+
+.rockaden-shop-card__title a {
+  color: var(--wp--preset--color--on-surface);
+  text-decoration: none;
+}
+
+.rockaden-shop-card__title a:hover {
+  color: var(--wp--preset--color--primary);
 }
 
 .rockaden-shop-card__price {
@@ -1627,4 +1653,61 @@ html.dark .rockaden-news-card:hover {
 .rockaden-upcoming-events__more {
   margin-top: 0.625rem;
   margin-bottom: 0;
+}
+
+/* =========================================================
+   Shop archive + single page
+   ========================================================= */
+
+.rockaden-archive-shop {
+  padding: 1.5rem 1rem 2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .rockaden-archive-shop {
+    padding: 2rem 1.5rem 3rem;
+  }
+}
+
+.rockaden-archive-shop__heading {
+  margin: 0 0 1.25rem;
+}
+
+.rockaden-single-shop {
+  padding: 1.5rem 1rem 2rem;
+  max-width: 720px;
+}
+
+.rockaden-single-shop__back {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+}
+
+.rockaden-single-shop__back a {
+  color: var(--wp--preset--color--on-surface-muted);
+  text-decoration: none;
+}
+
+.rockaden-single-shop__back a:hover {
+  color: var(--wp--preset--color--primary);
+}
+
+.rockaden-single-shop__title {
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  margin: 0 0 1rem;
+}
+
+.rockaden-single-shop__image {
+  margin: 0 0 1.5rem;
+}
+
+.rockaden-single-shop__image img {
+  width: 100%;
+  height: auto;
+  max-height: 480px;
+  object-fit: contain;
+  display: block;
+  border-radius: 0.5rem;
 }
