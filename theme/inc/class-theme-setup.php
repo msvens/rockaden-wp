@@ -34,6 +34,14 @@ class Rockaden_Theme_Setup {
 	/**
 	 * Create the "Hem" landing page (if absent), pre-fill with landing patterns,
 	 * assign the page-landing template, and set it as the static front page.
+	 *
+	 * Idempotent: every assertion is guarded so this can run on every deploy
+	 * (e.g. wired into rockaden-update.sh) without overwriting admin choices.
+	 *  - Page is only created when missing.
+	 *  - Template is only assigned to a Hem page that has no template yet
+	 *    (so an admin who deliberately changed it isn't reverted).
+	 *  - show_on_front / page_on_front are only set on a fresh install where
+	 *    the admin hasn't picked a different home-page setup.
 	 */
 	private static function create_landing_page(): void {
 		$page = get_page_by_path('hem');
@@ -57,14 +65,23 @@ class Rockaden_Theme_Setup {
 			}
 		} else {
 			$page_id = $page->ID;
-			// Ensure the landing template is assigned even if the page existed.
-			if (get_post_meta($page_id, '_wp_page_template', true) !== 'page-landing') {
+			// Only assign the landing template if the page has none yet —
+			// don't revert an admin's deliberate template change.
+			if (get_post_meta($page_id, '_wp_page_template', true) === '') {
 				update_post_meta($page_id, '_wp_page_template', 'page-landing');
 			}
 		}
 
-		update_option('show_on_front', 'page');
-		update_option('page_on_front', (int) $page_id);
+		// Only set front-page mode if admin hasn't chosen something else
+		// (e.g. left the default "Latest posts" or pointed at a different page).
+		if (get_option('show_on_front') !== 'page') {
+			update_option('show_on_front', 'page');
+		}
+
+		// Only set page_on_front when nothing is set (0 = unset).
+		if ((int) get_option('page_on_front') === 0) {
+			update_option('page_on_front', (int) $page_id);
+		}
 	}
 
 	/**
