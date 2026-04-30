@@ -27,7 +27,73 @@ class Rockaden_Theme_Setup {
 	 */
 	public static function activate(): void {
 		self::create_stub_pages();
+		self::create_landing_page();
 		self::set_default_options();
+	}
+
+	/**
+	 * Create the "Hem" landing page (if absent), pre-fill with landing patterns,
+	 * assign the page-landing template, and set it as the static front page.
+	 */
+	private static function create_landing_page(): void {
+		$page = get_page_by_path('hem');
+
+		if (!$page) {
+			$content = self::build_landing_content();
+
+			$page_id = wp_insert_post([
+				'post_title'   => 'Hem',
+				'post_name'    => 'hem',
+				'post_status'  => 'publish',
+				'post_type'    => 'page',
+				'post_content' => $content,
+				'meta_input'   => [
+					'_wp_page_template' => 'page-landing',
+				],
+			]);
+
+			if (is_wp_error($page_id) || !$page_id) {
+				return;
+			}
+		} else {
+			$page_id = $page->ID;
+			// Ensure the landing template is assigned even if the page existed.
+			if (get_post_meta($page_id, '_wp_page_template', true) !== 'page-landing') {
+				update_post_meta($page_id, '_wp_page_template', 'page-landing');
+			}
+		}
+
+		update_option('show_on_front', 'page');
+		update_option('page_on_front', (int) $page_id);
+	}
+
+	/**
+	 * Concatenate the registered landing patterns into a single block-content string.
+	 */
+	private static function build_landing_content(): string {
+		$slugs = [
+			'rockaden-theme/landing-hero',
+			'rockaden-theme/landing-why',
+			'rockaden-theme/landing-news-and-shop',
+		];
+
+		// Patterns are auto-registered from theme/patterns/ during init; ensure
+		// they're available even if activation runs before that.
+		if (function_exists('_register_theme_block_patterns')) {
+			_register_theme_block_patterns();
+		}
+
+		$registry = \WP_Block_Patterns_Registry::get_instance();
+		$parts    = [];
+
+		foreach ($slugs as $slug) {
+			$pattern = $registry->get_registered($slug);
+			if ($pattern && !empty($pattern['content'])) {
+				$parts[] = $pattern['content'];
+			}
+		}
+
+		return implode("\n\n", $parts);
 	}
 
 	/**

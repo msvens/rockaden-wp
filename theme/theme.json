@@ -164,7 +164,8 @@
     }
   },
   "customTemplates": [
-    { "name": "page-section", "title": "Page (Section Nav)", "postTypes": ["page"] }
+    { "name": "page-section", "title": "Page (Section Nav)", "postTypes": ["page"] },
+    { "name": "page-landing", "title": "Page (Landing)", "postTypes": ["page"] }
   ],
   "templateParts": [
     { "name": "header", "title": "Header", "area": "header" },
