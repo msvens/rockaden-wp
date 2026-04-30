@@ -51,6 +51,16 @@ add_action('wp_enqueue_scripts', function (): void {
 });
 
 /**
+ * Load custom.css inside the block editor canvas so the editor renders
+ * landing-page sections (and other custom layouts) the same way as the
+ * frontend. Without this, editors see raw stacked blocks and can't
+ * predict the final layout.
+ */
+add_action('after_setup_theme', function (): void {
+    add_editor_style('assets/css/custom.css');
+});
+
+/**
  * Enqueue dark mode toggle script.
  */
 add_action('wp_enqueue_scripts', function (): void {

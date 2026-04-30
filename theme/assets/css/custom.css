@@ -1029,7 +1029,6 @@ body > .wp-site-blocks > main.rockaden-landing {
 
 /* Section headings: smaller and tighter than the global h2 (2.25rem). */
 .rockaden-landing-why__heading,
-.rockaden-landing-upcoming__heading,
 .rockaden-landing-news-shop__heading {
   font-size: 1.25rem;
   font-weight: 500;
@@ -1040,7 +1039,6 @@ body > .wp-site-blocks > main.rockaden-landing {
 
 @media screen and (min-width: 768px) {
   .rockaden-landing-why__heading,
-  .rockaden-landing-upcoming__heading,
   .rockaden-landing-news-shop__heading {
     font-size: 1.375rem;
   }
@@ -1164,7 +1162,6 @@ body > .wp-site-blocks > main.rockaden-landing {
    wins without !important. A 1px border separates Why from Upcoming since
    they share the same gray background. */
 .rockaden-landing-why,
-.rockaden-landing-upcoming,
 .rockaden-landing-news-shop {
   padding: 1rem 1rem;
   margin-block-start: 0;
@@ -1172,7 +1169,6 @@ body > .wp-site-blocks > main.rockaden-landing {
 
 @media screen and (min-width: 768px) {
   .rockaden-landing-why,
-  .rockaden-landing-upcoming,
   .rockaden-landing-news-shop {
     padding: 1.25rem 1.5rem;
   }
@@ -1180,10 +1176,10 @@ body > .wp-site-blocks > main.rockaden-landing {
 
 
 /* --- Why section ---
-   Mobile: stacked (heading, cards, media) via natural block flow.
-   Desktop (≥768px): CSS Grid with two columns (60/40) and two rows.
-   Heading occupies col1/row1, cards occupy col1/row2, media spans col2/rows1-2,
-   so the image fills the full height of (heading + cards). */
+   Layout is native wp:columns (60/40). align-items: stretch is the column
+   default, so both columns share the taller column's height. Heading sits
+   inside the left column above the cards (so the image's top edge lines
+   up with the heading). On mobile (≤782px), wp:columns stacks naturally. */
 .rockaden-landing-why {
   /* No section background — sits on the body (white). A hairline at the
      bottom separates it from the next white section (News+Shop). */
@@ -1197,52 +1193,38 @@ body > .wp-site-blocks > main.rockaden-landing {
   }
 }
 
-@media screen and (min-width: 768px) {
-  .rockaden-landing-why {
-    display: grid;
-    grid-template-columns: 6fr 4fr;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-      "heading media"
-      "cards   media";
-    column-gap: 2rem;
-    row-gap: 0.25rem;
-    align-items: start;
-  }
-  .rockaden-landing-why__heading {
-    grid-area: heading;
-    margin: 0;
-    line-height: 1.2;
-  }
-  .rockaden-landing-why__cards {
-    grid-area: cards;
-  }
-  /* On desktop, take the image out of normal flow so its intrinsic height
-     doesn't push the grid rows past (heading + cards). The figure absolutely
-     fills the media cell, which the grid sizes from column 1's content. */
-  .rockaden-landing-why__media {
-    grid-area: media;
-    position: relative;
-    align-self: stretch;
-    overflow: hidden;
-    border-radius: 0.5rem;
-    min-height: 100%;
-  }
-  .rockaden-landing-why__media .rockaden-landing-why__image {
-    position: absolute;
-    inset: 0;
-    margin: 0;
-    border-radius: 0;
-  }
-  .rockaden-landing-why__media .rockaden-landing-why__image img {
-    width: 100%;
-    height: 100%;
-    border-radius: 0;
-  }
+/* Tight sibling spacing inside the cards column (heading + 3 cards). WP's
+   global block-gap is 1.5rem; same selector specificity (10) as our
+   rule means our later rule wins without !important. */
+.rockaden-landing-why__cards-col > * + * {
+  margin-block-start: 0.5rem;
 }
 
-.rockaden-landing-why__cards {
-  gap: 0.5rem;
+/* Right column is a flex container so the image figure can stretch
+   vertically to match the column height (which equals the cards column). */
+.rockaden-landing-why__media-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.rockaden-landing-why__media-col > .rockaden-landing-why__image {
+  flex: 1;
+  margin: 0;
+  min-height: 0;
+}
+
+.rockaden-landing-why__media-col > .rockaden-landing-why__image img {
+  width: 100%;
+  height: 100%;
+  /* Cap the image height so the section doesn't grow unboundedly on very
+     wide viewports (where 40% of the section becomes a tall image due to
+     the natural aspect ratio). object-fit: cover crops the rest. If the
+     editor sets an explicit aspect-ratio in the image inspector, that
+     applies up to this max-height cap. */
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  display: block;
 }
 
 .rockaden-feature-card {
@@ -1283,30 +1265,7 @@ body > .wp-site-blocks > main.rockaden-landing {
   line-height: 1.4;
 }
 
-.rockaden-landing-why__media {
-  margin: 0;
-  display: flex;
-}
-
-.rockaden-landing-why__image {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.rockaden-landing-why__image img {
-  width: 100%;
-  height: 100%;
-  border-radius: 0.5rem;
-  object-fit: cover;
-  display: block;
-}
-
 /* --- Upcoming events --- */
-.rockaden-landing-upcoming {
-  background-color: var(--wp--preset--color--surface-dim);
-}
-
 .rockaden-upcoming-events__list {
   list-style: none;
   margin: 0;
@@ -1395,50 +1354,34 @@ body > .wp-site-blocks > main.rockaden-landing {
 .rockaden-event-card--allsvenskan { border-left: 3px solid var(--wp--preset--color--cat-allsvenskan); }
 .rockaden-event-card--skolschack { border-left: 3px solid var(--wp--preset--color--cat-skolschack); }
 
-/* --- News + Shop two-column --- */
+/* --- News + Shop two-column ---
+   Layout is native wp:columns (50/50, stacks below 782px by default). */
 .rockaden-landing-news-shop {
   background-color: var(--wp--preset--color--surface);
 }
 
-.rockaden-landing-news-shop__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.25rem;
-  align-items: start;
-}
-
-@media screen and (min-width: 1024px) {
-  .rockaden-landing-news-shop__grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-  }
-}
-
-/* The grid wrapper (.rockaden-landing-news-shop__grid) is `is-layout-flow`
-   from wp:group's default layout. WP's global rule
-   `:root :where(.is-layout-flow) > * { margin-block-start: 1.5rem }` then
-   adds 1.5rem above every non-first-child sibling — including the __shop
-   column, which is the second grid child. That 24px top margin is what was
-   pushing "Schackmaterial" 24px below "Senaste nyheter". Zero it on both
-   columns so they sit flush with the top of the grid row. */
-.rockaden-landing-news-shop__news,
-.rockaden-landing-news-shop__shop {
-  margin-block-start: 0;
+/* Tight sibling spacing inside each column (heading + content blocks).
+   Default WP block-gap (1.5rem) is too loose for the section padding we
+   use; same specificity wins via source order. */
+.rockaden-landing-news-shop__news > * + *,
+.rockaden-landing-news-shop__shop > * + * {
+  margin-block-start: 0.75rem;
 }
 
 /* Calendar nested inside the news-shop right column: force a vertical stack
-   regardless of viewport (the global rule otherwise switches to 4 columns
-   at ≥1024px, which is too cramped inside a half-width container). */
+   regardless of viewport (the global events rule otherwise switches to 4
+   columns at ≥1024px, which is too cramped inside a half-width container). */
 .rockaden-landing-news-shop__shop .rockaden-upcoming-events__list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-/* Visual breathing room before the secondary heading ("Kommande aktiviteter")
-   when it follows the shop grid in the same column. */
-.rockaden-landing-news-shop__heading--secondary {
-  margin-top: 1.25rem;
+/* Extra breathing room before the secondary heading ("Kommande aktiviteter")
+   that follows the shop grid in the same column. Higher specificity (20)
+   than the > * + * override (10) so this beats it cleanly. */
+.rockaden-landing-news-shop__shop > .rockaden-landing-news-shop__heading--secondary {
+  margin-block-start: 1.25rem;
 }
 
 /* News list */
