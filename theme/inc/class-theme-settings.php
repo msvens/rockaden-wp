@@ -24,7 +24,6 @@ class Rockaden_Theme_Settings {
 			'show_header_border'   => true,
 			'show_dark_toggle'     => true,
 			'show_language_toggle' => true,
-			'sidebar_enabled'      => 'none',
 			'sidebar_cards'        => [
 				[
 					'type'       => 'text',
@@ -200,12 +199,6 @@ class Rockaden_Theme_Settings {
 		$options['cta_label_en'] = sanitize_text_field($_POST['cta_label_en'] ?? 'Join');
 		$options['cta_url']      = sanitize_text_field($_POST['cta_url'] ?? '');
 
-		// Sidebar visibility.
-		$sidebar_value = sanitize_text_field($_POST['sidebar_enabled'] ?? 'none');
-		$options['sidebar_enabled'] = in_array($sidebar_value, ['none', 'landing', 'all'], true)
-			? $sidebar_value
-			: 'none';
-
 		// Sidebar cards.
 		$options['sidebar_cards'] = self::sanitize_sidebar_cards(
 			$_POST['sidebar_card_type'] ?? [],
@@ -305,11 +298,15 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
-	 * Render page display meta box (title visibility + sidebar override).
+	 * Render page display meta box (title visibility + sidebar opt-in).
+	 *
+	 * The sidebar checkbox only matters on pages whose template includes the
+	 * sidebar-panel block in templateMode (currently `index.html` and
+	 * `page.html`). Manually-inserted sidebar blocks render unconditionally.
 	 */
 	public static function render_page_display_meta_box(\WP_Post $post): void {
-		$hide_title = get_post_meta($post->ID, 'rc_hide_title', true);
-		$sidebar    = get_post_meta($post->ID, 'rc_sidebar_override', true);
+		$hide_title   = get_post_meta($post->ID, 'rc_hide_title', true);
+		$show_sidebar = get_post_meta($post->ID, 'rc_show_sidebar', true);
 		wp_nonce_field('rc_page_display_save', 'rc_page_display_nonce');
 		?>
 		<p>
@@ -320,12 +317,16 @@ class Rockaden_Theme_Settings {
 			</label>
 		</p>
 		<p>
-			<label for="rc_sidebar_override"><strong>Sidebar</strong></label><br>
-			<select name="rc_sidebar_override" id="rc_sidebar_override" style="width:100%">
-				<option value="" <?php selected($sidebar, ''); ?>>Default (use global setting)</option>
-				<option value="show" <?php selected($sidebar, 'show'); ?>>Show</option>
-				<option value="hide" <?php selected($sidebar, 'hide'); ?>>Hide</option>
-			</select>
+			<label>
+				<input type="checkbox" name="rc_show_sidebar" value="1"
+					<?php checked($show_sidebar, '1'); ?> />
+				Show sidebar on this page
+			</label>
+			<br>
+			<span class="description">
+				Only affects pages that include the Sidebar Panel block via the theme template
+				(news archive, default Page template). Manually inserted sidebar blocks always show.
+			</span>
 		</p>
 		<?php
 	}
@@ -354,12 +355,11 @@ class Rockaden_Theme_Settings {
 			delete_post_meta($post_id, 'rc_hide_title');
 		}
 
-		// Sidebar override.
-		$sidebar = sanitize_text_field($_POST['rc_sidebar_override'] ?? '');
-		if (in_array($sidebar, ['show', 'hide'], true)) {
-			update_post_meta($post_id, 'rc_sidebar_override', $sidebar);
+		// Show sidebar opt-in.
+		if (! empty($_POST['rc_show_sidebar'])) {
+			update_post_meta($post_id, 'rc_show_sidebar', '1');
 		} else {
-			delete_post_meta($post_id, 'rc_sidebar_override');
+			delete_post_meta($post_id, 'rc_show_sidebar');
 		}
 	}
 
@@ -443,17 +443,6 @@ class Rockaden_Theme_Settings {
 									<?php checked($options['show_language_toggle']); ?> />
 								Show the SV/EN language switcher in the Mer menu
 							</label>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">Sidebar</th>
-						<td>
-							<select name="sidebar_enabled">
-								<option value="none" <?php selected($options['sidebar_enabled'], 'none'); ?>>Disabled</option>
-								<option value="landing" <?php selected($options['sidebar_enabled'], 'landing'); ?>>Landing page only</option>
-								<option value="all" <?php selected($options['sidebar_enabled'], 'all'); ?>>All pages</option>
-							</select>
-							<p class="description">Show the right sidebar panel. Configure cards in the Sidebar Cards section below.</p>
 						</td>
 					</tr>
 				</table>
