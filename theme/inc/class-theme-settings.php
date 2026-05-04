@@ -298,6 +298,66 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
+	 * Theme-defined routes that are not WP Pages (CPT archives etc.) but
+	 * which an admin may want to link to from the navigation.
+	 *
+	 * @return array<int, array{label: string, url: string}>
+	 */
+	private static function theme_routes(): array {
+		return [
+			['label' => 'Schackmaterial (shop)', 'url' => '/schackmaterial/'],
+		];
+	}
+
+	/**
+	 * Render the page/route selector dropdown for nav rows and the CTA URL.
+	 *
+	 * Emits a <select> with three groups: Pages, Theme routes, and a
+	 * "Custom URL" option that lets the editor type a free-form URL into
+	 * the paired text input. The current value is matched against known
+	 * options; if no match, "Custom URL" is selected.
+	 *
+	 * @param array<int, \WP_Post> $pages         Pages from get_pages().
+	 * @param string               $current_url   Currently saved URL.
+	 * @param string               $select_class  Class on the <select>.
+	 */
+	private static function render_page_select(array $pages, string $current_url, string $select_class = 'rockaden-page-select'): void {
+		$normalized_current = $current_url;
+		$known              = [];
+		foreach ($pages as $page) {
+			$known[] = wp_make_link_relative(get_permalink($page));
+		}
+		foreach (self::theme_routes() as $route) {
+			$known[] = $route['url'];
+		}
+		$is_custom = $current_url !== '' && ! in_array($normalized_current, $known, true);
+		?>
+		<select class="<?php echo esc_attr($select_class); ?>">
+			<option value="">— Select page —</option>
+			<optgroup label="Pages">
+				<?php foreach ($pages as $page) :
+					$page_url = wp_make_link_relative(get_permalink($page));
+				?>
+					<option value="<?php echo esc_attr($page_url); ?>"
+						<?php selected($page_url, $current_url); ?>>
+						<?php echo esc_html($page->post_title); ?>
+					</option>
+				<?php endforeach; ?>
+			</optgroup>
+			<optgroup label="Theme routes">
+				<?php foreach (self::theme_routes() as $route) : ?>
+					<option value="<?php echo esc_attr($route['url']); ?>"
+						<?php selected($route['url'], $current_url); ?>>
+						<?php echo esc_html($route['label']); ?>
+					</option>
+				<?php endforeach; ?>
+			</optgroup>
+			<option value="__custom__" <?php selected($is_custom); ?>>Custom URL</option>
+		</select>
+		<?php
+	}
+
+	/**
 	 * Register page display meta box on pages.
 	 */
 	public static function register_page_display_meta_box(): void {
@@ -459,18 +519,9 @@ class Rockaden_Theme_Settings {
 					</tr>
 					<tr>
 						<th scope="row">Link</th>
-						<td>
+						<td class="rockaden-url-cell">
+							<?php self::render_page_select($pages, $options['cta_url']); ?>
 							<input type="text" name="cta_url" value="<?php echo esc_attr($options['cta_url']); ?>" class="regular-text rockaden-url-input" placeholder="/bli-medlem" />
-							<select class="rockaden-page-select" data-target-url="cta_url">
-								<option value="">— Select page —</option>
-								<?php foreach ($pages as $page) : ?>
-									<option value="<?php echo esc_attr(wp_make_link_relative(get_permalink($page))); ?>"
-										<?php selected(wp_make_link_relative(get_permalink($page)), $options['cta_url']); ?>>
-										<?php echo esc_html($page->post_title); ?>
-									</option>
-								<?php endforeach; ?>
-								<option value="__custom__">Custom URL</option>
-							</select>
 						</td>
 					</tr>
 				</table>
@@ -676,19 +727,10 @@ class Rockaden_Theme_Settings {
 							<input type="text" name="main_nav_label_en[]"
 								value="<?php echo esc_attr($item['labelEn'] ?? ''); ?>"
 								placeholder="Label (EN)" class="regular-text rockaden-label-en-input" />
+							<?php self::render_page_select($pages, $item['url']); ?>
 							<input type="text" name="main_nav_url[]"
 								value="<?php echo esc_attr($item['url']); ?>"
 								placeholder="/url" class="regular-text rockaden-url-input" />
-							<select class="rockaden-page-select">
-								<option value="">— Select page —</option>
-								<?php foreach ($pages as $page) : ?>
-									<option value="<?php echo esc_attr(wp_make_link_relative(get_permalink($page))); ?>"
-										<?php selected(wp_make_link_relative(get_permalink($page)), $item['url']); ?>>
-										<?php echo esc_html($page->post_title); ?>
-									</option>
-								<?php endforeach; ?>
-								<option value="__custom__">Custom URL</option>
-							</select>
 							<button type="button" class="button rockaden-remove-row">&times;</button>
 						</div>
 					<?php endforeach; ?>
@@ -707,19 +749,10 @@ class Rockaden_Theme_Settings {
 							<input type="text" name="more_nav_label_en[]"
 								value="<?php echo esc_attr($item['labelEn'] ?? ''); ?>"
 								placeholder="Label (EN)" class="regular-text rockaden-label-en-input" />
+							<?php self::render_page_select($pages, $item['url']); ?>
 							<input type="text" name="more_nav_url[]"
 								value="<?php echo esc_attr($item['url']); ?>"
 								placeholder="/url" class="regular-text rockaden-url-input" />
-							<select class="rockaden-page-select">
-								<option value="">— Select page —</option>
-								<?php foreach ($pages as $page) : ?>
-									<option value="<?php echo esc_attr(wp_make_link_relative(get_permalink($page))); ?>"
-										<?php selected(wp_make_link_relative(get_permalink($page)), $item['url']); ?>>
-										<?php echo esc_html($page->post_title); ?>
-									</option>
-								<?php endforeach; ?>
-								<option value="__custom__">Custom URL</option>
-							</select>
 							<button type="button" class="button rockaden-remove-row">&times;</button>
 						</div>
 					<?php endforeach; ?>
@@ -734,16 +767,8 @@ class Rockaden_Theme_Settings {
 				<div class="rockaden-nav-row">
 					<input type="text" name="" placeholder="Label (SV)" class="regular-text" />
 					<input type="text" name="" placeholder="Label (EN)" class="regular-text rockaden-label-en-input" />
+					<?php self::render_page_select($pages, ''); ?>
 					<input type="text" name="" placeholder="/url" class="regular-text rockaden-url-input" />
-					<select class="rockaden-page-select">
-						<option value="">— Select page —</option>
-						<?php foreach ($pages as $page) : ?>
-							<option value="<?php echo esc_attr(wp_make_link_relative(get_permalink($page))); ?>">
-								<?php echo esc_html($page->post_title); ?>
-							</option>
-						<?php endforeach; ?>
-						<option value="__custom__">Custom URL</option>
-					</select>
 					<button type="button" class="button rockaden-remove-row">&times;</button>
 				</div>
 			</template>

@@ -32,8 +32,22 @@
 }
 
 .rockaden-nav-row .rockaden-page-select {
-  width: 180px;
+  width: 220px;
   flex: 0 0 auto;
+}
+
+/* URL inputs are hidden by default — JS reveals them when "Custom URL"
+   is the active option in the paired select. */
+.rockaden-url-input {
+  display: none;
+}
+
+.rockaden-url-input.is-visible {
+  display: inline-block;
+}
+
+.rockaden-url-cell .rockaden-page-select {
+  width: 220px;
 }
 
 .rockaden-nav-row .rockaden-remove-row {

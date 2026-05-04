@@ -19,6 +19,7 @@
 
       var clone = template.content.cloneNode(true);
       var inputs = clone.querySelectorAll('input');
+      // Order in template: label SV, label EN, url
       if (inputs[0]) inputs[0].name = prefix + '_label[]';
       if (inputs[1]) inputs[1].name = prefix + '_label_en[]';
       if (inputs[2]) inputs[2].name = prefix + '_url[]';
@@ -34,19 +35,55 @@
     }
   });
 
-  /* Page dropdown → URL field */
+  /* Page dropdown → URL field
+     - Picking a Page or theme route writes that URL into the (hidden)
+       url input and keeps it hidden.
+     - Picking "Custom URL" reveals the url input for free typing. */
   document.addEventListener('change', function (e) {
     if (!e.target.classList.contains('rockaden-page-select')) return;
-    var container = e.target.closest('.rockaden-nav-row') || e.target.closest('td');
+    syncRowFromSelect(e.target);
+  });
+
+  function syncRowFromSelect(select) {
+    var container = select.closest('.rockaden-nav-row') || select.closest('.rockaden-url-cell') || select.closest('td');
     if (!container) return;
     var urlInput = container.querySelector('.rockaden-url-input');
     if (!urlInput) return;
 
-    var value = e.target.value;
-    if (value && value !== '__custom__') {
+    var value = select.value;
+    if (value === '__custom__') {
+      urlInput.classList.add('is-visible');
+      // Only clear/focus on user interaction, not initial sync.
+      if (select.dataset.userTouched === '1') {
+        urlInput.value = '';
+        urlInput.focus();
+      }
+    } else if (value === '') {
+      urlInput.classList.remove('is-visible');
+      urlInput.value = '';
+    } else {
       urlInput.value = value;
+      urlInput.classList.remove('is-visible');
+    }
+  }
+
+  /* Mark selects as user-touched on real interaction (so init sync
+     doesn't trigger the focus/clear behavior). */
+  document.addEventListener('mousedown', function (e) {
+    if (e.target.classList.contains('rockaden-page-select')) {
+      e.target.dataset.userTouched = '1';
     }
   });
+  document.addEventListener('keydown', function (e) {
+    if (e.target.classList.contains('rockaden-page-select')) {
+      e.target.dataset.userTouched = '1';
+    }
+  });
+
+  /* Init: for each existing row, sync URL input visibility to match
+     the dropdown's selected option. PHP has already selected
+     "Custom URL" if the saved URL doesn't match a known option. */
+  document.querySelectorAll('.rockaden-page-select').forEach(syncRowFromSelect);
 
   /* ================================================================
      Sidebar card repeater
