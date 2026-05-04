@@ -84,10 +84,12 @@ class Rockaden_Theme_Setup {
 		}
 
 		// Wire the Nyheter stub page as WP's "Posts page" so /nyheter/ serves
-		// the post archive (using home.html / index.html). Only set if the
-		// admin hasn't picked a different posts page.
+		// the post archive (using home.html / index.html). Asserted on every
+		// activate() run — page_for_posts is theme-owned routing, not an
+		// editor-facing choice, so no guard against existing values. This is
+		// also self-healing if the option ever points at a deleted/orphan page.
 		$nyheter = get_page_by_path('nyheter');
-		if ($nyheter && (int) get_option('page_for_posts') === 0) {
+		if ($nyheter) {
 			update_option('page_for_posts', (int) $nyheter->ID);
 		}
 	}
