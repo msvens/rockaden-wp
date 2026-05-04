@@ -2,45 +2,52 @@
 /**
  * Sidebar Panel block — server render.
  *
- * Checks global sidebar visibility setting and per-page override,
- * then renders sidebar cards from the rockaden_theme_options option.
+ * Visibility rules:
+ * - When the block is in a template (templateMode: true), it's gated by the
+ *   per-route admin toggle in Appearance → Rockaden → Sidebar Visibility.
+ *   Each auto-generated route (home/news archive, single post, shop archive,
+ *   single shop item) has its own checkbox.
+ * - When the block is inserted directly into page content (templateMode: false,
+ *   the default), it always renders if cards are configured. The admin chose
+ *   to place it; no separate opt-in needed.
+ *
+ * In both cases, when the block must render hidden, we emit an empty
+ * `.rc-sidebar-panel--hidden` placeholder so the existing `:has()` CSS in
+ * custom.css collapses the parent sidebar column on templated pages.
+ *
+ * @var array<string, mixed> $attributes Block attributes.
  */
 
 defined('ABSPATH') || exit;
 
-$options          = Rockaden_Theme_Settings::get_options();
-$sidebar_enabled  = $options['sidebar_enabled'] ?? 'none';
-$post_id          = get_the_ID();
-$page_override    = $post_id ? get_post_meta($post_id, 'rc_sidebar_override', true) : '';
+$template_mode = ! empty($attributes['templateMode']);
 
-// Determine visibility: per-page override wins over global setting.
-if ($page_override === 'show') {
-	$visible = true;
-} elseif ($page_override === 'hide') {
-	$visible = false;
-} else {
-	// Global setting.
-	switch ($sidebar_enabled) {
-		case 'all':
-			$visible = true;
-			break;
-		case 'landing':
-			$visible = is_front_page();
-			break;
-		default: // 'none'
-			$visible = false;
-			break;
+if ($template_mode) {
+	$route_key = null;
+	if (is_home()) {
+		$route_key = 'home';
+	} elseif (is_singular('post')) {
+		$route_key = 'single_post';
+	} elseif (is_post_type_archive('rc_shop_item')) {
+		$route_key = 'shop_archive';
+	} elseif (is_singular('rc_shop_item')) {
+		$route_key = 'single_shop_item';
+	}
+
+	$routes = Rockaden_Theme_Settings::get_options()['sidebar_routes'] ?? [];
+	$show   = $route_key && ! empty($routes[$route_key]);
+
+	if (! $show) {
+		echo '<div class="rc-sidebar-panel--hidden" hidden></div>';
+		return;
 	}
 }
 
-if (! $visible) {
-	echo '<div class="rc-sidebar-panel--hidden" hidden></div>';
-	return;
-}
-
-$cards = $options['sidebar_cards'] ?? [];
+$cards = Rockaden_Theme_Settings::get_options()['sidebar_cards'] ?? [];
 
 if (empty($cards)) {
+	// No cards configured — emit the hidden placeholder so a templated
+	// column still collapses cleanly.
 	echo '<div class="rc-sidebar-panel--hidden" hidden></div>';
 	return;
 }

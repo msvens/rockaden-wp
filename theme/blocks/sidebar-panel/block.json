@@ -2,15 +2,20 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "rockaden/sidebar-panel",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "title": "Sidebar Panel",
   "category": "widgets",
   "icon": "columns",
-  "description": "Renders sidebar cards from theme settings with visibility controls.",
+  "description": "Sidebar cards configured under Appearance → Rockaden. Insert anywhere on a page; on templated pages (index.html, page.html) it's gated by the per-page \"Show sidebar\" checkbox.",
   "textdomain": "rockaden-theme",
+  "attributes": {
+    "templateMode": {
+      "type": "boolean",
+      "default": false
+    }
+  },
   "supports": {
     "html": false,
-    "inserter": false,
     "align": false
   },
   "render": "file:./render.php"

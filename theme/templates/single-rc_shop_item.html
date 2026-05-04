@@ -2,17 +2,28 @@
 
 <!-- wp:group {"tagName":"main","className":"rockaden-single-shop","layout":{"type":"constrained"}} -->
 <main class="wp-block-group rockaden-single-shop">
+  <!-- wp:columns {"className":"rc-content-columns","style":{"spacing":{"blockGap":{"left":"2rem"}}}} -->
+  <div class="wp-block-columns rc-content-columns">
+    <!-- wp:column {"width":"75%"} -->
+    <div class="wp-block-column" style="flex-basis:75%">
+      <!-- wp:paragraph {"className":"rockaden-single-shop__back"} -->
+      <p class="rockaden-single-shop__back"><a href="/schackmaterial/">← Handla</a></p>
+      <!-- /wp:paragraph -->
 
-  <!-- wp:paragraph {"className":"rockaden-single-shop__back"} -->
-  <p class="rockaden-single-shop__back"><a href="/schackmaterial/">← Handla</a></p>
-  <!-- /wp:paragraph -->
+      <!-- wp:post-title {"level":1,"className":"rockaden-single-shop__title"} /-->
 
-  <!-- wp:post-title {"level":1,"className":"rockaden-single-shop__title"} /-->
+      <!-- wp:post-featured-image {"className":"rockaden-single-shop__image"} /-->
 
-  <!-- wp:post-featured-image {"className":"rockaden-single-shop__image"} /-->
-
-  <!-- wp:post-content {"layout":{"type":"constrained"}} /-->
-
+      <!-- wp:post-content {"layout":{"type":"constrained"}} /-->
+    </div>
+    <!-- /wp:column -->
+    <!-- wp:column {"width":"25%","className":"rc-sidebar-column"} -->
+    <div class="wp-block-column rc-sidebar-column" style="flex-basis:25%">
+      <!-- wp:rockaden/sidebar-panel {"templateMode":true} /-->
+    </div>
+    <!-- /wp:column -->
+  </div>
+  <!-- /wp:columns -->
 </main>
 <!-- /wp:group -->
 

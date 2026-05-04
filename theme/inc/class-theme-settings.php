@@ -24,7 +24,6 @@ class Rockaden_Theme_Settings {
 			'show_header_border'   => true,
 			'show_dark_toggle'     => true,
 			'show_language_toggle' => true,
-			'sidebar_enabled'      => 'none',
 			'sidebar_cards'        => [
 				[
 					'type'       => 'text',
@@ -56,6 +55,12 @@ class Rockaden_Theme_Settings {
 					'image_url'  => '',
 					'full_bleed' => false,
 				],
+			],
+			'sidebar_routes'     => [
+				'home'             => false,
+				'single_post'      => false,
+				'shop_archive'     => false,
+				'single_shop_item' => false,
 			],
 			'cta_label'          => 'Bli medlem',
 			'cta_label_en'       => 'Join',
@@ -200,11 +205,13 @@ class Rockaden_Theme_Settings {
 		$options['cta_label_en'] = sanitize_text_field($_POST['cta_label_en'] ?? 'Join');
 		$options['cta_url']      = sanitize_text_field($_POST['cta_url'] ?? '');
 
-		// Sidebar visibility.
-		$sidebar_value = sanitize_text_field($_POST['sidebar_enabled'] ?? 'none');
-		$options['sidebar_enabled'] = in_array($sidebar_value, ['none', 'landing', 'all'], true)
-			? $sidebar_value
-			: 'none';
+		// Sidebar route toggles.
+		$options['sidebar_routes'] = [
+			'home'             => ! empty($_POST['sidebar_route_home']),
+			'single_post'      => ! empty($_POST['sidebar_route_single_post']),
+			'shop_archive'     => ! empty($_POST['sidebar_route_shop_archive']),
+			'single_shop_item' => ! empty($_POST['sidebar_route_single_shop_item']),
+		];
 
 		// Sidebar cards.
 		$options['sidebar_cards'] = self::sanitize_sidebar_cards(
@@ -305,11 +312,14 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
-	 * Render page display meta box (title visibility + sidebar override).
+	 * Render page display meta box (title visibility).
+	 *
+	 * Sidebar visibility on auto-generated routes is controlled globally via
+	 * Appearance → Rockaden → Sidebar settings. To put a sidebar on a regular
+	 * Page, insert the Sidebar Panel block directly into the page content.
 	 */
 	public static function render_page_display_meta_box(\WP_Post $post): void {
 		$hide_title = get_post_meta($post->ID, 'rc_hide_title', true);
-		$sidebar    = get_post_meta($post->ID, 'rc_sidebar_override', true);
 		wp_nonce_field('rc_page_display_save', 'rc_page_display_nonce');
 		?>
 		<p>
@@ -318,14 +328,6 @@ class Rockaden_Theme_Settings {
 					<?php checked($hide_title, '1'); ?> />
 				Hide page title
 			</label>
-		</p>
-		<p>
-			<label for="rc_sidebar_override"><strong>Sidebar</strong></label><br>
-			<select name="rc_sidebar_override" id="rc_sidebar_override" style="width:100%">
-				<option value="" <?php selected($sidebar, ''); ?>>Default (use global setting)</option>
-				<option value="show" <?php selected($sidebar, 'show'); ?>>Show</option>
-				<option value="hide" <?php selected($sidebar, 'hide'); ?>>Hide</option>
-			</select>
 		</p>
 		<?php
 	}
@@ -352,14 +354,6 @@ class Rockaden_Theme_Settings {
 			update_post_meta($post_id, 'rc_hide_title', '1');
 		} else {
 			delete_post_meta($post_id, 'rc_hide_title');
-		}
-
-		// Sidebar override.
-		$sidebar = sanitize_text_field($_POST['rc_sidebar_override'] ?? '');
-		if (in_array($sidebar, ['show', 'hide'], true)) {
-			update_post_meta($post_id, 'rc_sidebar_override', $sidebar);
-		} else {
-			delete_post_meta($post_id, 'rc_sidebar_override');
 		}
 	}
 
@@ -445,17 +439,6 @@ class Rockaden_Theme_Settings {
 							</label>
 						</td>
 					</tr>
-					<tr>
-						<th scope="row">Sidebar</th>
-						<td>
-							<select name="sidebar_enabled">
-								<option value="none" <?php selected($options['sidebar_enabled'], 'none'); ?>>Disabled</option>
-								<option value="landing" <?php selected($options['sidebar_enabled'], 'landing'); ?>>Landing page only</option>
-								<option value="all" <?php selected($options['sidebar_enabled'], 'all'); ?>>All pages</option>
-							</select>
-							<p class="description">Show the right sidebar panel. Configure cards in the Sidebar Cards section below.</p>
-						</td>
-					</tr>
 				</table>
 
 				<!-- CTA Button -->
@@ -488,6 +471,38 @@ class Rockaden_Theme_Settings {
 								<?php endforeach; ?>
 								<option value="__custom__">Custom URL</option>
 							</select>
+						</td>
+					</tr>
+				</table>
+
+				<!-- Sidebar Visibility -->
+				<h2>Sidebar Visibility</h2>
+				<p class="description">Show the sidebar on auto-generated pages (those without an editable content surface). For regular Pages (and the front page), insert the Sidebar Panel block directly into the page content where you want it.</p>
+				<?php $sidebar_routes = $options['sidebar_routes'] ?? []; ?>
+				<table class="form-table">
+					<tr>
+						<th scope="row">Show sidebar on</th>
+						<td>
+							<label>
+								<input type="checkbox" name="sidebar_route_home" value="1"
+									<?php checked(! empty($sidebar_routes['home'])); ?> />
+								News archive (<code>/nyheter/</code>)
+							</label><br>
+							<label>
+								<input type="checkbox" name="sidebar_route_single_post" value="1"
+									<?php checked(! empty($sidebar_routes['single_post'])); ?> />
+								News posts (individual articles)
+							</label><br>
+							<label>
+								<input type="checkbox" name="sidebar_route_shop_archive" value="1"
+									<?php checked(! empty($sidebar_routes['shop_archive'])); ?> />
+								Shop archive (<code>/butik/</code>)
+							</label><br>
+							<label>
+								<input type="checkbox" name="sidebar_route_single_shop_item" value="1"
+									<?php checked(! empty($sidebar_routes['single_shop_item'])); ?> />
+								Shop items (individual items)
+							</label>
 						</td>
 					</tr>
 				</table>
