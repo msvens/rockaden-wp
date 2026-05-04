@@ -4,8 +4,9 @@
  *
  * Visibility rules:
  * - When the block is in a template (templateMode: true), it's gated by the
- *   per-page "Show sidebar on this page" checkbox (post meta rc_show_sidebar).
- *   Default behavior on templated pages: hidden.
+ *   per-route admin toggle in Appearance → Rockaden → Sidebar Visibility.
+ *   Each auto-generated route (home/news archive, single post, shop archive,
+ *   single shop item) has its own checkbox.
  * - When the block is inserted directly into page content (templateMode: false,
  *   the default), it always renders if cards are configured. The admin chose
  *   to place it; no separate opt-in needed.
@@ -22,8 +23,19 @@ defined('ABSPATH') || exit;
 $template_mode = ! empty($attributes['templateMode']);
 
 if ($template_mode) {
-	$post_id = get_queried_object_id();
-	$show    = $post_id ? '1' === get_post_meta($post_id, 'rc_show_sidebar', true) : false;
+	$route_key = null;
+	if (is_home()) {
+		$route_key = 'home';
+	} elseif (is_singular('post')) {
+		$route_key = 'single_post';
+	} elseif (is_post_type_archive('rc_shop_item')) {
+		$route_key = 'shop_archive';
+	} elseif (is_singular('rc_shop_item')) {
+		$route_key = 'single_shop_item';
+	}
+
+	$routes = Rockaden_Theme_Settings::get_options()['sidebar_routes'] ?? [];
+	$show   = $route_key && ! empty($routes[$route_key]);
 
 	if (! $show) {
 		echo '<div class="rc-sidebar-panel--hidden" hidden></div>';

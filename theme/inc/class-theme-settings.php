@@ -56,6 +56,12 @@ class Rockaden_Theme_Settings {
 					'full_bleed' => false,
 				],
 			],
+			'sidebar_routes'     => [
+				'home'             => false,
+				'single_post'      => false,
+				'shop_archive'     => false,
+				'single_shop_item' => false,
+			],
 			'cta_label'          => 'Bli medlem',
 			'cta_label_en'       => 'Join',
 			'cta_url'            => '',
@@ -199,6 +205,14 @@ class Rockaden_Theme_Settings {
 		$options['cta_label_en'] = sanitize_text_field($_POST['cta_label_en'] ?? 'Join');
 		$options['cta_url']      = sanitize_text_field($_POST['cta_url'] ?? '');
 
+		// Sidebar route toggles.
+		$options['sidebar_routes'] = [
+			'home'             => ! empty($_POST['sidebar_route_home']),
+			'single_post'      => ! empty($_POST['sidebar_route_single_post']),
+			'shop_archive'     => ! empty($_POST['sidebar_route_shop_archive']),
+			'single_shop_item' => ! empty($_POST['sidebar_route_single_shop_item']),
+		];
+
 		// Sidebar cards.
 		$options['sidebar_cards'] = self::sanitize_sidebar_cards(
 			$_POST['sidebar_card_type'] ?? [],
@@ -298,15 +312,14 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
-	 * Render page display meta box (title visibility + sidebar opt-in).
+	 * Render page display meta box (title visibility).
 	 *
-	 * The sidebar checkbox only matters on pages whose template includes the
-	 * sidebar-panel block in templateMode (currently `index.html` and
-	 * `page.html`). Manually-inserted sidebar blocks render unconditionally.
+	 * Sidebar visibility on auto-generated routes is controlled globally via
+	 * Appearance → Rockaden → Sidebar settings. To put a sidebar on a regular
+	 * Page, insert the Sidebar Panel block directly into the page content.
 	 */
 	public static function render_page_display_meta_box(\WP_Post $post): void {
-		$hide_title   = get_post_meta($post->ID, 'rc_hide_title', true);
-		$show_sidebar = get_post_meta($post->ID, 'rc_show_sidebar', true);
+		$hide_title = get_post_meta($post->ID, 'rc_hide_title', true);
 		wp_nonce_field('rc_page_display_save', 'rc_page_display_nonce');
 		?>
 		<p>
@@ -315,18 +328,6 @@ class Rockaden_Theme_Settings {
 					<?php checked($hide_title, '1'); ?> />
 				Hide page title
 			</label>
-		</p>
-		<p>
-			<label>
-				<input type="checkbox" name="rc_show_sidebar" value="1"
-					<?php checked($show_sidebar, '1'); ?> />
-				Show sidebar on this page
-			</label>
-			<br>
-			<span class="description">
-				Only affects pages that include the Sidebar Panel block via the theme template
-				(news archive, default Page template). Manually inserted sidebar blocks always show.
-			</span>
 		</p>
 		<?php
 	}
@@ -353,13 +354,6 @@ class Rockaden_Theme_Settings {
 			update_post_meta($post_id, 'rc_hide_title', '1');
 		} else {
 			delete_post_meta($post_id, 'rc_hide_title');
-		}
-
-		// Show sidebar opt-in.
-		if (! empty($_POST['rc_show_sidebar'])) {
-			update_post_meta($post_id, 'rc_show_sidebar', '1');
-		} else {
-			delete_post_meta($post_id, 'rc_show_sidebar');
 		}
 	}
 
@@ -477,6 +471,38 @@ class Rockaden_Theme_Settings {
 								<?php endforeach; ?>
 								<option value="__custom__">Custom URL</option>
 							</select>
+						</td>
+					</tr>
+				</table>
+
+				<!-- Sidebar Visibility -->
+				<h2>Sidebar Visibility</h2>
+				<p class="description">Show the sidebar on auto-generated pages (those without an editable content surface). For regular Pages (and the front page), insert the Sidebar Panel block directly into the page content where you want it.</p>
+				<?php $sidebar_routes = $options['sidebar_routes'] ?? []; ?>
+				<table class="form-table">
+					<tr>
+						<th scope="row">Show sidebar on</th>
+						<td>
+							<label>
+								<input type="checkbox" name="sidebar_route_home" value="1"
+									<?php checked(! empty($sidebar_routes['home'])); ?> />
+								News archive (<code>/nyheter/</code>)
+							</label><br>
+							<label>
+								<input type="checkbox" name="sidebar_route_single_post" value="1"
+									<?php checked(! empty($sidebar_routes['single_post'])); ?> />
+								News posts (individual articles)
+							</label><br>
+							<label>
+								<input type="checkbox" name="sidebar_route_shop_archive" value="1"
+									<?php checked(! empty($sidebar_routes['shop_archive'])); ?> />
+								Shop archive (<code>/butik/</code>)
+							</label><br>
+							<label>
+								<input type="checkbox" name="sidebar_route_single_shop_item" value="1"
+									<?php checked(! empty($sidebar_routes['single_shop_item'])); ?> />
+								Shop items (individual items)
+							</label>
 						</td>
 					</tr>
 				</table>
