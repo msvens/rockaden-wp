@@ -45,20 +45,27 @@
 <h3 class="rc-doc-en">Main Navigation</h3>
 
 <p class="rc-doc-sv">
-	Länkarna som visas centrerat i sidhuvudet. Lägg till, ta bort eller ändra ordning med repeater-fälten. Varje länk har en svensk etikett, en valfri engelsk etikett, och en URL (välj en befintlig sida eller ange en egen URL).
+	Länkarna som visas centrerat i sidhuvudet. Lägg till, ta bort eller ändra ordning med repeater-fälten. Varje länk har en svensk etikett, en valfri engelsk etikett, och en målpekare som väljs från en rullgardinslista.
 </p>
 <p class="rc-doc-en">
-	The links displayed centered in the header. Add, remove, or reorder using the repeater fields. Each link has a Swedish label, an optional English label, and a URL (select an existing page or enter a custom URL).
+	The links displayed centered in the header. Add, remove, or reorder using the repeater fields. Each link has a Swedish label, an optional English label, and a target picked from a dropdown.
+</p>
+
+<p class="rc-doc-sv">
+	Rullgardinslistan är grupperad: <strong>Pages</strong> innehåller alla publicerade sidor, <strong>Theme routes</strong> innehåller temats fördefinierade rutter (t.ex. <code>/schackmaterial/</code> för butiken), och <strong>Custom URL</strong> låter dig skriva in en valfri URL själv. URL-fältet visas bara när "Custom URL" är valt.
+</p>
+<p class="rc-doc-en">
+	The dropdown is grouped: <strong>Pages</strong> lists all published pages, <strong>Theme routes</strong> lists the theme's predefined routes (e.g. <code>/schackmaterial/</code> for the shop), and <strong>Custom URL</strong> lets you type any URL by hand. The URL field only appears when "Custom URL" is selected.
 </p>
 
 <h3 class="rc-doc-sv">Mer-menyn</h3>
 <h3 class="rc-doc-en">More Menu</h3>
 
 <p class="rc-doc-sv">
-	Ytterligare länkar som visas i dropdown-menyn "Mer" (desktop) och i sidopanelen (mobil). Används för sekundär navigation som "Om oss" och "Kontakt".
+	Ytterligare länkar som visas i dropdown-menyn "Mer" (desktop) och i sidopanelen (mobil). Används för sekundär navigation som "Om oss" och "Kontakt". Samma rullgardinslista som för huvudnavigationen.
 </p>
 <p class="rc-doc-en">
-	Additional links shown in the "More" dropdown (desktop) and the side drawer (mobile). Used for secondary navigation like "About" and "Contact".
+	Additional links shown in the "More" dropdown (desktop) and the side drawer (mobile). Used for secondary navigation like "About" and "Contact". Uses the same dropdown picker as the main navigation.
 </p>
 
 <h2 class="rc-doc-sv">Mörkt läge</h2>
@@ -85,8 +92,63 @@
 <h2 class="rc-doc-en">Sidebar</h2>
 
 <p class="rc-doc-sv">
-	Den högra sidomenyn kan aktiveras globalt: <strong>Inaktiverad</strong>, <strong>Bara startsidan</strong>, eller <strong>Alla sidor</strong>. Enskilda sidor kan överrida denna inställning via Rockaden Display-metarutan.
+	Sidomenyn (höger sida) styrs på två sätt beroende på var den ska visas.
 </p>
 <p class="rc-doc-en">
-	The right sidebar can be enabled globally: <strong>Disabled</strong>, <strong>Landing page only</strong>, or <strong>All pages</strong>. Individual pages can override this setting via the Rockaden Display meta box.
+	The sidebar (right column) is controlled in two ways depending on where it should appear.
 </p>
+
+<h3 class="rc-doc-sv">Sidebar Cards</h3>
+<h3 class="rc-doc-en">Sidebar Cards</h3>
+
+<p class="rc-doc-sv">
+	Innehållet i sidomenyn — text- eller bildkort — konfigureras under <strong>Sidebar Cards</strong>. Korten visas i samma ordning som de står här. Använd kollaps-pilen för att fokusera på ett kort i taget och pilarna för att flytta dem.
+</p>
+<p class="rc-doc-en">
+	The sidebar content — text or image cards — is configured under <strong>Sidebar Cards</strong>. Cards appear in the order shown here. Use the collapse arrow to focus on one card at a time and the up/down arrows to reorder them.
+</p>
+
+<h3 class="rc-doc-sv">Sidebar Visibility</h3>
+<h3 class="rc-doc-en">Sidebar Visibility</h3>
+
+<p class="rc-doc-sv">
+	Under <strong>Sidebar Visibility</strong> väljer du på vilka <em>auto-genererade</em> sidor sidomenyn ska visas. Det finns en kryssruta per ruttyp:
+</p>
+<p class="rc-doc-en">
+	Under <strong>Sidebar Visibility</strong>, choose which <em>auto-generated</em> pages should display the sidebar. There is one checkbox per route type:
+</p>
+
+<ul class="rc-doc-sv">
+	<li><strong>News archive</strong> — nyhetsarkivet på <code>/nyheter/</code></li>
+	<li><strong>News posts</strong> — enskilda nyhetsartiklar</li>
+	<li><strong>Shop archive</strong> — butiksarkivet på <code>/schackmaterial/</code></li>
+	<li><strong>Shop items</strong> — enskilda butiksartiklar</li>
+</ul>
+<ul class="rc-doc-en">
+	<li><strong>News archive</strong> — the news archive at <code>/nyheter/</code></li>
+	<li><strong>News posts</strong> — individual news articles</li>
+	<li><strong>Shop archive</strong> — the shop archive at <code>/schackmaterial/</code></li>
+	<li><strong>Shop items</strong> — individual shop items</li>
+</ul>
+
+<p class="rc-doc-sv">
+	Standard är att alla rutter är avstängda. Sidomenyn syns inte förrän du aktiverar den för en ruttyp och har kort konfigurerade.
+</p>
+<p class="rc-doc-en">
+	By default, all routes are off. The sidebar isn't shown until you enable it for a route type and have cards configured.
+</p>
+
+<h3 class="rc-doc-sv">Sidomeny på vanliga sidor</h3>
+<h3 class="rc-doc-en">Sidebar on regular Pages</h3>
+
+<p class="rc-doc-sv">
+	För vanliga sidor (Hem, "Om Rockaden", egna sidor) använder du istället blocket <strong>Sidebar Panel</strong> direkt i sidans innehåll. Lägg in det där du vill att sidomenyn ska visas — då används kortinnehållet från inställningarna ovan.
+</p>
+<p class="rc-doc-en">
+	For regular Pages (Hem, "About Rockaden", your own pages) insert the <strong>Sidebar Panel</strong> block directly into the page content where you want the sidebar to appear. The card content comes from the settings above.
+</p>
+
+<div class="rc-docs-tip">
+	<span class="rc-doc-sv"><strong>Varför två sätt?</strong> Auto-genererade sidor (arkiv, enskilda inlägg) har ingen redigerbar innehållsyta i sidredigeraren — därför kontrolleras de via globala kryssrutor. Vanliga sidor redigerar du i Gutenberg, så där placerar du blocket precis där du vill ha sidomenyn.</span>
+	<span class="rc-doc-en"><strong>Why two ways?</strong> Auto-generated pages (archives, single posts) have no editable content surface in the page editor — so they're controlled with global checkboxes. Regular Pages are edited in Gutenberg, so there you place the block exactly where you want the sidebar.</span>
+</div>
