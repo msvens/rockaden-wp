@@ -1558,7 +1558,6 @@ html.dark .rockaden-news-card:hover {
      so width / aspect-ratio apply (anchors are inline by default). */
   display: block;
   aspect-ratio: 1 / 1;
-  background-color: var(--wp--preset--color--surface-dim);
 }
 
 .rockaden-shop-grid--column .rockaden-shop-card__media {
