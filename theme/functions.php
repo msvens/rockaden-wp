@@ -20,6 +20,7 @@ add_action('admin_post_rockaden_save_settings', ['Rockaden_Theme_Settings', 'han
 // Page display meta box (title visibility + sidebar override).
 add_action('add_meta_boxes', ['Rockaden_Theme_Settings', 'register_page_display_meta_box']);
 add_action('save_post_page', ['Rockaden_Theme_Settings', 'save_page_display_meta']);
+add_filter('body_class', ['Rockaden_Theme_Settings', 'body_class_for_page_display']);
 
 
 /**

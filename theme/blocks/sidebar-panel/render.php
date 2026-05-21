@@ -28,8 +28,6 @@ if ($template_mode) {
 		$route_key = 'home';
 	} elseif (is_singular('post')) {
 		$route_key = 'single_post';
-	} elseif (is_post_type_archive('rc_shop_item')) {
-		$route_key = 'shop_archive';
 	} elseif (is_singular('rc_shop_item')) {
 		$route_key = 'single_shop_item';
 	}

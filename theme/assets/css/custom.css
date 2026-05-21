@@ -59,6 +59,16 @@ body > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-foo
   padding: 1.5rem 1rem;
 }
 
+/* Per-page opt-out: rc_remove_top_padding meta → rc-no-top-padding body class.
+   Zeros both the local padding-top AND WP's global block-gap margin
+   (:where(.wp-site-blocks) > * { margin-block-start: 1.5rem }), which is the
+   same treatment .rockaden-landing gets at line 1033. */
+body.rc-no-top-padding > .wp-site-blocks > main:not(.rockaden-landing),
+body.rc-no-top-padding > .wp-site-blocks > .wp-block-group:not(.rockaden-header):not(.rockaden-footer):not(.rockaden-landing) {
+  padding-top: 0;
+  margin-block-start: 0;
+}
+
 /* --- Fixed header --- */
 .rockaden-header {
   position: fixed;

@@ -16,6 +16,8 @@ class Rockaden_Theme_Setup {
 		'Nyheter'      => 'nyheter',
 		'Kalender'     => 'kalender',
 		'Träning'      => 'training',
+		'Turneringar'  => 'tournaments',
+		'Handla'       => 'shop',
 		'Medlemmar'    => 'medlemmar',
 		'Om Rockaden'  => 'om-rockaden',
 		'Kontakt'      => 'kontakt',

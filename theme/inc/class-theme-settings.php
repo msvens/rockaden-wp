@@ -59,7 +59,6 @@ class Rockaden_Theme_Settings {
 			'sidebar_routes'     => [
 				'home'             => false,
 				'single_post'      => false,
-				'shop_archive'     => false,
 				'single_shop_item' => false,
 			],
 			'cta_label'          => 'Bli medlem',
@@ -209,7 +208,6 @@ class Rockaden_Theme_Settings {
 		$options['sidebar_routes'] = [
 			'home'             => ! empty($_POST['sidebar_route_home']),
 			'single_post'      => ! empty($_POST['sidebar_route_single_post']),
-			'shop_archive'     => ! empty($_POST['sidebar_route_shop_archive']),
 			'single_shop_item' => ! empty($_POST['sidebar_route_single_shop_item']),
 		];
 
@@ -304,9 +302,9 @@ class Rockaden_Theme_Settings {
 	 * @return array<int, array{label: string, url: string}>
 	 */
 	private static function theme_routes(): array {
-		return [
-			['label' => 'Schackmaterial (shop)', 'url' => '/schackmaterial/'],
-		];
+		// Stubs for /shop, /tournaments etc. are real WP pages and appear in
+		// the Pages dropdown automatically — no theme-routes entries needed.
+		return [];
 	}
 
 	/**
@@ -379,7 +377,8 @@ class Rockaden_Theme_Settings {
 	 * Page, insert the Sidebar Panel block directly into the page content.
 	 */
 	public static function render_page_display_meta_box(\WP_Post $post): void {
-		$hide_title = get_post_meta($post->ID, 'rc_hide_title', true);
+		$hide_title         = get_post_meta($post->ID, 'rc_hide_title', true);
+		$remove_top_padding = get_post_meta($post->ID, 'rc_remove_top_padding', true);
 		wp_nonce_field('rc_page_display_save', 'rc_page_display_nonce');
 		?>
 		<p>
@@ -387,6 +386,13 @@ class Rockaden_Theme_Settings {
 				<input type="checkbox" name="rc_hide_title" value="1"
 					<?php checked($hide_title, '1'); ?> />
 				Hide page title
+			</label>
+		</p>
+		<p>
+			<label>
+				<input type="checkbox" name="rc_remove_top_padding" value="1"
+					<?php checked($remove_top_padding, '1'); ?> />
+				Remove default top padding
 			</label>
 		</p>
 		<?php
@@ -415,6 +421,30 @@ class Rockaden_Theme_Settings {
 		} else {
 			delete_post_meta($post_id, 'rc_hide_title');
 		}
+
+		// Remove default top padding.
+		if (! empty($_POST['rc_remove_top_padding'])) {
+			update_post_meta($post_id, 'rc_remove_top_padding', '1');
+		} else {
+			delete_post_meta($post_id, 'rc_remove_top_padding');
+		}
+	}
+
+	/**
+	 * body_class filter — adds rc-no-top-padding when the per-page toggle is set,
+	 * letting CSS zero the default top padding on <main>.
+	 *
+	 * @param string[] $classes Existing body classes.
+	 * @return string[]
+	 */
+	public static function body_class_for_page_display(array $classes): array {
+		if (is_singular('page')) {
+			$post_id = get_the_ID();
+			if ($post_id && get_post_meta($post_id, 'rc_remove_top_padding', true)) {
+				$classes[] = 'rc-no-top-padding';
+			}
+		}
+		return $classes;
 	}
 
 	/**
@@ -543,11 +573,6 @@ class Rockaden_Theme_Settings {
 								<input type="checkbox" name="sidebar_route_single_post" value="1"
 									<?php checked(! empty($sidebar_routes['single_post'])); ?> />
 								News posts (individual articles)
-							</label><br>
-							<label>
-								<input type="checkbox" name="sidebar_route_shop_archive" value="1"
-									<?php checked(! empty($sidebar_routes['shop_archive'])); ?> />
-								Shop archive (<code>/butik/</code>)
 							</label><br>
 							<label>
 								<input type="checkbox" name="sidebar_route_single_shop_item" value="1"
