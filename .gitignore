@@ -1,6 +1,7 @@
 node_modules/
 plugin/build/
 plugin/vendor/
+theme/vendor/
 shared/dist/
 *.log
 .wp-env/

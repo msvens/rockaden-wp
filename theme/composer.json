@@ -1,0 +1,13 @@
+{
+    "name": "rockaden/theme",
+    "type": "wordpress-theme",
+    "authors": [
+        {
+            "name": "msvens",
+            "email": "msvens@gmail.com"
+        }
+    ],
+    "require": {
+        "yahnis-elsts/plugin-update-checker": "^5.6"
+    }
+}

@@ -5,6 +5,20 @@
 
 defined('ABSPATH') || exit;
 
+// GitHub-based update checker. Reads release assets from the rockaden-wp
+// repository and lets WordPress show the standard "update available" UI in
+// Appearance → Themes. Pre-releases on GitHub are skipped automatically.
+if (file_exists(get_theme_file_path('vendor/autoload.php'))) {
+    require_once get_theme_file_path('vendor/autoload.php');
+
+    $rockaden_theme_update_checker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+        'https://github.com/msvens/rockaden-wp/',
+        get_theme_file_path('style.css'),
+        'rockaden-theme'
+    );
+    $rockaden_theme_update_checker->getVcsApi()->enableReleaseAssets('/rockaden-theme\.zip$/');
+}
+
 // Include theme classes.
 require_once get_theme_file_path('inc/class-theme-settings.php');
 require_once get_theme_file_path('inc/class-theme-setup.php');
