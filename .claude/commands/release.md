@@ -37,6 +37,7 @@ Create a new release tag and push it: $ARGUMENTS
 
 ## Important
 
+- **Plugin and theme always release together from one tag** (step 3 bumps both, and `release.yml` builds both zips). This matters because functionality can move between them — e.g. the theme now registers the `rc_shop_item` shop CPT that the plugin used to own. If only one package reached the live site, that registration could lapse (shop CPT/block/`/shop/` would break). The live site's auto-pull installs both zips from each tag, so keep bumping both — never release one without the other.
 - **Abort if working tree is dirty** — all changes must be committed first
 - **Never force-push tags** — if tag exists, abort and inform user
 - Tag format is always `vX.Y.Z` (semver with `v` prefix)
