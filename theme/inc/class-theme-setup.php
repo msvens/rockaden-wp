@@ -31,6 +31,12 @@ class Rockaden_Theme_Setup {
 		self::create_stub_pages();
 		self::create_landing_page();
 		self::set_default_options();
+
+		// The shop CPT is registered on `init`, which hasn't run yet during
+		// after_switch_theme. Register it here too so its /shop/ rewrite rules
+		// are present when we flush.
+		Rockaden_Theme_Shop::register_post_type();
+		flush_rewrite_rules();
 	}
 
 	/**

@@ -22,9 +22,16 @@ if (file_exists(get_theme_file_path('vendor/autoload.php'))) {
 // Include theme classes.
 require_once get_theme_file_path('inc/class-theme-settings.php');
 require_once get_theme_file_path('inc/class-theme-setup.php');
+require_once get_theme_file_path('inc/class-theme-shop.php');
 
 // Theme activation: create stub pages + default settings.
 add_action('after_switch_theme', ['Rockaden_Theme_Setup', 'activate']);
+
+// Shop feature (rc_shop_item CPT + meta, REST endpoint, pricing meta box).
+add_action('init', ['Rockaden_Theme_Shop', 'register']);
+add_action('rest_api_init', ['Rockaden_Theme_Shop', 'register_routes']);
+add_action('add_meta_boxes', ['Rockaden_Theme_Shop', 'add_meta_box']);
+add_action('save_post_rc_shop_item', ['Rockaden_Theme_Shop', 'save'], 10, 2);
 
 // Admin settings page.
 add_action('admin_menu', ['Rockaden_Theme_Settings', 'register_page']);
@@ -208,6 +215,7 @@ add_action('init', function (): void {
     register_block_type(get_theme_file_path('blocks/section-nav'));
     register_block_type(get_theme_file_path('blocks/sidebar-panel'));
     register_block_type(get_theme_file_path('blocks/page-title'));
+    register_block_type(get_theme_file_path('blocks/shop-grid'));
 });
 
 /**
