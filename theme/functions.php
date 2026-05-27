@@ -23,6 +23,46 @@ if (file_exists(get_theme_file_path('vendor/autoload.php'))) {
 require_once get_theme_file_path('inc/class-theme-settings.php');
 require_once get_theme_file_path('inc/class-theme-setup.php');
 require_once get_theme_file_path('inc/class-theme-shop.php');
+require_once get_theme_file_path('inc/class-theme-i18n.php');
+
+// Cookie-driven front-end locale + data-lang + textdomain (visitor SV/EN switch).
+Rockaden_Theme_I18n::register();
+
+/**
+ * One-time migration: the Hem page used to be created with the rendered
+ * pattern content inlined into its post_content, freezing the strings at the
+ * locale active during theme activation. The landing page now references
+ * patterns by slug so each request re-renders under the current locale, but
+ * existing sites still have the old inlined Swedish content. Replace it with
+ * pattern refs once, only on pages that look untouched.
+ *
+ * TEMP — safe to delete in a follow-up PR after the live site has run this
+ * once (i.e., once the `rockaden_theme_hem_pattern_refs_migrated` option is
+ * set). New installs hit the new build_landing_content() path directly.
+ */
+add_action('init', function (): void {
+    $option_key = 'rockaden_theme_hem_pattern_refs_migrated';
+    if (get_option($option_key)) {
+        return;
+    }
+    $hem = get_page_by_path('hem');
+    if (!$hem) {
+        update_option($option_key, 1);
+        return;
+    }
+    $has_refs   = str_contains($hem->post_content, 'wp:pattern {"slug":"rockaden-theme/landing-');
+    $has_marker = str_contains($hem->post_content, 'Upptäck schack hos SK Rockaden');
+    if (!$has_refs && $has_marker) {
+        wp_update_post([
+            'ID'           => $hem->ID,
+            'post_content' => '<!-- wp:pattern {"slug":"rockaden-theme/landing-hero"} /-->' . "\n\n"
+                            . '<!-- wp:pattern {"slug":"rockaden-theme/landing-why"} /-->' . "\n\n"
+                            . '<!-- wp:pattern {"slug":"rockaden-theme/landing-news-and-shop"} /-->',
+        ]);
+    }
+    update_option($option_key, 1);
+}, 9);
+
 
 // Theme activation: create stub pages + default settings.
 add_action('after_switch_theme', ['Rockaden_Theme_Setup', 'activate']);
@@ -52,7 +92,7 @@ add_action('wp_head', function (): void {
     $logo_url = esc_url(get_theme_file_uri('assets/images/logo.png'));
     ?>
     <script>
-    (function(){var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-lang',localStorage.getItem('language')||'sv');})();
+    (function(){var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');})();
     </script>
     <style>
     :root { --rockaden-logo-url: url('<?php echo $logo_url; ?>'); }

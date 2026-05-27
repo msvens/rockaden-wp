@@ -92,14 +92,22 @@ class Rockaden_Theme_Settings {
 	 * Return the config object for the frontend JS.
 	 */
 	public static function get_frontend_config(): array {
-		$opts = self::get_options();
+		$opts  = self::get_options();
+		$is_en = ('en' === Rockaden_Theme_I18n::current_lang());
+
+		// Resolve each nav item to a single label for the active locale.
+		// (Items store Swedish in `label` and optional English in `labelEn`.)
+		$resolve = static function (array $item) use ($is_en): array {
+			$label = ($is_en && ! empty($item['labelEn'])) ? $item['labelEn'] : ($item['label'] ?? '');
+			return ['label' => $label, 'url' => $item['url'] ?? ''];
+		};
+
 		$cta = [];
 		$cta_url = trim($opts['cta_url']);
 		if ($cta_url !== '') {
 			$cta = [
-				'label'   => $opts['cta_label'],
-				'labelEn' => $opts['cta_label_en'],
-				'url'     => $cta_url,
+				'label' => ($is_en && $opts['cta_label_en'] !== '') ? $opts['cta_label_en'] : $opts['cta_label'],
+				'url'   => $cta_url,
 			];
 		}
 
@@ -111,8 +119,8 @@ class Rockaden_Theme_Settings {
 		}
 
 		return [
-			'mainNav'            => $opts['main_nav'],
-			'moreNav'            => $opts['more_nav'],
+			'mainNav'            => array_values(array_map($resolve, $opts['main_nav'])),
+			'moreNav'            => array_values(array_map($resolve, $opts['more_nav'])),
 			'ctaButton'          => $cta,
 			'docsUrl'            => $docs_url,
 			'showDarkToggle'     => (bool) $opts['show_dark_toggle'],
@@ -121,6 +129,13 @@ class Rockaden_Theme_Settings {
 			'headerStyle'        => $opts['header_style'],
 			'headerDensity'      => $opts['header_density'],
 			'headerBorderWidth'  => $opts['header_border_width'],
+			// Header UI labels, translated server-side (theme domain, Swedish source).
+			'i18n'               => [
+				'more'     => __('Mer', 'rockaden-theme'),
+				'language' => __('Språk', 'rockaden-theme'),
+				'darkMode' => __('Mörkt läge', 'rockaden-theme'),
+				'docs'     => __('Dokumentation', 'rockaden-theme'),
+			],
 		];
 	}
 

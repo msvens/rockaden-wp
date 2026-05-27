@@ -189,7 +189,7 @@
     });
   }
 
-  // Run on load and on language change
+  // Run once on load. The locale is fixed per request (server-set data-lang);
+  // switching language reloads the page, so there's no live update event.
   update();
-  window.addEventListener('rockaden-lang-change', update);
 })();

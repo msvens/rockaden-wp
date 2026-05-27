@@ -18,8 +18,7 @@
       "default": "/shop"
     },
     "moreLabel": {
-      "type": "string",
-      "default": "Mer schackmaterial"
+      "type": "string"
     },
     "layout": {
       "type": "string",
