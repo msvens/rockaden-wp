@@ -106,6 +106,10 @@ class Rockaden_Theme_Setup {
 	 * Concatenate the registered landing patterns into a single block-content string.
 	 */
 	private static function build_landing_content(): string {
+		// Reference patterns by slug rather than inlining their rendered HTML.
+		// This way each pattern is re-rendered on every request under the
+		// active locale (gettext translates the strings inside), so the
+		// visitor SV/EN toggle actually translates the landing page.
 		$slugs = [
 			'rockaden-theme/landing-hero',
 			'rockaden-theme/landing-why',
@@ -122,9 +126,8 @@ class Rockaden_Theme_Setup {
 		$parts    = [];
 
 		foreach ($slugs as $slug) {
-			$pattern = $registry->get_registered($slug);
-			if ($pattern && !empty($pattern['content'])) {
-				$parts[] = $pattern['content'];
+			if ($registry->get_registered($slug)) {
+				$parts[] = '<!-- wp:pattern {"slug":"' . esc_attr($slug) . '"} /-->';
 			}
 		}
 

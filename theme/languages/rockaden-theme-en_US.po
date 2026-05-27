@@ -1,0 +1,77 @@
+# English (en_US) translations for the Rockaden Theme.
+# The theme's source language is Swedish; this file provides English for the
+# visitor SV/EN toggle. Strings already in English in source are omitted —
+# gettext falls back to the msgid in that case.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Rockaden Theme\n"
+"PO-Revision-Date: 2026-05-26\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Barn spelar schack"
+msgstr "Children playing chess"
+
+msgid "Bli medlem"
+msgstr "Join"
+
+msgid "Centralt i Hägersten"
+msgstr "Central in Hägersten"
+
+msgid "Dokumentation"
+msgstr "Documentation"
+
+msgid "Gemenskap och fler tjejer på schackbrädet"
+msgstr "Community and more girls at the chessboard"
+
+msgid "Gemenskap, utveckling och spelglädje – för alla nivåer"
+msgstr "Community, growth, and the joy of playing — for all levels"
+
+msgid "Kommande aktiviteter"
+msgstr "Upcoming activities"
+
+msgid "Köp"
+msgstr "Buy"
+
+msgid "Mer"
+msgstr "More"
+
+msgid "Mer schackmaterial"
+msgstr "More chess equipment"
+
+msgid "Mörkt läge"
+msgstr "Dark mode"
+
+msgid "Nybörjare till elit"
+msgstr "Beginner to elite"
+
+msgid "Prova gratis"
+msgstr "Try for free"
+
+msgid "Schackmaterial"
+msgstr "Chess equipment"
+
+msgid "Senaste nyheter"
+msgstr "Latest news"
+
+msgid "Slut i lager"
+msgstr "Out of stock"
+
+msgid "Språk"
+msgstr "Language"
+
+msgid "Tjejgrupp – trygg miljö och gemenskap"
+msgstr "Girls' group — safe environment and community"
+
+msgid "Träningsgrupper för alla åldrar"
+msgstr "Training groups for all ages"
+
+msgid "Upptäck schack hos SK Rockaden"
+msgstr "Discover chess at SK Rockaden"
+
+msgid "Varför välja SK Rockaden?"
+msgstr "Why choose SK Rockaden?"

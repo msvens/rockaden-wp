@@ -1,40 +1,24 @@
 /**
  * Header navigation: renders nav from settings, "Mer" dropdown + mobile drawer.
  * Reads config from window.rockadenNav (injected by wp_localize_script).
+ *
+ * Labels are already resolved to the active locale server-side (config.mainNav
+ * etc. + config.i18n), so there is no client-side language swapping. The
+ * language switcher sets a cookie and reloads (see language.js).
  */
 (function () {
   var config = window.rockadenNav || {};
   var mainNav = config.mainNav || [];
   var moreNav = config.moreNav || [];
+  var i18n = config.i18n || {};
   var showDarkToggle = config.showDarkToggle !== false && config.showDarkToggle !== '';
   var showLangToggle = !!config.showLanguageToggle && config.showLanguageToggle !== '0';
   var showBorder = config.showHeaderBorder !== false && config.showHeaderBorder !== '';
   var docsUrl = config.docsUrl || '';
 
-  /* ---- Language helpers ---- */
   function currentLang() {
     return typeof window.rockadenGetLanguage === 'function'
       ? window.rockadenGetLanguage() : 'sv';
-  }
-
-  function navLabel(item) {
-    var lang = currentLang();
-    return (lang === 'en' && item.labelEn) ? item.labelEn : item.label;
-  }
-
-  function setTranslatedText(el, item) {
-    el.setAttribute('data-label-sv', item.label);
-    el.setAttribute('data-label-en', item.labelEn || item.label);
-    el.textContent = navLabel(item);
-  }
-
-  function updateNavLabels() {
-    var lang = currentLang();
-    document.querySelectorAll('[data-label-sv]').forEach(function (el) {
-      el.textContent = lang === 'en'
-        ? (el.getAttribute('data-label-en') || el.getAttribute('data-label-sv'))
-        : el.getAttribute('data-label-sv');
-    });
   }
 
   /* ---- Language switcher builder ---- */
@@ -45,9 +29,7 @@
     row.className = 'rockaden-dropdown-toggle-row';
 
     var langLabel = document.createElement('span');
-    langLabel.setAttribute('data-label-sv', 'Språk');
-    langLabel.setAttribute('data-label-en', 'Language');
-    langLabel.textContent = activeLang === 'en' ? 'Language' : 'Språk';
+    langLabel.textContent = i18n.language || 'Språk';
     row.appendChild(langLabel);
 
     var switcher = document.createElement('div');
@@ -59,14 +41,11 @@
       btn.textContent = lang.toUpperCase();
       btn.setAttribute('aria-label', 'Switch to ' + lang.toUpperCase());
       btn.addEventListener('click', function () {
+        // Sets the rc_locale cookie and reloads; the server then renders
+        // the whole page in the chosen language.
         if (typeof window.rockadenSetLanguage === 'function') {
           window.rockadenSetLanguage(lang);
         }
-        // Update active state on all switcher buttons in the page.
-        document.querySelectorAll('.rockaden-lang-btn').forEach(function (b) {
-          b.classList.toggle('is-active', b.textContent === lang.toUpperCase());
-        });
-        updateNavLabels();
       });
       switcher.appendChild(btn);
     });
@@ -103,7 +82,7 @@
     var a = document.createElement('a');
     a.href = item.url;
     a.className = 'rockaden-nav-link';
-    setTranslatedText(a, item);
+    a.textContent = item.label;
     navContainer.appendChild(a);
   });
 
@@ -113,7 +92,7 @@
     var ctaLink = document.createElement('a');
     ctaLink.href = ctaButton.url;
     ctaLink.className = 'rockaden-cta-btn';
-    setTranslatedText(ctaLink, ctaButton);
+    ctaLink.textContent = ctaButton.label;
     actionsContainer.appendChild(ctaLink);
   }
 
@@ -125,9 +104,7 @@
     moreBtn.className = 'rockaden-more-btn';
     moreBtn.setAttribute('aria-expanded', 'false');
     moreBtn.setAttribute('aria-label', 'More menu');
-    moreBtn.setAttribute('data-label-sv', 'Mer');
-    moreBtn.setAttribute('data-label-en', 'More');
-    moreBtn.textContent = currentLang() === 'en' ? 'More' : 'Mer';
+    moreBtn.textContent = i18n.more || 'Mer';
     actionsContainer.appendChild(moreBtn);
   }
 
@@ -152,14 +129,14 @@
     moreNav.forEach(function (item) {
       var a = document.createElement('a');
       a.href = item.url;
-      setTranslatedText(a, item);
+      a.textContent = item.label;
       moreDropdown.appendChild(a);
     });
 
     if (docsUrl) {
       var docsLink = document.createElement('a');
       docsLink.href = docsUrl;
-      setTranslatedText(docsLink, { label: 'Dokumentation', labelEn: 'Documentation' });
+      docsLink.textContent = i18n.docs || 'Dokumentation';
       moreDropdown.appendChild(docsLink);
     }
 
@@ -175,9 +152,7 @@
       var toggleRow = document.createElement('div');
       toggleRow.className = 'rockaden-dropdown-toggle-row';
       var darkLabel = document.createElement('span');
-      darkLabel.setAttribute('data-label-sv', 'Mörkt läge');
-      darkLabel.setAttribute('data-label-en', 'Dark mode');
-      darkLabel.textContent = currentLang() === 'en' ? 'Dark mode' : 'Mörkt läge';
+      darkLabel.textContent = i18n.darkMode || 'Mörkt läge';
       toggleRow.appendChild(darkLabel);
       var darkBtn = document.createElement('button');
       darkBtn.className = 'rockaden-toggle-switch';
@@ -236,7 +211,7 @@
     var a = document.createElement('a');
     a.href = item.url;
     a.className = 'rockaden-drawer-link';
-    setTranslatedText(a, item);
+    a.textContent = item.label;
     drawerItems.appendChild(a);
   });
 
@@ -247,16 +222,14 @@
 
     var moreLabel = document.createElement('span');
     moreLabel.className = 'rockaden-drawer-label';
-    moreLabel.setAttribute('data-label-sv', 'Mer');
-    moreLabel.setAttribute('data-label-en', 'More');
-    moreLabel.textContent = currentLang() === 'en' ? 'More' : 'Mer';
+    moreLabel.textContent = i18n.more || 'Mer';
     drawerItems.appendChild(moreLabel);
 
     moreNav.forEach(function (item) {
       var a = document.createElement('a');
       a.href = item.url;
       a.className = 'rockaden-drawer-link';
-      setTranslatedText(a, item);
+      a.textContent = item.label;
       drawerItems.appendChild(a);
     });
   }
@@ -270,7 +243,7 @@
     var drawerDocsLink = document.createElement('a');
     drawerDocsLink.href = docsUrl;
     drawerDocsLink.className = 'rockaden-drawer-link';
-    setTranslatedText(drawerDocsLink, { label: 'Dokumentation', labelEn: 'Documentation' });
+    drawerDocsLink.textContent = i18n.docs || 'Dokumentation';
     drawerItems.appendChild(drawerDocsLink);
   }
 
@@ -284,9 +257,7 @@
     var drawerToggle = document.createElement('div');
     drawerToggle.className = 'rockaden-drawer-toggle-row';
     var drawerDarkLabel = document.createElement('span');
-    drawerDarkLabel.setAttribute('data-label-sv', 'Mörkt läge');
-    drawerDarkLabel.setAttribute('data-label-en', 'Dark mode');
-    drawerDarkLabel.textContent = currentLang() === 'en' ? 'Dark mode' : 'Mörkt läge';
+    drawerDarkLabel.textContent = i18n.darkMode || 'Mörkt läge';
     drawerToggle.appendChild(drawerDarkLabel);
     var drawerDarkBtn = document.createElement('button');
     drawerDarkBtn.className = 'rockaden-toggle-switch';
