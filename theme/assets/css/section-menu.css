@@ -1,0 +1,133 @@
+/**
+ * Styling for the "Section menu" meta box in the page editor.
+ * Admin context — uses WordPress admin greys, not the front-end palette.
+ */
+
+.rc-section-menu__list {
+	margin: 0 0 8px;
+	padding: 0;
+	list-style: none;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+}
+
+.rc-section-menu__item {
+	padding: 8px;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.rc-section-menu__item:last-child {
+	border-bottom: none;
+}
+
+.rc-section-menu__item.is-current {
+	background: #f0f6fc;
+}
+
+.rc-section-menu__row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+/* Hidden items stay in the panel (clearly marked) so they can be re-enabled —
+   only the label is muted/struck, the checkbox stays fully usable. */
+.rc-section-menu__item.rc-item-hidden .rc-section-menu__label,
+.rc-section-menu__item.rc-item-hidden .rc-section-menu__label-input {
+	color: #8c8f94;
+}
+
+.rc-section-menu__item.rc-item-hidden .rc-section-menu__label {
+	text-decoration: line-through;
+}
+
+.rc-section-menu__hidden-tag {
+	display: none;
+	flex: 0 0 auto;
+	font-size: 10px;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+	color: #646970;
+	background: #f0f0f1;
+	border-radius: 3px;
+	padding: 1px 5px;
+}
+
+.rc-section-menu__item.rc-item-hidden .rc-section-menu__hidden-tag {
+	display: inline-block;
+}
+
+.rc-section-menu__label {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+
+.rc-section-menu__item.is-current .rc-section-menu__label,
+.rc-section-menu__item.is-root .rc-section-menu__label {
+	font-weight: 600;
+}
+
+.rc-section-menu__label-input {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.rc-section-menu__visible {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin-top: 4px;
+	font-size: 12px;
+	color: #646970;
+}
+
+.rc-section-menu__visible input {
+	margin: 0;
+}
+
+.rc-section-menu__badge {
+	flex: 0 0 auto;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.02em;
+	color: #646970;
+	background: #f0f0f1;
+	border-radius: 3px;
+	padding: 1px 6px;
+}
+
+.rc-section-menu__controls {
+	flex: 0 0 auto;
+	display: inline-flex;
+	gap: 2px;
+}
+
+.rc-section-menu__move {
+	width: 24px;
+	height: 24px;
+	line-height: 1;
+	padding: 0;
+	cursor: pointer;
+	color: #1d2327;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 3px;
+}
+
+.rc-section-menu__move:hover:not(:disabled) {
+	background: #f6f7f7;
+	border-color: #8c8f94;
+}
+
+.rc-section-menu__move:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+
+.rc-section-menu__status {
+	min-height: 1em;
+	margin: 4px 0;
+	color: #646970;
+	font-style: italic;
+}
