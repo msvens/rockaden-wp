@@ -446,6 +446,155 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
+	 * Register the "Section menu" meta box on pages — shows the section sidebar
+	 * menu (root + children) this page belongs to, with reorder controls and a
+	 * per-page label override. Visible on every page in a section.
+	 */
+	public static function register_section_menu_meta_box(): void {
+		add_meta_box(
+			'rc_section_menu',
+			__('Section menu', 'rockaden-theme'),
+			[self::class, 'render_section_menu_meta_box'],
+			'page',
+			'side',
+			'default'
+		);
+	}
+
+	/**
+	 * Render the Section menu meta box.
+	 *
+	 * The editor canvas cannot show template-level sidebar blocks, so this panel
+	 * is the editor-side window into the section menu: what pages are in it, in
+	 * what order, and how the current page is labelled.
+	 *
+	 * @param WP_Post $post The current page.
+	 */
+	public static function render_section_menu_meta_box(WP_Post $post): void {
+		$items = Rockaden_Theme_Section_Nav::get_menu_items($post->ID);
+
+		// The sidebar only renders on the front end with the Section Nav template.
+		$template = get_post_meta($post->ID, '_wp_page_template', true);
+		if ('page-section' !== $template) {
+			echo '<p class="description">';
+			esc_html_e('This page does not use the “Page (Section Nav)” template, so the sidebar will not show on the front end. Pick that template in the Page panel to display it.', 'rockaden-theme');
+			echo '</p>';
+		}
+
+		if (empty($items)) {
+			echo '<p class="description">';
+			esc_html_e('This page isn’t part of a section yet. Give it the “Page (Section Nav)” template and add child pages (or make it a child of a section page).', 'rockaden-theme');
+			echo '</p>';
+			return;
+		}
+
+		// Editing the menu (label/visibility/order) rewrites attributes on sibling
+		// and parent pages, so the interactive controls require edit_others_pages.
+		$can_edit = current_user_can('edit_others_pages');
+		?>
+		<ul class="rc-section-menu__list">
+			<?php foreach ($items as $item) : ?>
+				<li
+					class="rc-section-menu__item<?php echo $item['is_current'] ? ' is-current' : ''; ?><?php echo $item['is_root'] ? ' is-root' : ''; ?><?php echo $item['hidden'] ? ' rc-item-hidden' : ''; ?>"
+					data-page-id="<?php echo esc_attr((string) $item['id']); ?>"
+					<?php echo $item['is_root'] ? ' data-root="1"' : ''; ?>
+					<?php echo $item['is_current'] ? ' aria-current="true"' : ''; ?>
+				>
+					<div class="rc-section-menu__row">
+						<?php if ($item['is_root']) : ?>
+							<span class="rc-section-menu__badge" title="<?php esc_attr_e('The section parent page is always first.', 'rockaden-theme'); ?>"><?php esc_html_e('Top', 'rockaden-theme'); ?></span>
+						<?php elseif ($can_edit) : ?>
+							<span class="rc-section-menu__controls">
+								<button type="button" class="rc-section-menu__move rc-section-menu__up" aria-label="<?php esc_attr_e('Move up', 'rockaden-theme'); ?>">&uarr;</button>
+								<button type="button" class="rc-section-menu__move rc-section-menu__down" aria-label="<?php esc_attr_e('Move down', 'rockaden-theme'); ?>">&darr;</button>
+							</span>
+						<?php endif; ?>
+
+						<?php if ($can_edit) : ?>
+							<input
+								type="text"
+								class="rc-section-menu__label-input"
+								value="<?php echo esc_attr($item['label']); ?>"
+								placeholder="<?php echo esc_attr(get_the_title($item['id'])); ?>"
+								aria-label="<?php esc_attr_e('Menu label', 'rockaden-theme'); ?>"
+							/>
+						<?php else : ?>
+							<span class="rc-section-menu__label"><?php echo esc_html($item['label']); ?></span>
+						<?php endif; ?>
+						<span class="rc-section-menu__hidden-tag"><?php esc_html_e('Hidden', 'rockaden-theme'); ?></span>
+					</div>
+
+					<?php if ($can_edit) : ?>
+						<label class="rc-section-menu__visible">
+							<input type="checkbox" class="rc-section-menu__hide-toggle" <?php checked(!$item['hidden']); ?> />
+							<?php esc_html_e('Show in menu', 'rockaden-theme'); ?>
+						</label>
+					<?php endif; ?>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+		<?php if ($can_edit) : ?>
+			<p class="rc-section-menu__status" role="status" aria-live="polite"></p>
+			<p class="description"><?php esc_html_e('Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. Changes save right away. The parent page is always first.', 'rockaden-theme'); ?></p>
+		<?php else : ?>
+			<p class="description"><?php esc_html_e('The section menu is managed by users who can edit all pages.', 'rockaden-theme'); ?></p>
+		<?php endif; ?>
+		<?php
+	}
+
+	/**
+	 * Enqueue the Section menu reorder assets on the page editor only, and only
+	 * for users who can reorder (edit other people's pages).
+	 *
+	 * @param string $hook Current admin page hook.
+	 */
+	public static function enqueue_section_menu_assets(string $hook): void {
+		if ('post.php' !== $hook && 'post-new.php' !== $hook) {
+			return;
+		}
+		$screen = get_current_screen();
+		if (!$screen || 'page' !== $screen->post_type) {
+			return;
+		}
+		if (!current_user_can('edit_others_pages')) {
+			return;
+		}
+
+		// Version by file mtime so edits bust the browser cache without a theme
+		// version bump (the static theme version would serve stale assets).
+		$css_path = get_theme_file_path('assets/css/section-menu.css');
+		$js_path  = get_theme_file_path('assets/js/section-menu.js');
+		$fallback = wp_get_theme()->get('Version');
+		$css_ver  = file_exists($css_path) ? (string) filemtime($css_path) : $fallback;
+		$js_ver   = file_exists($js_path) ? (string) filemtime($js_path) : $fallback;
+
+		wp_enqueue_style(
+			'rockaden-section-menu',
+			get_theme_file_uri('assets/css/section-menu.css'),
+			[],
+			$css_ver
+		);
+
+		wp_enqueue_script(
+			'rockaden-section-menu',
+			get_theme_file_uri('assets/js/section-menu.js'),
+			['wp-api-fetch'],
+			$js_ver,
+			true
+		);
+
+		wp_localize_script(
+			'rockaden-section-menu',
+			'rockadenSectionMenu',
+			[
+				'saving' => __('Saving…', 'rockaden-theme'),
+				'saved'  => __('Saved', 'rockaden-theme'),
+				'error'  => __('Couldn’t save — reload and try again.', 'rockaden-theme'),
+			]
+		);
+	}
+
+	/**
 	 * body_class filter — adds rc-no-top-padding when the per-page toggle is set,
 	 * letting CSS zero the default top padding on <main>.
 	 *

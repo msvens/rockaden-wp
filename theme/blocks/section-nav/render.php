@@ -17,33 +17,39 @@ if ( ! $current_id ) {
 	return;
 }
 
-$current_post = get_post( $current_id );
-if ( ! $current_post || 'page' !== $current_post->post_type ) {
+// Shared helper builds the section menu (root + children, with label overrides).
+// Empty means this page is not part of a section — render nothing.
+$all_items = Rockaden_Theme_Section_Nav::get_menu_items( (int) $current_id );
+if ( empty( $all_items ) ) {
 	return;
 }
 
-// Determine root page: parent if exists, otherwise self.
-$root_id = $current_post->post_parent ? $current_post->post_parent : $current_id;
-$root    = get_post( $root_id );
-if ( ! $root ) {
-	return;
+// Root is the first item; its label labels the nav for screen readers (even if
+// the root itself is hidden from the menu).
+$root_label = $all_items[0]['label'];
+
+// Current page label (for the mobile dropdown button) — from the full list, as
+// the current page may itself be hidden from its own menu.
+$current_label = $root_label;
+foreach ( $all_items as $item ) {
+	if ( $item['is_current'] ) {
+		$current_label = $item['label'];
+		break;
+	}
 }
 
-// Get direct children of the root page.
-$children = get_pages(
-	[
-		'parent'      => $root_id,
-		'sort_column' => 'menu_order,post_title',
-	]
+// Drop items hidden from the menu. If nothing visible remains, render nothing.
+$nav_items = array_values(
+	array_filter(
+		$all_items,
+		static function ( $item ) {
+			return ! $item['hidden'];
+		}
+	)
 );
-
-// If no children, render nothing.
-if ( empty( $children ) ) {
+if ( empty( $nav_items ) ) {
 	return;
 }
-
-// Build nav items: root first, then children.
-$nav_items = array_merge( [ $root ], $children );
 
 // Unique ID for this instance (multiple blocks on one page).
 $nav_id = 'rc-snav-' . wp_unique_id();
@@ -53,14 +59,14 @@ $wrapper_attributes = get_block_wrapper_attributes(
 );
 ?>
 <div <?php echo wp_kses_post( $wrapper_attributes ); ?>>
-	<nav class="rc-section-nav__desktop" aria-label="<?php echo esc_attr( get_the_title( $root_id ) ); ?>">
+	<nav class="rc-section-nav__desktop" aria-label="<?php echo esc_attr( $root_label ); ?>">
 		<ul class="rc-section-nav__list">
 			<?php foreach ( $nav_items as $item ) : ?>
 				<li>
 					<a
-						href="<?php echo esc_url( get_permalink( $item->ID ) ); ?>"
-						<?php echo $item->ID === $current_id ? ' aria-current="page"' : ''; ?>
-					><?php echo esc_html( get_the_title( $item->ID ) ); ?></a>
+						href="<?php echo esc_url( $item['url'] ); ?>"
+						<?php echo $item['is_current'] ? ' aria-current="page"' : ''; ?>
+					><?php echo esc_html( $item['label'] ); ?></a>
 				</li>
 			<?php endforeach; ?>
 		</ul>
@@ -74,7 +80,7 @@ $wrapper_attributes = get_block_wrapper_attributes(
 			aria-expanded="false"
 			aria-controls="<?php echo esc_attr( $nav_id ); ?>-menu"
 		>
-			<span><?php echo esc_html( get_the_title( $current_id ) ); ?></span>
+			<span><?php echo esc_html( $current_label ); ?></span>
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
 				<path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
 			</svg>
@@ -83,14 +89,14 @@ $wrapper_attributes = get_block_wrapper_attributes(
 			class="rc-section-nav__mobile-menu"
 			id="<?php echo esc_attr( $nav_id ); ?>-menu"
 			role="listbox"
-			aria-label="<?php echo esc_attr( get_the_title( $root_id ) ); ?>"
+			aria-label="<?php echo esc_attr( $root_label ); ?>"
 		>
 			<?php foreach ( $nav_items as $item ) : ?>
 				<li>
 					<a
-						href="<?php echo esc_url( get_permalink( $item->ID ) ); ?>"
-						<?php echo $item->ID === $current_id ? ' aria-current="page"' : ''; ?>
-					><?php echo esc_html( get_the_title( $item->ID ) ); ?></a>
+						href="<?php echo esc_url( $item['url'] ); ?>"
+						<?php echo $item['is_current'] ? ' aria-current="page"' : ''; ?>
+					><?php echo esc_html( $item['label'] ); ?></a>
 				</li>
 			<?php endforeach; ?>
 		</ul>

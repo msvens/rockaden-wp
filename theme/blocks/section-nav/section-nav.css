@@ -23,14 +23,11 @@
 }
 
 .rc-section-nav ul.rc-section-nav__list li a:hover {
-	color: var(--wp--preset--color--on-surface);
 	background-color: var(--wp--preset--color--surface-dim);
 	text-decoration: none;
 }
 
 .rc-section-nav ul.rc-section-nav__list li a[aria-current="page"] {
-	font-weight: 600;
-	color: var(--wp--preset--color--on-surface);
 	background-color: var(--wp--preset--color--surface-dim);
 }
 
@@ -113,20 +110,27 @@ html.dark .rc-section-nav__mobile-menu {
 }
 
 .rc-section-nav__mobile-menu li a:hover {
-	color: var(--wp--preset--color--on-surface);
 	background-color: var(--wp--preset--color--surface-dim);
 	text-decoration: none;
 }
 
 .rc-section-nav__mobile-menu li a[aria-current="page"] {
-	font-weight: 600;
-	color: var(--wp--preset--color--on-surface);
 	background-color: var(--wp--preset--color--surface-dim);
 }
 
 /* Sidebar column */
 .rc-section-sidebar {
 	padding-right: 1rem;
+}
+
+/* Desktop: stick the sidebar below the fixed header while scrolling.
+   align-self is required because the column is a flex child of wp:columns. */
+@media screen and (min-width: 768px) {
+	.rc-section-sidebar {
+		position: sticky;
+		top: calc(var(--rc-header-height) + 1rem);
+		align-self: flex-start;
+	}
 }
 
 /* Responsive */

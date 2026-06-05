@@ -23,6 +23,7 @@ if (file_exists(get_theme_file_path('vendor/autoload.php'))) {
 require_once get_theme_file_path('inc/class-theme-settings.php');
 require_once get_theme_file_path('inc/class-theme-setup.php');
 require_once get_theme_file_path('inc/class-theme-shop.php');
+require_once get_theme_file_path('inc/class-theme-section-nav.php');
 require_once get_theme_file_path('inc/class-theme-i18n.php');
 
 // Cookie-driven front-end locale + data-lang + textdomain (visitor SV/EN switch).
@@ -46,6 +47,11 @@ add_action('admin_post_rockaden_save_settings', ['Rockaden_Theme_Settings', 'han
 add_action('add_meta_boxes', ['Rockaden_Theme_Settings', 'register_page_display_meta_box']);
 add_action('save_post_page', ['Rockaden_Theme_Settings', 'save_page_display_meta']);
 add_filter('body_class', ['Rockaden_Theme_Settings', 'body_class_for_page_display']);
+
+// Section menu meta box (editor view + reorder/label/hide of the section sidebar menu).
+add_action('init', ['Rockaden_Theme_Section_Nav', 'register']);
+add_action('add_meta_boxes', ['Rockaden_Theme_Settings', 'register_section_menu_meta_box']);
+add_action('admin_enqueue_scripts', ['Rockaden_Theme_Settings', 'enqueue_section_menu_assets']);
 
 
 /**
