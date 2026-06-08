@@ -212,6 +212,33 @@ add_action('rc_register_docs', function (): void {
             'file'       => $docs_dir . 'installningar.html',
             'order'      => 30,
         ],
+        [
+            'slug'       => 'guide-lagg-till-vara',
+            'title_sv'   => 'Lägg till en vara i butiken',
+            'title_en'   => 'Add a shop item',
+            'section_sv' => 'How-Tos',
+            'section_en' => 'How-Tos',
+            'file'       => $docs_dir . 'guide-lagg-till-vara.html',
+            'order'      => 40,
+        ],
+        [
+            'slug'       => 'guide-sektionssida',
+            'title_sv'   => 'Skapa en sektionssida med sidomeny',
+            'title_en'   => 'Set up a section page with a side menu',
+            'section_sv' => 'How-Tos',
+            'section_en' => 'How-Tos',
+            'file'       => $docs_dir . 'guide-sektionssida.html',
+            'order'      => 60,
+        ],
+        [
+            'slug'       => 'guide-landing-hero',
+            'title_sv'   => 'Redigera startsidans hero',
+            'title_en'   => 'Edit the landing hero',
+            'section_sv' => 'How-Tos',
+            'section_en' => 'How-Tos',
+            'file'       => $docs_dir . 'guide-landing-hero.html',
+            'order'      => 70,
+        ],
     ];
     foreach ($entries as $entry) {
         \Rockaden\Docs\DocsRegistry::register($entry);
