@@ -163,18 +163,26 @@ class Rockaden_Theme_Settings {
 		wp_enqueue_media();
 		wp_enqueue_editor();
 
+		// Version by file mtime so edits bust the browser cache without a theme
+		// version bump (the static theme version would serve stale assets).
+		$css_path = get_theme_file_path('assets/css/theme-settings.css');
+		$js_path  = get_theme_file_path('assets/js/theme-settings.js');
+		$fallback = wp_get_theme()->get('Version');
+		$css_ver  = file_exists($css_path) ? (string) filemtime($css_path) : $fallback;
+		$js_ver   = file_exists($js_path) ? (string) filemtime($js_path) : $fallback;
+
 		wp_enqueue_style(
 			'rockaden-theme-settings',
 			get_theme_file_uri('assets/css/theme-settings.css'),
 			[],
-			wp_get_theme()->get('Version')
+			$css_ver
 		);
 
 		wp_enqueue_script(
 			'rockaden-theme-settings',
 			get_theme_file_uri('assets/js/theme-settings.js'),
 			['jquery'],
-			wp_get_theme()->get('Version'),
+			$js_ver,
 			true
 		);
 	}
@@ -920,6 +928,8 @@ class Rockaden_Theme_Settings {
 							<input type="text" name="main_nav_url[]"
 								value="<?php echo esc_attr($item['url']); ?>"
 								placeholder="/url" class="regular-text rockaden-url-input" />
+							<button type="button" class="button rockaden-nav-move-up" title="Move up" aria-label="Move up">&uarr;</button>
+							<button type="button" class="button rockaden-nav-move-down" title="Move down" aria-label="Move down">&darr;</button>
 							<button type="button" class="button rockaden-remove-row">&times;</button>
 						</div>
 					<?php endforeach; ?>
@@ -942,6 +952,8 @@ class Rockaden_Theme_Settings {
 							<input type="text" name="more_nav_url[]"
 								value="<?php echo esc_attr($item['url']); ?>"
 								placeholder="/url" class="regular-text rockaden-url-input" />
+							<button type="button" class="button rockaden-nav-move-up" title="Move up" aria-label="Move up">&uarr;</button>
+							<button type="button" class="button rockaden-nav-move-down" title="Move down" aria-label="Move down">&darr;</button>
 							<button type="button" class="button rockaden-remove-row">&times;</button>
 						</div>
 					<?php endforeach; ?>
@@ -958,6 +970,8 @@ class Rockaden_Theme_Settings {
 					<input type="text" name="" placeholder="Label (EN)" class="regular-text rockaden-label-en-input" />
 					<?php self::render_page_select($pages, ''); ?>
 					<input type="text" name="" placeholder="/url" class="regular-text rockaden-url-input" />
+					<button type="button" class="button rockaden-nav-move-up" title="Move up" aria-label="Move up">&uarr;</button>
+					<button type="button" class="button rockaden-nav-move-down" title="Move down" aria-label="Move down">&darr;</button>
 					<button type="button" class="button rockaden-remove-row">&times;</button>
 				</div>
 			</template>

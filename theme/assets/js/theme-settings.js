@@ -35,6 +35,27 @@
     }
   });
 
+  /* Reorder rows up/down (delegated). Row order = submit order, so swapping
+     rows in the DOM reorders the nav on save. */
+  document.addEventListener('click', function (e) {
+    var up = e.target.classList.contains('rockaden-nav-move-up');
+    var down = e.target.classList.contains('rockaden-nav-move-down');
+    if (!up && !down) return;
+    var row = e.target.closest('.rockaden-nav-row');
+    if (!row) return;
+    if (up) {
+      var prev = row.previousElementSibling;
+      if (prev && prev.classList.contains('rockaden-nav-row')) {
+        row.parentNode.insertBefore(row, prev);
+      }
+    } else {
+      var next = row.nextElementSibling;
+      if (next && next.classList.contains('rockaden-nav-row')) {
+        row.parentNode.insertBefore(next, row);
+      }
+    }
+  });
+
   /* Page dropdown → URL field
      - Picking a Page or theme route writes that URL into the (hidden)
        url input and keeps it hidden.
