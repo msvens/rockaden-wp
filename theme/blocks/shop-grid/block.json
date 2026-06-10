@@ -11,7 +11,7 @@
   "attributes": {
     "count": {
       "type": "number",
-      "default": 4
+      "default": 0
     },
     "moreUrl": {
       "type": "string",
@@ -24,6 +24,11 @@
       "type": "string",
       "default": "grid",
       "enum": ["grid", "column"]
+    },
+    "display": {
+      "type": "string",
+      "default": "full",
+      "enum": ["full", "condensed"]
     }
   },
   "supports": {

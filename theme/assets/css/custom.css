@@ -1347,8 +1347,7 @@ body > .wp-site-blocks > main.rockaden-landing {
 }
 
 .rockaden-shop-card__media {
-  /* Element is an <a> linking to the single page; needs display:block
-     so width / aspect-ratio apply (anchors are inline by default). */
+  margin: 0;
   display: block;
   aspect-ratio: 1 / 1;
 }
@@ -1384,15 +1383,30 @@ body > .wp-site-blocks > main.rockaden-landing {
   font-weight: 600;
   letter-spacing: 0;
   line-height: 1.25;
-}
-
-.rockaden-shop-card__title a {
   color: var(--wp--preset--color--on-surface);
-  text-decoration: none;
 }
 
-.rockaden-shop-card__title a:hover {
-  color: var(--wp--preset--color--primary);
+.rockaden-shop-card__desc {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--wp--preset--color--on-surface-muted, #6b7280);
+}
+
+.rockaden-shop-card__desc > :first-child {
+  margin-top: 0;
+}
+
+.rockaden-shop-card__desc > :last-child {
+  margin-bottom: 0;
+}
+
+/* Condensed display: image + title only — tighter, centered cards. */
+.rockaden-shop-grid--condensed .rockaden-shop-card__body {
+  padding: 0.5rem 0.625rem;
+}
+
+.rockaden-shop-grid--condensed .rockaden-shop-card__title {
+  text-align: center;
 }
 
 .rockaden-shop-card__price {
