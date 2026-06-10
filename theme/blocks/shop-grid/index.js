@@ -35,10 +35,19 @@
 						{ title: 'Settings' },
 						el( TextControl, {
 							label: 'Count',
-							value: String( attributes.count || '' ),
+							help: '0 = show all items',
+							type: 'number',
+							min: 0,
+							value:
+								attributes.count == null
+									? ''
+									: String( attributes.count ),
 							onChange: function ( val ) {
 								setAttributes( {
-									count: Math.max( 1, Number( val ) || 1 ),
+									count:
+										'' === val
+											? 0
+											: Math.max( 0, Number( val ) || 0 ),
 								} );
 							},
 						} ),
@@ -51,6 +60,20 @@
 							],
 							onChange: function ( val ) {
 								setAttributes( { layout: val } );
+							},
+						} ),
+						el( SelectControl, {
+							label: 'Display',
+							value: attributes.display || 'full',
+							options: [
+								{ label: 'Full (all info)', value: 'full' },
+								{
+									label: 'Condensed (image + title)',
+									value: 'condensed',
+								},
+							],
+							onChange: function ( val ) {
+								setAttributes( { display: val } );
 							},
 						} ),
 						el( TextControl, {
@@ -84,10 +107,12 @@
 							},
 						},
 						'[ Shop Items — ' +
-							( attributes.count || 4 ) +
+							( attributes.count || 'all' ) +
 							' items, ' +
 							( attributes.layout || 'grid' ) +
-							' layout ]'
+							', ' +
+							( attributes.display || 'full' ) +
+							' ]'
 					)
 				)
 			);

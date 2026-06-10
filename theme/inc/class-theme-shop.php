@@ -40,13 +40,19 @@ class Rockaden_Theme_Shop {
 					'add_new_item'  => __('Add New Shop Item', 'rockaden-theme'),
 					'edit_item'     => __('Edit Shop Item', 'rockaden-theme'),
 				],
-				'public'       => true,
-				'show_ui'      => true,
-				'show_in_rest' => true,
-				'supports'     => ['title', 'editor', 'thumbnail', 'excerpt'],
-				'has_archive'  => false,
-				'menu_icon'    => 'dashicons-cart',
-				'rewrite'      => ['slug' => 'shop'],
+				// Items are shown only inside the shop grid block — there are no
+				// per-item front-end pages. Keep the admin UI + REST for editing,
+				// but no public single pages / archive / rewrite (the latter also
+				// avoids clashing with the 'shop' page slug).
+				'public'             => false,
+				'show_ui'            => true,
+				'show_in_rest'       => true,
+				'publicly_queryable' => false,
+				'exclude_from_search' => true,
+				'supports'           => ['title', 'editor', 'thumbnail', 'excerpt'],
+				'has_archive'        => false,
+				'menu_icon'          => 'dashicons-cart',
+				'rewrite'            => false,
 			]
 		);
 	}
@@ -139,8 +145,8 @@ class Rockaden_Theme_Shop {
 		return [
 			'id'          => $post->ID,
 			'title'       => $post->post_title,
-			'permalink'   => get_permalink($post),
 			'excerpt'     => $post->post_excerpt,
+			'content'     => $post->post_content,
 			'price'       => get_post_meta($post->ID, 'rc_price', true) ?: '',
 			'salePrice'   => get_post_meta($post->ID, 'rc_sale_price', true) ?: '',
 			'buyUrl'      => get_post_meta($post->ID, 'rc_buy_url', true) ?: '',
