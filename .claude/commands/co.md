@@ -1,3 +1,4 @@
+
 # Commit Command
 
 Validate and commit changes: $ARGUMENTS
