@@ -64,6 +64,9 @@ class Rockaden_Theme_Settings {
 			'cta_label'          => 'Bli medlem',
 			'cta_label_en'       => 'Join',
 			'cta_url'            => '',
+			// Recipient for the feedback-form block. Empty falls back to the
+			// site admin email at send time.
+			'feedback_email'     => '',
 			'main_nav'           => [
 				['label' => 'Nyheter',   'url' => '/'],
 				['label' => 'Kalender',  'url' => '/kalender'],
@@ -226,6 +229,7 @@ class Rockaden_Theme_Settings {
 		$options['cta_label']    = sanitize_text_field($_POST['cta_label'] ?? 'Bli medlem');
 		$options['cta_label_en'] = sanitize_text_field($_POST['cta_label_en'] ?? 'Join');
 		$options['cta_url']      = sanitize_text_field($_POST['cta_url'] ?? '');
+		$options['feedback_email'] = sanitize_email($_POST['feedback_email'] ?? '');
 
 		// Sidebar route toggles.
 		$options['sidebar_routes'] = [
@@ -724,6 +728,18 @@ class Rockaden_Theme_Settings {
 						<td class="rockaden-url-cell">
 							<?php self::render_page_select($pages, $options['cta_url']); ?>
 							<input type="text" name="cta_url" value="<?php echo esc_attr($options['cta_url']); ?>" class="regular-text rockaden-url-input" placeholder="/bli-medlem" />
+						</td>
+					</tr>
+				</table>
+
+				<!-- Feedback form -->
+				<h2>Feedback</h2>
+				<p class="description">Email address that gets notified of new submissions from the Feedback Form block. <strong>Leave empty to turn email off</strong> — submissions are always saved under the Feedback menu regardless.</p>
+				<table class="form-table">
+					<tr>
+						<th scope="row">Recipient email</th>
+						<td>
+							<input type="email" name="feedback_email" value="<?php echo esc_attr($options['feedback_email']); ?>" class="regular-text" placeholder="kontakt@example.com" />
 						</td>
 					</tr>
 				</table>
