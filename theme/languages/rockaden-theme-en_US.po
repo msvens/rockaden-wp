@@ -75,3 +75,58 @@ msgstr "Discover chess at SK Rockaden"
 
 msgid "Varför välja SK Rockaden?"
 msgstr "Why choose SK Rockaden?"
+
+# Feedback form (rockaden/feedback-form)
+msgid "Namn"
+msgstr "Name"
+
+msgid "E-post"
+msgstr "Email"
+
+msgid "Meddelande"
+msgstr "Message"
+
+msgid "Webbplats"
+msgstr "Website"
+
+msgid "Skicka"
+msgstr "Send"
+
+msgid "Skickar…"
+msgstr "Sending…"
+
+msgid "Tack! Ditt meddelande har skickats."
+msgstr "Thanks! Your message has been sent."
+
+msgid "Något gick fel. Försök igen."
+msgstr "Something went wrong. Please try again."
+
+msgid "Aktivera JavaScript för att skicka feedback."
+msgstr "Please enable JavaScript to send feedback."
+
+msgid "Visa feedback"
+msgstr "View Feedback"
+
+msgid "Fyll i ditt namn och ett meddelande."
+msgstr "Please fill in your name and a message."
+
+msgid "Ange en giltig e-postadress eller lämna fältet tomt."
+msgstr "Enter a valid email address or leave the field empty."
+
+msgid "Valfritt – fyll i om du vill att vi ska kunna kontakta dig."
+msgstr "Optional — add it if you'd like us to be able to contact you."
+
+msgid "Kunde inte spara ditt meddelande. Försök igen."
+msgstr "Could not save your message. Please try again."
+
+msgid "Feedback från %s"
+msgstr "Feedback from %s"
+
+msgid "Webbplatsfeedback från %s"
+msgstr "Website feedback from %s"
+
+msgid "Avsändare"
+msgstr "Sender"
+
+msgid "Från"
+msgstr "From"

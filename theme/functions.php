@@ -23,11 +23,16 @@ if (file_exists(get_theme_file_path('vendor/autoload.php'))) {
 require_once get_theme_file_path('inc/class-theme-settings.php');
 require_once get_theme_file_path('inc/class-theme-setup.php');
 require_once get_theme_file_path('inc/class-theme-shop.php');
+require_once get_theme_file_path('inc/class-theme-feedback.php');
 require_once get_theme_file_path('inc/class-theme-section-nav.php');
+require_once get_theme_file_path('inc/class-theme-comments.php');
 require_once get_theme_file_path('inc/class-theme-i18n.php');
 
 // Cookie-driven front-end locale + data-lang + textdomain (visitor SV/EN switch).
 Rockaden_Theme_I18n::register();
+
+// Comments disabled site-wide (new + old posts) + admin tidy-up.
+Rockaden_Theme_Comments::register();
 
 // Theme activation: create stub pages + default settings.
 add_action('after_switch_theme', ['Rockaden_Theme_Setup', 'activate']);
@@ -37,6 +42,14 @@ add_action('init', ['Rockaden_Theme_Shop', 'register']);
 add_action('rest_api_init', ['Rockaden_Theme_Shop', 'register_routes']);
 add_action('add_meta_boxes', ['Rockaden_Theme_Shop', 'add_meta_box']);
 add_action('save_post_rc_shop_item', ['Rockaden_Theme_Shop', 'save'], 10, 2);
+
+// Feedback feature (rc_feedback CPT to store submissions + public REST endpoint
+// behind the feedback-form block on the Contact page).
+add_action('init', ['Rockaden_Theme_Feedback', 'register']);
+add_action('rest_api_init', ['Rockaden_Theme_Feedback', 'register_routes']);
+add_action('add_meta_boxes', ['Rockaden_Theme_Feedback', 'add_meta_box']);
+add_filter('manage_rc_feedback_posts_columns', ['Rockaden_Theme_Feedback', 'columns']);
+add_action('manage_rc_feedback_posts_custom_column', ['Rockaden_Theme_Feedback', 'column_content'], 10, 2);
 
 // Admin settings page.
 add_action('admin_menu', ['Rockaden_Theme_Settings', 'register_page']);
@@ -116,22 +129,6 @@ add_action('wp_enqueue_scripts', function (): void {
         wp_get_theme()->get('Version'),
         true
     );
-});
-
-/**
- * Expose comment_count on the posts REST API endpoint.
- */
-add_action('rest_api_init', function (): void {
-    register_rest_field('post', 'comment_count', [
-        'get_callback' => function ($post) {
-            return (int) get_comments_number($post['id']);
-        },
-        'schema' => [
-            'type'        => 'integer',
-            'description' => 'Number of comments',
-            'context'     => ['view'],
-        ],
-    ]);
 });
 
 /**
@@ -253,6 +250,7 @@ add_action('init', function (): void {
     register_block_type(get_theme_file_path('blocks/sidebar-panel'));
     register_block_type(get_theme_file_path('blocks/page-title'));
     register_block_type(get_theme_file_path('blocks/shop-grid'));
+    register_block_type(get_theme_file_path('blocks/feedback-form'));
 });
 
 /**
