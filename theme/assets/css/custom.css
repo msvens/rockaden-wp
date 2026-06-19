@@ -19,6 +19,39 @@ html.dark img {
   opacity: 0.9;
 }
 
+/* --- Core block palette fixes ---
+   Some built-in blocks hardcode light greys instead of using the palette, so
+   they don't follow dark mode. Point them at the palette tokens so they adapt
+   in both light and dark. */
+
+/* Table → Stripes: core paints odd rows + the bottom border #f0f0f0 (unreadable
+   in dark). Use the palette instead. (A per-table background still wins via
+   core's .has-background rule.) */
+.wp-block-table.is-style-stripes tbody tr:nth-child(odd) {
+  background-color: var(--wp--preset--color--surface-dim);
+}
+
+.wp-block-table.is-style-stripes {
+  border-bottom-color: var(--wp--preset--color--border);
+}
+
+/* Code / Preformatted: no background by default — give them a subtle surface
+   box so they read as code in both modes. */
+.wp-block-code,
+.wp-block-preformatted {
+  background-color: var(--wp--preset--color--surface-dim);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 0.25rem;
+  padding: 1rem;
+}
+
+/* Search input: core gives it a hardcoded grey border; follow the palette. */
+.wp-block-search__input {
+  background-color: var(--wp--preset--color--surface);
+  color: var(--wp--preset--color--on-surface);
+  border-color: var(--wp--preset--color--border);
+}
+
 /* --- Header height + font size custom properties (density) --- */
 :root {
   --rc-header-height: 3.5rem;
