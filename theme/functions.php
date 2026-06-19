@@ -26,6 +26,7 @@ require_once get_theme_file_path('inc/class-theme-shop.php');
 require_once get_theme_file_path('inc/class-theme-feedback.php');
 require_once get_theme_file_path('inc/class-theme-section-nav.php');
 require_once get_theme_file_path('inc/class-theme-comments.php');
+require_once get_theme_file_path('inc/class-theme-excerpt.php');
 require_once get_theme_file_path('inc/class-theme-i18n.php');
 
 // Cookie-driven front-end locale + data-lang + textdomain (visitor SV/EN switch).
@@ -33,6 +34,9 @@ Rockaden_Theme_I18n::register();
 
 // Comments disabled site-wide (new + old posts) + admin tidy-up.
 Rockaden_Theme_Comments::register();
+
+// Content-aware post excerpts (hide "Läs mer" when nothing is truncated).
+Rockaden_Theme_Excerpt::register();
 
 // Theme activation: create stub pages + default settings.
 add_action('after_switch_theme', ['Rockaden_Theme_Setup', 'activate']);
