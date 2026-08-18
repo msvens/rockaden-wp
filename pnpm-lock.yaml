@@ -15,8 +15,8 @@ importers:
   plugin:
     dependencies:
       '@msvens/schack-se-sdk':
-        specifier: github:msvens/schack-se-sdk#v0.7.0
-        version: https://codeload.github.com/msvens/schack-se-sdk/tar.gz/ef7fc09f023e3ad147a04c596ad3e2490aa2c6f6
+        specifier: github:msvens/schack-se-sdk#v0.17.0
+        version: https://codeload.github.com/msvens/schack-se-sdk/tar.gz/51f953673ba2f54d4ae7505f55eb1d7dc8f19a0b
       '@wordpress/api-fetch':
         specifier: ^7.0.0
         version: 7.40.0
@@ -1050,9 +1050,9 @@ packages:
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
 
-  '@msvens/schack-se-sdk@https://codeload.github.com/msvens/schack-se-sdk/tar.gz/ef7fc09f023e3ad147a04c596ad3e2490aa2c6f6':
-    resolution: {tarball: https://codeload.github.com/msvens/schack-se-sdk/tar.gz/ef7fc09f023e3ad147a04c596ad3e2490aa2c6f6}
-    version: 0.7.0
+  '@msvens/schack-se-sdk@https://codeload.github.com/msvens/schack-se-sdk/tar.gz/51f953673ba2f54d4ae7505f55eb1d7dc8f19a0b':
+    resolution: {tarball: https://codeload.github.com/msvens/schack-se-sdk/tar.gz/51f953673ba2f54d4ae7505f55eb1d7dc8f19a0b}
+    version: 0.17.0
 
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
@@ -8226,7 +8226,7 @@ snapshots:
 
   '@leichtgewicht/ip-codec@2.0.5': {}
 
-  '@msvens/schack-se-sdk@https://codeload.github.com/msvens/schack-se-sdk/tar.gz/ef7fc09f023e3ad147a04c596ad3e2490aa2c6f6': {}
+  '@msvens/schack-se-sdk@https://codeload.github.com/msvens/schack-se-sdk/tar.gz/51f953673ba2f54d4ae7505f55eb1d7dc8f19a0b': {}
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
