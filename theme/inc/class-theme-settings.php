@@ -77,6 +77,16 @@ class Rockaden_Theme_Settings {
 				['label' => 'Om Rockaden', 'url' => '/om-rockaden'],
 				['label' => 'Kontakt',     'url' => '/kontakt'],
 			],
+			// Footer links. Seeded from what parts/footer.html used to hardcode,
+			// so activating an updated theme changes nothing until an admin edits it.
+			'footer_nav'         => [
+				['label' => 'Nyheter', 'url' => '/nyheter'],
+				['label' => 'Om oss',  'url' => '/om-rockaden'],
+				['label' => 'Kontakt', 'url' => '/kontakt'],
+			],
+			// Line beneath the footer links. {year} is replaced at render time.
+			'footer_text'        => '© {year} SK Rockaden',
+			'footer_text_en'     => '',
 		];
 	}
 
@@ -92,18 +102,51 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
+	 * Resolve nav items to a single label and URL for the active front-end locale.
+	 *
+	 * Items store Swedish in `label` / `url` and optional English in `labelEn` /
+	 * `urlEn`. An empty English value falls back to the Swedish one, so an item
+	 * that exists only once still works in both locales — which is the common
+	 * case, and why both English fields are optional.
+	 *
+	 * Shared by the header (via get_frontend_config) and the footer-nav block so
+	 * the two cannot drift apart.
+	 *
+	 * @param array<int, array<string, string>> $items Saved nav items.
+	 * @return array<int, array{label: string, url: string}>
+	 */
+	public static function localize_nav_items(array $items): array {
+		$is_en = ('en' === Rockaden_Theme_I18n::current_lang());
+
+		$resolved = array_map(
+			static function (array $item) use ($is_en): array {
+				$label = ($is_en && ! empty($item['labelEn'])) ? $item['labelEn'] : ($item['label'] ?? '');
+				$url   = ($is_en && ! empty($item['urlEn'])) ? $item['urlEn'] : ($item['url'] ?? '');
+				return ['label' => $label, 'url' => $url];
+			},
+			$items
+		);
+
+		return array_values($resolved);
+	}
+
+	/**
+	 * The footer text line for the active locale, with {year} substituted.
+	 */
+	public static function footer_text(): string {
+		$opts  = self::get_options();
+		$is_en = ('en' === Rockaden_Theme_I18n::current_lang());
+		$text  = ($is_en && ! empty($opts['footer_text_en'])) ? $opts['footer_text_en'] : ($opts['footer_text'] ?? '');
+
+		return str_replace('{year}', wp_date('Y'), $text);
+	}
+
+	/**
 	 * Return the config object for the frontend JS.
 	 */
 	public static function get_frontend_config(): array {
 		$opts  = self::get_options();
 		$is_en = ('en' === Rockaden_Theme_I18n::current_lang());
-
-		// Resolve each nav item to a single label for the active locale.
-		// (Items store Swedish in `label` and optional English in `labelEn`.)
-		$resolve = static function (array $item) use ($is_en): array {
-			$label = ($is_en && ! empty($item['labelEn'])) ? $item['labelEn'] : ($item['label'] ?? '');
-			return ['label' => $label, 'url' => $item['url'] ?? ''];
-		};
 
 		$cta = [];
 		$cta_url = trim($opts['cta_url']);
@@ -122,8 +165,8 @@ class Rockaden_Theme_Settings {
 		}
 
 		return [
-			'mainNav'            => array_values(array_map($resolve, $opts['main_nav'])),
-			'moreNav'            => array_values(array_map($resolve, $opts['more_nav'])),
+			'mainNav'            => self::localize_nav_items($opts['main_nav']),
+			'moreNav'            => self::localize_nav_items($opts['more_nav']),
 			'ctaButton'          => $cta,
 			'docsUrl'            => $docs_url,
 			'showDarkToggle'     => (bool) $opts['show_dark_toggle'],
@@ -251,8 +294,13 @@ class Rockaden_Theme_Settings {
 		);
 
 		// Navigation items.
-		$options['main_nav'] = self::sanitize_nav_items($_POST['main_nav_label'] ?? [], $_POST['main_nav_url'] ?? [], $_POST['main_nav_label_en'] ?? []);
-		$options['more_nav'] = self::sanitize_nav_items($_POST['more_nav_label'] ?? [], $_POST['more_nav_url'] ?? [], $_POST['more_nav_label_en'] ?? []);
+		$options['main_nav']   = self::sanitize_nav_items($_POST['main_nav_label'] ?? [], $_POST['main_nav_url'] ?? [], $_POST['main_nav_label_en'] ?? [], $_POST['main_nav_url_en'] ?? []);
+		$options['more_nav']   = self::sanitize_nav_items($_POST['more_nav_label'] ?? [], $_POST['more_nav_url'] ?? [], $_POST['more_nav_label_en'] ?? [], $_POST['more_nav_url_en'] ?? []);
+		$options['footer_nav'] = self::sanitize_nav_items($_POST['footer_nav_label'] ?? [], $_POST['footer_nav_url'] ?? [], $_POST['footer_nav_label_en'] ?? [], $_POST['footer_nav_url_en'] ?? []);
+
+		// Footer text.
+		$options['footer_text']    = sanitize_text_field($_POST['footer_text'] ?? '');
+		$options['footer_text_en'] = sanitize_text_field($_POST['footer_text_en'] ?? '');
 
 		update_option(self::OPTION_KEY, $options);
 
@@ -300,13 +348,14 @@ class Rockaden_Theme_Settings {
 	/**
 	 * Sanitize parallel arrays of labels and URLs into nav items.
 	 */
-	private static function sanitize_nav_items(array $labels, array $urls, array $labels_en = []): array {
+	private static function sanitize_nav_items(array $labels, array $urls, array $labels_en = [], array $urls_en = []): array {
 		$items = [];
 		$count = min(count($labels), count($urls));
 		for ($i = 0; $i < $count; $i++) {
 			$label    = sanitize_text_field($labels[$i]);
 			$url      = sanitize_text_field($urls[$i]);
 			$label_en = sanitize_text_field($labels_en[$i] ?? '');
+			$url_en   = sanitize_text_field($urls_en[$i] ?? '');
 			if ($label === '' && $url === '') {
 				continue;
 			}
@@ -314,8 +363,13 @@ class Rockaden_Theme_Settings {
 				'label' => $label,
 				'url'   => $url,
 			];
+			// English fields are only stored when set, so an item with no English
+			// variant stays exactly the shape it has always been.
 			if ($label_en !== '') {
 				$item['labelEn'] = $label_en;
+			}
+			if ($url_en !== '') {
+				$item['urlEn'] = $url_en;
 			}
 			$items[] = $item;
 		}
@@ -346,6 +400,70 @@ class Rockaden_Theme_Settings {
 	 * @param string               $current_url   Currently saved URL.
 	 * @param string               $select_class  Class on the <select>.
 	 */
+	/**
+	 * Render one nav repeater row: Swedish label + URL, optional English label + URL.
+	 *
+	 * Used for main nav, more menu, footer nav and the hidden JS row template.
+	 * Passing an empty $prefix leaves the input names blank, which is what the
+	 * template needs — theme-settings.js fills them in when cloning a row.
+	 *
+	 * Laid out as two lines — Swedish above English, each tagged in a left
+	 * gutter — because two identical page pickers side by side gave no clue
+	 * which was which.
+	 *
+	 * Inputs carry `data-field`; theme-settings.js builds their names from it
+	 * rather than from position, so the markup can be rearranged freely.
+	 *
+	 * @param array<int, WP_Post>   $pages  Pages for the picker.
+	 * @param string                $prefix Field-name prefix, e.g. 'main_nav'. Empty for the template.
+	 * @param array<string, string> $item   Saved item, or empty for a blank row.
+	 */
+	private static function render_nav_row(array $pages, string $prefix, array $item = []): void {
+		$name = static function (string $field) use ($prefix): string {
+			return $prefix === '' ? '' : $prefix . '_' . $field . '[]';
+		};
+		?>
+		<div class="rockaden-nav-row">
+			<div class="rockaden-nav-row__langs">
+
+				<div class="rockaden-nav-lang">
+					<span class="rockaden-nav-lang__tag" aria-hidden="true">SV</span>
+					<input type="text" data-field="label" name="<?php echo esc_attr($name('label')); ?>"
+						value="<?php echo esc_attr($item['label'] ?? ''); ?>"
+						placeholder="Label" aria-label="Swedish label" class="regular-text" />
+					<span class="rockaden-url-cell">
+						<?php self::render_page_select($pages, $item['url'] ?? ''); ?>
+						<input type="text" data-field="url" name="<?php echo esc_attr($name('url')); ?>"
+							value="<?php echo esc_attr($item['url'] ?? ''); ?>"
+							placeholder="/url" class="regular-text rockaden-url-input" />
+					</span>
+				</div>
+
+				<div class="rockaden-nav-lang">
+					<span class="rockaden-nav-lang__tag" aria-hidden="true">EN</span>
+					<input type="text" data-field="label_en" name="<?php echo esc_attr($name('label_en')); ?>"
+						value="<?php echo esc_attr($item['labelEn'] ?? ''); ?>"
+						placeholder="Same as Swedish" aria-label="English label"
+						class="regular-text rockaden-label-en-input" />
+					<span class="rockaden-url-cell">
+						<?php self::render_page_select($pages, $item['urlEn'] ?? ''); ?>
+						<input type="text" data-field="url_en" name="<?php echo esc_attr($name('url_en')); ?>"
+							value="<?php echo esc_attr($item['urlEn'] ?? ''); ?>"
+							placeholder="/url" class="regular-text rockaden-url-input" />
+					</span>
+				</div>
+
+			</div>
+
+			<div class="rockaden-nav-row__actions">
+				<button type="button" class="button rockaden-nav-move-up" title="Move up" aria-label="Move up">&uarr;</button>
+				<button type="button" class="button rockaden-nav-move-down" title="Move down" aria-label="Move down">&darr;</button>
+				<button type="button" class="button rockaden-remove-row">&times;</button>
+			</div>
+		</div>
+		<?php
+	}
+
 	private static function render_page_select(array $pages, string $current_url, string $select_class = 'rockaden-page-select'): void {
 		$normalized_current = $current_url;
 		$known              = [];
@@ -930,24 +1048,13 @@ class Rockaden_Theme_Settings {
 
 				<!-- Main Navigation -->
 				<h2>Main Navigation</h2>
-				<p class="description">These links appear in the header navigation bar.</p>
+				<p class="description">
+					These links appear in the header navigation bar.
+					Leave the English label or page empty to reuse the Swedish one.
+				</p>
 				<div class="rockaden-nav-repeater" id="main-nav-repeater">
 					<?php foreach ($options['main_nav'] as $item) : ?>
-						<div class="rockaden-nav-row">
-							<input type="text" name="main_nav_label[]"
-								value="<?php echo esc_attr($item['label']); ?>"
-								placeholder="Label (SV)" class="regular-text" />
-							<input type="text" name="main_nav_label_en[]"
-								value="<?php echo esc_attr($item['labelEn'] ?? ''); ?>"
-								placeholder="Label (EN)" class="regular-text rockaden-label-en-input" />
-							<?php self::render_page_select($pages, $item['url']); ?>
-							<input type="text" name="main_nav_url[]"
-								value="<?php echo esc_attr($item['url']); ?>"
-								placeholder="/url" class="regular-text rockaden-url-input" />
-							<button type="button" class="button rockaden-nav-move-up" title="Move up" aria-label="Move up">&uarr;</button>
-							<button type="button" class="button rockaden-nav-move-down" title="Move down" aria-label="Move down">&darr;</button>
-							<button type="button" class="button rockaden-remove-row">&times;</button>
-						</div>
+						<?php self::render_nav_row($pages, 'main_nav', $item); ?>
 					<?php endforeach; ?>
 				</div>
 				<button type="button" class="button rockaden-add-row" data-target="main-nav-repeater" data-prefix="main_nav">+ Add item</button>
@@ -957,39 +1064,48 @@ class Rockaden_Theme_Settings {
 				<p class="description">These links appear in the "Mer" dropdown and mobile drawer.</p>
 				<div class="rockaden-nav-repeater" id="more-nav-repeater">
 					<?php foreach ($options['more_nav'] as $item) : ?>
-						<div class="rockaden-nav-row">
-							<input type="text" name="more_nav_label[]"
-								value="<?php echo esc_attr($item['label']); ?>"
-								placeholder="Label (SV)" class="regular-text" />
-							<input type="text" name="more_nav_label_en[]"
-								value="<?php echo esc_attr($item['labelEn'] ?? ''); ?>"
-								placeholder="Label (EN)" class="regular-text rockaden-label-en-input" />
-							<?php self::render_page_select($pages, $item['url']); ?>
-							<input type="text" name="more_nav_url[]"
-								value="<?php echo esc_attr($item['url']); ?>"
-								placeholder="/url" class="regular-text rockaden-url-input" />
-							<button type="button" class="button rockaden-nav-move-up" title="Move up" aria-label="Move up">&uarr;</button>
-							<button type="button" class="button rockaden-nav-move-down" title="Move down" aria-label="Move down">&darr;</button>
-							<button type="button" class="button rockaden-remove-row">&times;</button>
-						</div>
+						<?php self::render_nav_row($pages, 'more_nav', $item); ?>
 					<?php endforeach; ?>
 				</div>
 				<button type="button" class="button rockaden-add-row" data-target="more-nav-repeater" data-prefix="more_nav">+ Add item</button>
+
+				<!-- Footer -->
+				<h2>Footer</h2>
+				<p class="description">Links shown in the site footer.</p>
+				<div class="rockaden-nav-repeater" id="footer-nav-repeater">
+					<?php foreach ($options['footer_nav'] as $item) : ?>
+						<?php self::render_nav_row($pages, 'footer_nav', $item); ?>
+					<?php endforeach; ?>
+				</div>
+				<button type="button" class="button rockaden-add-row" data-target="footer-nav-repeater" data-prefix="footer_nav">+ Add item</button>
+
+				<table class="form-table">
+					<tr>
+						<th scope="row"><label for="footer_text">Footer text (SV)</label></th>
+						<td>
+							<input type="text" id="footer_text" name="footer_text"
+								value="<?php echo esc_attr($options['footer_text']); ?>"
+								class="regular-text" />
+							<p class="description">Shown beneath the links. <code>{year}</code> is replaced with the current year.</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="footer_text_en">Footer text (EN)</label></th>
+						<td>
+							<input type="text" id="footer_text_en" name="footer_text_en"
+								value="<?php echo esc_attr($options['footer_text_en']); ?>"
+								class="regular-text" />
+							<p class="description">Leave empty to reuse the Swedish text.</p>
+						</td>
+					</tr>
+				</table>
 
 				<?php submit_button('Save Settings'); ?>
 			</form>
 
 			<!-- Hidden template for new rows (used by JS) -->
 			<template id="rockaden-nav-row-template">
-				<div class="rockaden-nav-row">
-					<input type="text" name="" placeholder="Label (SV)" class="regular-text" />
-					<input type="text" name="" placeholder="Label (EN)" class="regular-text rockaden-label-en-input" />
-					<?php self::render_page_select($pages, ''); ?>
-					<input type="text" name="" placeholder="/url" class="regular-text rockaden-url-input" />
-					<button type="button" class="button rockaden-nav-move-up" title="Move up" aria-label="Move up">&uarr;</button>
-					<button type="button" class="button rockaden-nav-move-down" title="Move down" aria-label="Move down">&darr;</button>
-					<button type="button" class="button rockaden-remove-row">&times;</button>
-				</div>
+				<?php self::render_nav_row($pages, ''); ?>
 			</template>
 		</div>
 		<?php

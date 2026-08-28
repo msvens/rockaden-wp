@@ -255,6 +255,7 @@ add_action('init', function (): void {
     register_block_type(get_theme_file_path('blocks/page-title'));
     register_block_type(get_theme_file_path('blocks/shop-grid'));
     register_block_type(get_theme_file_path('blocks/feedback-form'));
+    register_block_type(get_theme_file_path('blocks/footer-nav'));
 });
 
 /**
