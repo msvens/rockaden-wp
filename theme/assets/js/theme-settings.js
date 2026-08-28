@@ -18,11 +18,11 @@
       if (!container || !template) return;
 
       var clone = template.content.cloneNode(true);
-      var inputs = clone.querySelectorAll('input');
-      // Order in template: label SV, label EN, url
-      if (inputs[0]) inputs[0].name = prefix + '_label[]';
-      if (inputs[1]) inputs[1].name = prefix + '_label_en[]';
-      if (inputs[2]) inputs[2].name = prefix + '_url[]';
+      // Names come from each input's data-field, not its position, so
+      // render_nav_row can rearrange its markup without breaking this.
+      clone.querySelectorAll('input[data-field]').forEach(function (input) {
+        input.name = prefix + '_' + input.getAttribute('data-field') + '[]';
+      });
       container.appendChild(clone);
     });
   });
@@ -66,7 +66,9 @@
   });
 
   function syncRowFromSelect(select) {
-    var container = select.closest('.rockaden-nav-row') || select.closest('.rockaden-url-cell') || select.closest('td');
+    // .rockaden-url-cell first: a nav row holds two select+input pairs (SV and
+    // EN), so scoping to the row would always find the Swedish input.
+    var container = select.closest('.rockaden-url-cell') || select.closest('.rockaden-nav-row') || select.closest('td');
     if (!container) return;
     var urlInput = container.querySelector('.rockaden-url-input');
     if (!urlInput) return;

@@ -1,0 +1,57 @@
+/* Footer links + text. Replaces the inline styles parts/footer.html used to
+   carry, now that both are driven by Appearance → Rockaden. */
+
+.rc-footer-nav__nav {
+	display: flex;
+	justify-content: center;
+}
+
+.rc-footer-nav ul.rc-footer-nav__list {
+	list-style: none !important;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 0.75rem;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.rc-footer-nav ul.rc-footer-nav__list li {
+	list-style: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+/* Separator between items, drawn before every item but the first so it never
+   dangles at the end of a wrapped row. */
+.rc-footer-nav ul.rc-footer-nav__list li + li::before {
+	content: "·";
+	color: var(--wp--preset--color--on-surface-muted);
+}
+
+.rc-footer-nav ul.rc-footer-nav__list li a {
+	color: var(--wp--preset--color--on-surface-muted);
+	text-decoration: none;
+	font-size: 0.8rem;
+	font-weight: 300;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	transition: color 0.15s;
+}
+
+.rc-footer-nav ul.rc-footer-nav__list li a:hover,
+.rc-footer-nav ul.rc-footer-nav__list li a:focus-visible {
+	color: var(--wp--preset--color--on-surface);
+	text-decoration: none;
+}
+
+.rc-footer-nav__text {
+	margin: 1rem 0 0;
+	text-align: center;
+	font-size: 0.75rem;
+	color: var(--wp--preset--color--on-surface-muted);
+}

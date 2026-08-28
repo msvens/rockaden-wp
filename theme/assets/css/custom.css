@@ -615,25 +615,12 @@ html.dark .rockaden-card:hover {
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
 }
 
-/* --- Footer --- */
+/* --- Footer ---
+   Only the outer shell lives here. The links and text inside are rendered by
+   the rockaden/footer-nav block and styled by its own viewStyle. */
 .rockaden-footer {
   border-top: 1px solid var(--wp--preset--color--border);
   margin-top: auto;
-}
-
-.rockaden-footer a {
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  font-weight: 300;
-  letter-spacing: 0.05em;
-  color: var(--wp--preset--color--on-surface-muted);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-
-.rockaden-footer a:hover {
-  color: var(--wp--preset--color--on-surface);
-  text-decoration: none;
 }
 
 /* --- Sidebar navigation --- */
