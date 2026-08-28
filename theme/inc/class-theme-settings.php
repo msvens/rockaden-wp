@@ -64,6 +64,9 @@ class Rockaden_Theme_Settings {
 			'cta_label'          => 'Bli medlem',
 			'cta_label_en'       => 'Join',
 			'cta_url'            => '',
+			// Optional English target. Empty reuses cta_url, matching how nav
+			// items treat urlEn.
+			'cta_url_en'         => '',
 			// Recipient for the feedback-form block. Empty falls back to the
 			// site admin email at send time.
 			'feedback_email'     => '',
@@ -145,16 +148,21 @@ class Rockaden_Theme_Settings {
 	 * Return the config object for the frontend JS.
 	 */
 	public static function get_frontend_config(): array {
-		$opts  = self::get_options();
-		$is_en = ('en' === Rockaden_Theme_I18n::current_lang());
+		$opts = self::get_options();
 
+		// The CTA is a nav item in all but name, so resolve it through the same
+		// helper — otherwise its fallback rules could drift from the nav's.
 		$cta = [];
-		$cta_url = trim($opts['cta_url']);
-		if ($cta_url !== '') {
-			$cta = [
-				'label' => ($is_en && $opts['cta_label_en'] !== '') ? $opts['cta_label_en'] : $opts['cta_label'],
-				'url'   => $cta_url,
-			];
+		if (trim($opts['cta_url']) !== '') {
+			$resolved = self::localize_nav_items([
+				[
+					'label'   => $opts['cta_label'],
+					'labelEn' => $opts['cta_label_en'],
+					'url'     => $opts['cta_url'],
+					'urlEn'   => $opts['cta_url_en'],
+				],
+			]);
+			$cta = $resolved[0];
 		}
 
 		// Documentation link.
@@ -272,6 +280,7 @@ class Rockaden_Theme_Settings {
 		$options['cta_label']    = sanitize_text_field($_POST['cta_label'] ?? 'Bli medlem');
 		$options['cta_label_en'] = sanitize_text_field($_POST['cta_label_en'] ?? 'Join');
 		$options['cta_url']      = sanitize_text_field($_POST['cta_url'] ?? '');
+		$options['cta_url_en']   = sanitize_text_field($_POST['cta_url_en'] ?? '');
 		$options['feedback_email'] = sanitize_email($_POST['feedback_email'] ?? '');
 
 		// Sidebar route toggles.
@@ -842,10 +851,18 @@ class Rockaden_Theme_Settings {
 						</td>
 					</tr>
 					<tr>
-						<th scope="row">Link</th>
+						<th scope="row">Link (SV)</th>
 						<td class="rockaden-url-cell">
 							<?php self::render_page_select($pages, $options['cta_url']); ?>
 							<input type="text" name="cta_url" value="<?php echo esc_attr($options['cta_url']); ?>" class="regular-text rockaden-url-input" placeholder="/bli-medlem" />
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Link (EN)</th>
+						<td class="rockaden-url-cell">
+							<?php self::render_page_select($pages, $options['cta_url_en']); ?>
+							<input type="text" name="cta_url_en" value="<?php echo esc_attr($options['cta_url_en']); ?>" class="regular-text rockaden-url-input" placeholder="/join" />
+							<p class="description">Leave empty to reuse the Swedish link.</p>
 						</td>
 					</tr>
 				</table>
