@@ -144,12 +144,21 @@ class Rockaden_Theme_Setup {
 				continue;
 			}
 
+			// Nyheter is wired as WP's page_for_posts below, so its content is
+			// never rendered — /nyheter/ is drawn entirely by home.html. Seed it
+			// empty: placeholder text there looks like real content, and a
+			// non-empty body also suppresses core's classic-editor lock, which
+			// is conditional on `empty( $post->post_content )`.
+			$content = ('nyheter' === $slug)
+				? ''
+				: '<!-- wp:paragraph --><p>Innehåll kommer snart.</p><!-- /wp:paragraph -->';
+
 			wp_insert_post([
 				'post_title'   => $title,
 				'post_name'    => $slug,
 				'post_status'  => 'publish',
 				'post_type'    => 'page',
-				'post_content' => '<!-- wp:paragraph --><p>Innehåll kommer snart.</p><!-- /wp:paragraph -->',
+				'post_content' => $content,
 			]);
 		}
 	}
