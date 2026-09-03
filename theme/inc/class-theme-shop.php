@@ -9,10 +9,16 @@
  *
  * CPT slug and all rc_* meta keys are intentionally kept identical to the
  * plugin's former implementation so existing content needs no migration.
+ *
+ * @package Rockaden_Theme
  */
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Shop items: the rc_shop_item post type, its pricing meta box and read-only
+ * REST endpoint.
+ */
 class Rockaden_Theme_Shop {
 
 	public const POST_TYPE = 'rc_shop_item';
@@ -102,7 +108,8 @@ class Rockaden_Theme_Shop {
 	/*
 	---------------------------------------------------------------------
 	 * REST API
-	 * ------------------------------------------------------------------- */
+	 * -------------------------------------------------------------------
+	*/
 
 	/**
 	 * Register REST routes.
@@ -176,7 +183,8 @@ class Rockaden_Theme_Shop {
 	/*
 	---------------------------------------------------------------------
 	 * Pricing & Purchase meta box
-	 * ------------------------------------------------------------------- */
+	 * -------------------------------------------------------------------
+	*/
 
 	/**
 	 * Register the meta box.

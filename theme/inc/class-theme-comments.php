@@ -7,10 +7,15 @@
  * closes comments everywhere in code — new and old posts alike — and tidies the
  * admin so comments aren't presented anywhere. The single-post template's
  * comments block and the post-list "comment" buttons are removed separately.
+ *
+ * @package Rockaden_Theme
  */
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Closes comments site-wide in code and removes them from the admin.
+ */
 class Rockaden_Theme_Comments {
 
 	/**

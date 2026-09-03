@@ -4,17 +4,30 @@
  *
  * Registers an admin page under Appearance → Rockaden where site admins
  * can configure navigation items, the "Mer" menu, and appearance options.
+ *
+ * @package Rockaden_Theme
  */
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * The Appearance → Rockaden settings screen, plus the page-level meta boxes.
+ */
 class Rockaden_Theme_Settings {
 
 	const OPTION_KEY = 'rockaden_theme_options';
 	const PAGE_SLUG  = 'rockaden-theme-settings';
 
 	/**
+	 * Nonce action for the "Settings saved" notice, so the redirect flag that
+	 * triggers it can be verified rather than trusted.
+	 */
+	const SAVED_NOTICE_ACTION = 'rockaden_settings_saved';
+
+	/**
 	 * Default settings.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function defaults(): array {
 		return [
@@ -122,6 +135,8 @@ class Rockaden_Theme_Settings {
 
 	/**
 	 * Get current settings merged with defaults.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function get_options(): array {
 		$saved = get_option( self::OPTION_KEY, [] );
@@ -176,6 +191,8 @@ class Rockaden_Theme_Settings {
 
 	/**
 	 * Return the config object for the frontend JS.
+	 *
+	 * @return array<string, mixed>
 	 */
 	public static function get_frontend_config(): array {
 		$opts = self::get_options();
@@ -240,9 +257,11 @@ class Rockaden_Theme_Settings {
 
 	/**
 	 * Enqueue admin assets only on our settings page.
+	 *
+	 * @param string $hook Current admin page hook.
 	 */
 	public static function enqueue_admin_assets( string $hook ): void {
-		if ( $hook !== 'appearance_page_' . self::PAGE_SLUG ) {
+		if ( 'appearance_page_' . self::PAGE_SLUG !== $hook ) {
 			return;
 		}
 
@@ -281,7 +300,7 @@ class Rockaden_Theme_Settings {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_POST['rockaden_settings_nonce'], 'rockaden_save_settings' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rockaden_settings_nonce'] ) ), 'rockaden_save_settings' ) ) {
 			wp_die( 'Security check failed.' );
 		}
 
@@ -292,15 +311,15 @@ class Rockaden_Theme_Settings {
 		$options = [];
 
 		// Header style.
-		$style                   = sanitize_text_field( $_POST['header_style'] ?? 'contrast' );
+		$style                   = sanitize_text_field( wp_unslash( $_POST['header_style'] ?? 'contrast' ) );
 		$options['header_style'] = in_array( $style, [ 'default', 'contrast' ], true ) ? $style : 'contrast';
 
 		// Header density.
-		$density                   = sanitize_text_field( $_POST['header_density'] ?? 'normal' );
+		$density                   = sanitize_text_field( wp_unslash( $_POST['header_density'] ?? 'normal' ) );
 		$options['header_density'] = in_array( $density, [ 'compact', 'normal', 'large' ], true ) ? $density : 'normal';
 
 		// Header border width.
-		$border_width                   = sanitize_text_field( $_POST['header_border_width'] ?? 'thin' );
+		$border_width                   = sanitize_text_field( wp_unslash( $_POST['header_border_width'] ?? 'thin' ) );
 		$options['header_border_width'] = in_array( $border_width, [ 'thin', 'medium' ], true ) ? $border_width : 'thin';
 
 		// Checkboxes.
@@ -309,11 +328,11 @@ class Rockaden_Theme_Settings {
 		$options['show_language_toggle'] = ! empty( $_POST['show_language_toggle'] );
 
 		// CTA button.
-		$options['cta_label']      = sanitize_text_field( $_POST['cta_label'] ?? 'Bli medlem' );
-		$options['cta_label_en']   = sanitize_text_field( $_POST['cta_label_en'] ?? 'Join' );
-		$options['cta_url']        = sanitize_text_field( $_POST['cta_url'] ?? '' );
-		$options['cta_url_en']     = sanitize_text_field( $_POST['cta_url_en'] ?? '' );
-		$options['feedback_email'] = sanitize_email( $_POST['feedback_email'] ?? '' );
+		$options['cta_label']      = sanitize_text_field( wp_unslash( $_POST['cta_label'] ?? 'Bli medlem' ) );
+		$options['cta_label_en']   = sanitize_text_field( wp_unslash( $_POST['cta_label_en'] ?? 'Join' ) );
+		$options['cta_url']        = sanitize_text_field( wp_unslash( $_POST['cta_url'] ?? '' ) );
+		$options['cta_url_en']     = sanitize_text_field( wp_unslash( $_POST['cta_url_en'] ?? '' ) );
+		$options['feedback_email'] = sanitize_email( wp_unslash( $_POST['feedback_email'] ?? '' ) );
 
 		// Sidebar route toggles.
 		$options['sidebar_routes'] = [
@@ -324,32 +343,48 @@ class Rockaden_Theme_Settings {
 
 		// Sidebar cards.
 		$options['sidebar_cards'] = self::sanitize_sidebar_cards(
-			$_POST['sidebar_card_type'] ?? [],
-			$_POST['sidebar_card_title'] ?? [],
-			$_POST['sidebar_card_show_title'] ?? [],
-			$_POST['sidebar_card_content'] ?? [],
-			$_POST['sidebar_card_link_url'] ?? [],
-			$_POST['sidebar_card_link_label'] ?? [],
-			$_POST['sidebar_card_image_url'] ?? [],
-			$_POST['sidebar_card_full_bleed'] ?? []
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_type'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_title'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_show_title'] ?? [] ) ),
+			array_map( 'wp_kses_post', (array) wp_unslash( $_POST['sidebar_card_content'] ?? [] ) ),
+			array_map( 'esc_url_raw', (array) wp_unslash( $_POST['sidebar_card_link_url'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_link_label'] ?? [] ) ),
+			array_map( 'esc_url_raw', (array) wp_unslash( $_POST['sidebar_card_image_url'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_full_bleed'] ?? [] ) )
 		);
 
 		// Navigation items.
-		$options['main_nav']   = self::sanitize_nav_items( $_POST['main_nav_label'] ?? [], $_POST['main_nav_url'] ?? [], $_POST['main_nav_label_en'] ?? [], $_POST['main_nav_url_en'] ?? [] );
-		$options['more_nav']   = self::sanitize_nav_items( $_POST['more_nav_label'] ?? [], $_POST['more_nav_url'] ?? [], $_POST['more_nav_label_en'] ?? [], $_POST['more_nav_url_en'] ?? [] );
-		$options['footer_nav'] = self::sanitize_nav_items( $_POST['footer_nav_label'] ?? [], $_POST['footer_nav_url'] ?? [], $_POST['footer_nav_label_en'] ?? [], $_POST['footer_nav_url_en'] ?? [] );
+		$options['main_nav']   = self::sanitize_nav_items(
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['main_nav_label'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['main_nav_url'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['main_nav_label_en'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['main_nav_url_en'] ?? [] ) )
+		);
+		$options['more_nav']   = self::sanitize_nav_items(
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['more_nav_label'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['more_nav_url'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['more_nav_label_en'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['more_nav_url_en'] ?? [] ) )
+		);
+		$options['footer_nav'] = self::sanitize_nav_items(
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['footer_nav_label'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['footer_nav_url'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['footer_nav_label_en'] ?? [] ) ),
+			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['footer_nav_url_en'] ?? [] ) )
+		);
 
 		// Footer text.
-		$options['footer_text']    = sanitize_text_field( $_POST['footer_text'] ?? '' );
-		$options['footer_text_en'] = sanitize_text_field( $_POST['footer_text_en'] ?? '' );
+		$options['footer_text']    = sanitize_text_field( wp_unslash( $_POST['footer_text'] ?? '' ) );
+		$options['footer_text_en'] = sanitize_text_field( wp_unslash( $_POST['footer_text_en'] ?? '' ) );
 
 		update_option( self::OPTION_KEY, $options );
 
 		wp_safe_redirect(
 			add_query_arg(
 				[
-					'page'    => self::PAGE_SLUG,
-					'updated' => '1',
+					'page'     => self::PAGE_SLUG,
+					'updated'  => '1',
+					'_wpnonce' => wp_create_nonce( self::SAVED_NOTICE_ACTION ),
 				],
 				admin_url( 'themes.php' )
 			)
@@ -359,6 +394,19 @@ class Rockaden_Theme_Settings {
 
 	/**
 	 * Sanitize parallel arrays of sidebar card fields into card items.
+	 *
+	 * The settings form posts one array per field rather than one array per
+	 * card, so these are zipped together by index here.
+	 *
+	 * @param array<int, string> $types       Card type, 'text' or 'image'.
+	 * @param array<int, string> $titles      Card titles.
+	 * @param array<int, string> $show_titles Checkbox values; presence means shown.
+	 * @param array<int, string> $contents    Card body HTML.
+	 * @param array<int, string> $link_urls   Card link targets.
+	 * @param array<int, string> $link_labels Card link labels.
+	 * @param array<int, string> $image_urls  Image card sources.
+	 * @param array<int, string> $full_bleeds Checkbox values; presence means full bleed.
+	 * @return array<int, array<string, mixed>>
 	 */
 	private static function sanitize_sidebar_cards(
 		array $types,
@@ -393,6 +441,12 @@ class Rockaden_Theme_Settings {
 
 	/**
 	 * Sanitize parallel arrays of labels and URLs into nav items.
+	 *
+	 * @param array<int, string> $labels    Swedish labels.
+	 * @param array<int, string> $urls      Swedish targets.
+	 * @param array<int, string> $labels_en English labels; empty falls back to Swedish.
+	 * @param array<int, string> $urls_en   English targets; empty falls back to Swedish.
+	 * @return array<int, array<string, string>>
 	 */
 	private static function sanitize_nav_items( array $labels, array $urls, array $labels_en = [], array $urls_en = [] ): array {
 		$items = [];
@@ -402,7 +456,7 @@ class Rockaden_Theme_Settings {
 			$url      = sanitize_text_field( $urls[ $i ] );
 			$label_en = sanitize_text_field( $labels_en[ $i ] ?? '' );
 			$url_en   = sanitize_text_field( $urls_en[ $i ] ?? '' );
-			if ( $label === '' && $url === '' ) {
+			if ( '' === $label && '' === $url ) {
 				continue;
 			}
 			$item = [
@@ -411,10 +465,10 @@ class Rockaden_Theme_Settings {
 			];
 			// English fields are only stored when set, so an item with no English
 			// variant stays exactly the shape it has always been.
-			if ( $label_en !== '' ) {
+			if ( '' !== $label_en ) {
 				$item['labelEn'] = $label_en;
 			}
-			if ( $url_en !== '' ) {
+			if ( '' !== $url_en ) {
 				$item['urlEn'] = $url_en;
 			}
 			$items[] = $item;
@@ -466,7 +520,7 @@ class Rockaden_Theme_Settings {
 	 */
 	private static function render_nav_row( array $pages, string $prefix, array $item = [] ): void {
 		$name = static function ( string $field ) use ( $prefix ): string {
-			return $prefix === '' ? '' : $prefix . '_' . $field . '[]';
+			return '' === $prefix ? '' : $prefix . '_' . $field . '[]';
 		};
 		?>
 		<div class="rockaden-nav-row">
@@ -510,6 +564,13 @@ class Rockaden_Theme_Settings {
 		<?php
 	}
 
+	/**
+	 * Render a page picker paired with a free-text URL input.
+	 *
+	 * @param array<int, WP_Post> $pages        Pages offered in the dropdown.
+	 * @param string              $current_url  Currently saved URL.
+	 * @param string              $select_class Class applied to the <select>.
+	 */
 	private static function render_page_select( array $pages, string $current_url, string $select_class = 'rockaden-page-select' ): void {
 		$normalized_current = $current_url;
 		$known              = [];
@@ -519,7 +580,7 @@ class Rockaden_Theme_Settings {
 		foreach ( self::theme_routes() as $route ) {
 			$known[] = $route['url'];
 		}
-		$is_custom = $current_url !== '' && ! in_array( $normalized_current, $known, true );
+		$is_custom = '' !== $current_url && ! in_array( $normalized_current, $known, true );
 		?>
 		<select class="<?php echo esc_attr( $select_class ); ?>">
 			<option value="">— Select page —</option>
@@ -567,6 +628,8 @@ class Rockaden_Theme_Settings {
 	 * Sidebar visibility on auto-generated routes is controlled globally via
 	 * Appearance → Rockaden → Sidebar settings. To put a sidebar on a regular
 	 * Page, insert the Sidebar Panel block directly into the page content.
+	 *
+	 * @param \WP_Post $post Page being edited.
 	 */
 	public static function render_page_display_meta_box( \WP_Post $post ): void {
 		$hide_title         = get_post_meta( $post->ID, 'rc_hide_title', true );
@@ -592,12 +655,14 @@ class Rockaden_Theme_Settings {
 
 	/**
 	 * Save page display meta.
+	 *
+	 * @param int $post_id Page being saved.
 	 */
 	public static function save_page_display_meta( int $post_id ): void {
 		if ( ! isset( $_POST['rc_page_display_nonce'] ) ) {
 			return;
 		}
-		if ( ! wp_verify_nonce( $_POST['rc_page_display_nonce'], 'rc_page_display_save' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rc_page_display_nonce'] ) ), 'rc_page_display_save' ) ) {
 			return;
 		}
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -772,7 +837,7 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
-	 * body_class filter — adds rc-no-top-padding when the per-page toggle is set,
+	 * Body_class filter — adds rc-no-top-padding when the per-page toggle is set,
 	 * letting CSS zero the default top padding on <main>.
 	 *
 	 * @param string[] $classes Existing body classes.
@@ -799,11 +864,19 @@ class Rockaden_Theme_Settings {
 				'sort_order'  => 'ASC',
 			]
 		);
+
+		// The "saved" flag comes back on our own redirect, signed, so a crafted
+		// URL cannot make the page claim settings were saved when they weren't.
+		$just_saved = isset( $_GET['updated'], $_GET['_wpnonce'] )
+			&& wp_verify_nonce(
+				sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ),
+				self::SAVED_NOTICE_ACTION
+			);
 		?>
 		<div class="wrap rockaden-settings-wrap">
 			<h1>Rockaden Theme Settings</h1>
 
-			<?php if ( isset( $_GET['updated'] ) ) : ?>
+			<?php if ( $just_saved ) : ?>
 				<div class="notice notice-success is-dismissible">
 					<p>Settings saved.</p>
 				</div>
@@ -970,7 +1043,7 @@ class Rockaden_Theme_Settings {
 						$card_label      = $card['link_label'] ?? '';
 						$card_image      = $card['image_url'] ?? '';
 						$card_full_bleed = $card['full_bleed'] ?? false;
-						$preview         = $card_title !== '' ? $card_title : 'New card';
+						$preview         = '' !== $card_title ? $card_title : 'New card';
 						?>
 					<div class="rc-card-panel">
 						<div class="rc-card-header">
@@ -1004,7 +1077,7 @@ class Rockaden_Theme_Settings {
 							</p>
 							<div class="rc-card-text-fields" 
 							<?php
-							if ( $card_type === 'image' ) {
+							if ( 'image' === $card_type ) {
 								echo 'style="display:none"';}
 							?>
 								>
@@ -1013,7 +1086,7 @@ class Rockaden_Theme_Settings {
 							</div>
 							<div class="rc-card-image-fields" 
 							<?php
-							if ( $card_type !== 'image' ) {
+							if ( 'image' !== $card_type ) {
 								echo 'style="display:none"';}
 							?>
 								>
@@ -1023,12 +1096,12 @@ class Rockaden_Theme_Settings {
 									<button type="button" class="button rc-card-select-image">Select Image</button>
 									<button type="button" class="button rc-card-remove-image" 
 									<?php
-									if ( $card_image === '' ) {
+									if ( '' === $card_image ) {
 										echo 'style="display:none"';}
 									?>
 										>Remove</button>
 								</p>
-								<?php if ( $card_image !== '' ) : ?>
+								<?php if ( '' !== $card_image ) : ?>
 								<div class="rc-card-image-preview">
 									<img src="<?php echo esc_url( $card_image ); ?>" alt="" />
 								</div>
@@ -1049,7 +1122,7 @@ class Rockaden_Theme_Settings {
 							</p>
 							<p class="rc-card-link-label-field" 
 							<?php
-							if ( $card_type === 'image' ) {
+							if ( 'image' === $card_type ) {
 								echo 'style="display:none"';}
 							?>
 								>

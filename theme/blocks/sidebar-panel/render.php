@@ -16,6 +16,8 @@
  * custom.css collapses the parent sidebar column on templated pages.
  *
  * @var array<string, mixed> $attributes Block attributes.
+ *
+ * @package Rockaden_Theme
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -53,8 +55,10 @@ if ( empty( $cards ) ) {
 echo '<aside class="rc-sidebar">';
 
 foreach ( $cards as $card ) {
-	$type       = $card['type'] ?? 'text';
-	$title      = $card['title'] ?? '';
+	// $type and $title are prefixed to avoid shadowing WordPress's own globals —
+	// block render files are included in a shared scope.
+	$card_type  = $card['type'] ?? 'text';
+	$card_title = $card['title'] ?? '';
 	$show_title = $card['show_title'] ?? true;
 	$content    = $card['content'] ?? '';
 	$link_url   = $card['link_url'] ?? '';
@@ -63,31 +67,35 @@ foreach ( $cards as $card ) {
 	$full_bleed = ! empty( $card['full_bleed'] );
 
 	$card_classes = 'rc-sidebar-card';
-	if ( $full_bleed && $type === 'image' ) {
+	if ( $full_bleed && 'image' === $card_type ) {
 		$card_classes .= ' rc-sidebar-card--full-bleed';
 	}
 
 	echo '<div class="' . esc_attr( $card_classes ) . '">';
 
-	if ( $show_title && $title !== '' ) {
-		echo '<h3>' . esc_html( $title ) . '</h3>';
+	if ( $show_title && '' !== $card_title ) {
+		echo '<h3>' . esc_html( $card_title ) . '</h3>';
 	}
 
-	if ( $type === 'image' && $image_url !== '' ) {
-		$img_tag = '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr( $title ) . '" />';
-		if ( $link_url !== '' ) {
-			echo '<a href="' . esc_url( $link_url ) . '">' . $img_tag . '</a>';
+	if ( 'image' === $card_type && '' !== $image_url ) {
+		$img_tag = sprintf(
+			'<img src="%s" alt="%s" />',
+			esc_url( $image_url ),
+			esc_attr( $card_title )
+		);
+		if ( '' !== $link_url ) {
+			printf( '<a href="%s">%s</a>', esc_url( $link_url ), wp_kses_post( $img_tag ) );
 		} else {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above
-			echo $img_tag;
+			echo wp_kses_post( $img_tag );
 		}
 	} else {
-		if ( $content !== '' ) {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitized via wp_kses_post on save
-			echo $content;
+		if ( '' !== $content ) {
+			// Already run through wp_kses_post on save; re-applying is idempotent
+			// and keeps the escaping visible at the output site.
+			echo wp_kses_post( $content );
 		}
 
-		if ( $link_url !== '' && $link_label !== '' ) {
+		if ( '' !== $link_url && '' !== $link_label ) {
 			echo '<div class="wp-block-buttons"><div class="wp-block-button is-style-outline has-small-font-size">';
 			echo '<a class="wp-block-button__link wp-element-button" href="' . esc_url( $link_url ) . '">' . esc_html( $link_label ) . '</a>';
 			echo '</div></div>';

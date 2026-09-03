@@ -7,10 +7,16 @@
  * posts to. Each submission is stored (reviewable in wp-admin) and emailed to
  * the configured recipient. Club-bespoke, so it lives in the theme — not the
  * reusable plugin.
+ *
+ * @package Rockaden_Theme
  */
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Feedback submissions: the rc_feedback post type and the public REST endpoint
+ * behind the feedback-form block.
+ */
 class Rockaden_Theme_Feedback {
 
 	public const POST_TYPE = 'rc_feedback';
@@ -78,7 +84,8 @@ class Rockaden_Theme_Feedback {
 	/*
 	---------------------------------------------------------------------
 	 * REST API — public submission endpoint
-	 * ------------------------------------------------------------------- */
+	 * -------------------------------------------------------------------
+	*/
 
 	/**
 	 * Register REST routes. Called from functions.php on `rest_api_init`.
@@ -115,8 +122,10 @@ class Rockaden_Theme_Feedback {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function submit( WP_REST_Request $request ) {
+		// get_json_params() always returns an array, empty when the body was not
+		// JSON — so fall back on emptiness rather than on the type.
 		$params = $request->get_json_params();
-		if ( ! is_array( $params ) ) {
+		if ( empty( $params ) ) {
 			$params = $request->get_params();
 		}
 
@@ -215,7 +224,8 @@ class Rockaden_Theme_Feedback {
 	/*
 	---------------------------------------------------------------------
 	 * Admin list + meta box (review submissions)
-	 * ------------------------------------------------------------------- */
+	 * -------------------------------------------------------------------
+	*/
 
 	/**
 	 * Register the read-only contact meta box.

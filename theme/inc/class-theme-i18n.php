@@ -8,10 +8,15 @@
  * toggle sets the cookie and reloads — no client-side text swapping.
  *
  * Front-end only: the admin keeps the user's / site's own locale.
+ *
+ * @package Rockaden_Theme
  */
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Cookie-driven visitor locale, applied through WordPress's own gettext pipeline.
+ */
 class Rockaden_Theme_I18n {
 
 	public const COOKIE = 'rc_locale';

@@ -16,6 +16,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Builds the section menu shared by the front-end block and the editor meta box.
+ */
 class Rockaden_Theme_Section_Nav {
 
 	/**

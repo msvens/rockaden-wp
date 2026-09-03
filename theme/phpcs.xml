@@ -32,6 +32,21 @@
     <!-- Minimum WP version for deprecated function checks -->
     <config name="minimum_wp_version" value="6.4"/>
 
+    <!--
+        Parallel-array settings fields are sanitized element-by-element inside
+        these two helpers (sanitize_text_field / wp_kses_post / esc_url_raw),
+        one level below where the sniff can see. Declaring them keeps the check
+        active everywhere else instead of suppressing it at each call site.
+    -->
+    <rule ref="WordPress.Security.ValidatedSanitizedInput">
+        <properties>
+            <property name="customSanitizingFunctions" type="array">
+                <element value="sanitize_nav_items"/>
+                <element value="sanitize_sidebar_cards"/>
+            </property>
+        </properties>
+    </rule>
+
     <!-- Text domain for i18n -->
     <rule ref="WordPress.WP.I18n">
         <properties>

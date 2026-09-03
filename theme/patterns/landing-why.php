@@ -17,7 +17,10 @@
  * - Right column holds the image, stretched via CSS to fill the column height.
  *
  * Default WP columns stack on mobile (≤782px viewport).
+ *
+ * @package Rockaden_Theme
  */
+
 ?>
 <!-- wp:group {"align":"wide","className":"rockaden-landing-why","layout":{"type":"default"}} -->
 <div class="wp-block-group alignwide rockaden-landing-why">

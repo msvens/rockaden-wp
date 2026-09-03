@@ -3,10 +3,15 @@
  * Rockaden Theme Setup.
  *
  * Creates stub pages and default settings on theme activation.
+ *
+ * @package Rockaden_Theme
  */
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Theme activation: stub pages, the landing page, and default settings.
+ */
 class Rockaden_Theme_Setup {
 
 	/**
@@ -70,7 +75,9 @@ class Rockaden_Theme_Setup {
 				]
 			);
 
-			if ( is_wp_error( $page_id ) || ! $page_id ) {
+			// wp_insert_post() only returns WP_Error when called with
+			// $wp_error = true; otherwise failure is 0.
+			if ( ! $page_id ) {
 				return;
 			}
 		} else {

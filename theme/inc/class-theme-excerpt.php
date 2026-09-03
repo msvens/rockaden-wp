@@ -13,10 +13,15 @@
  *  - Otherwise trim on a word boundary, strip trailing punctuation, add "…", and
  *    keep the "Läs mer" link.
  * Manual excerpts (author-written teasers) are left untouched and keep the link.
+ *
+ * @package Rockaden_Theme
  */
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Post excerpts that only append a "Läs mer" link when text was truncated.
+ */
 class Rockaden_Theme_Excerpt {
 
 	/** Extra words allowed before we bother truncating. */
@@ -43,7 +48,7 @@ class Rockaden_Theme_Excerpt {
 	 * @return string
 	 */
 	public static function smart_excerpt( $excerpt, $post ) {
-		if ( ! $post instanceof \WP_Post || has_excerpt( $post ) ) {
+		if ( has_excerpt( $post ) ) {
 			return $excerpt;
 		}
 
@@ -66,9 +71,9 @@ class Rockaden_Theme_Excerpt {
 	/**
 	 * Drop the Post Excerpt block's "more" link when the post wasn't truncated.
 	 *
-	 * @param string    $content  Rendered block HTML.
-	 * @param array     $block    Parsed block.
-	 * @param \WP_Block $instance Block instance (for context).
+	 * @param string               $content  Rendered block HTML.
+	 * @param array<string, mixed> $block    Parsed block.
+	 * @param \WP_Block            $instance Block instance (for context).
 	 * @return string
 	 */
 	public static function maybe_remove_more_link( $content, $block, $instance ): string {

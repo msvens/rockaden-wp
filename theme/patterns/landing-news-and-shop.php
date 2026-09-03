@@ -7,7 +7,10 @@
  *
  * Uses native wp:columns (50/50 by default) so the editor renders the
  * structure clearly. Default WP columns stack on mobile (≤782px).
+ *
+ * @package Rockaden_Theme
  */
+
 ?>
 <!-- wp:group {"align":"wide","className":"rockaden-landing-news-shop","layout":{"type":"default"}} -->
 <div class="wp-block-group alignwide rockaden-landing-news-shop">

@@ -1,6 +1,8 @@
 <?php
 /**
  * Rockaden Theme functions.
+ *
+ * @package Rockaden_Theme
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -16,7 +18,12 @@ if ( file_exists( get_theme_file_path( 'vendor/autoload.php' ) ) ) {
 		get_theme_file_path( 'style.css' ),
 		'rockaden-theme'
 	);
-	$rockaden_theme_update_checker->getVcsApi()->enableReleaseAssets( '/rockaden-theme\.zip$/' );
+	// enableReleaseAssets() lives on the GitHub API subclass, not on the base
+	// Vcs\Api that getVcsApi() is typed to return.
+	$rockaden_vcs_api = $rockaden_theme_update_checker->getVcsApi();
+	if ( $rockaden_vcs_api instanceof YahnisElsts\PluginUpdateChecker\v5p6\Vcs\GitHubApi ) {
+		$rockaden_vcs_api->enableReleaseAssets( '/rockaden-theme\.zip$/' );
+	}
 }
 
 // Include theme classes.
@@ -78,13 +85,12 @@ add_action( 'admin_enqueue_scripts', [ 'Rockaden_Theme_Settings', 'enqueue_secti
 add_action(
 	'wp_head',
 	function (): void {
-		$logo_url = esc_url( get_theme_file_uri( 'assets/images/logo.png' ) );
 		?>
 	<script>
 	(function(){var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');})();
 	</script>
 	<style>
-	:root { --rockaden-logo-url: url('<?php echo $logo_url; ?>'); }
+	:root { --rockaden-logo-url: url('<?php echo esc_url( get_theme_file_uri( 'assets/images/logo.png' ) ); ?>'); }
 	</style>
 		<?php
 	},
