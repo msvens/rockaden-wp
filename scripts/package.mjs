@@ -25,7 +25,7 @@ execSync(
 
 console.log('Packaging theme...');
 execSync(
-  `cd "${join(root, 'theme')}" && zip -r "${join(dist, 'rockaden-theme.zip')}" . -x "node_modules/*" "composer.json" "composer.lock"`,
+  `cd "${join(root, 'theme')}" && zip -r "${join(dist, 'rockaden-theme.zip')}" . -x "node_modules/*" "*/node_modules/*" "composer.json" "composer.lock" "phpstan.neon" "phpcs.xml" "package.json" ".eslintrc.json"`,
   { stdio: 'inherit' },
 );
 
