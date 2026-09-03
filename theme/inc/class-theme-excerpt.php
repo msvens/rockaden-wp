@@ -15,7 +15,7 @@
  * Manual excerpts (author-written teasers) are left untouched and keep the link.
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 class Rockaden_Theme_Excerpt {
 
@@ -29,8 +29,8 @@ class Rockaden_Theme_Excerpt {
 	 * Register hooks. Called from functions.php.
 	 */
 	public static function register(): void {
-		add_filter('get_the_excerpt', [self::class, 'smart_excerpt'], 11, 2);
-		add_filter('render_block_core/post-excerpt', [self::class, 'maybe_remove_more_link'], 10, 3);
+		add_filter( 'get_the_excerpt', [ self::class, 'smart_excerpt' ], 11, 2 );
+		add_filter( 'render_block_core/post-excerpt', [ self::class, 'maybe_remove_more_link' ], 10, 3 );
 	}
 
 	/**
@@ -42,23 +42,23 @@ class Rockaden_Theme_Excerpt {
 	 * @param \WP_Post $post    The post.
 	 * @return string
 	 */
-	public static function smart_excerpt($excerpt, $post) {
-		if (! $post instanceof \WP_Post || has_excerpt($post)) {
+	public static function smart_excerpt( $excerpt, $post ) {
+		if ( ! $post instanceof \WP_Post || has_excerpt( $post ) ) {
 			return $excerpt;
 		}
 
 		$length = self::length();
-		$words  = self::content_words($post);
-		$count  = count($words);
+		$words  = self::content_words( $post );
+		$count  = count( $words );
 
-		if ($count <= $length + self::GRACE) {
-			return implode(' ', $words);
+		if ( $count <= $length + self::GRACE ) {
+			return implode( ' ', $words );
 		}
 
-		$trimmed = implode(' ', array_slice($words, 0, $length));
+		$trimmed = implode( ' ', array_slice( $words, 0, $length ) );
 		// Strip trailing whitespace/punctuation (ASCII only — rtrim is byte-based)
 		// so the "…" doesn't sit after a stray comma or period.
-		$trimmed = rtrim($trimmed, " \t\n\r\0\x0B.,;:!?-");
+		$trimmed = rtrim( $trimmed, " \t\n\r\0\x0B.,;:!?-" );
 
 		return $trimmed . '…';
 	}
@@ -71,17 +71,17 @@ class Rockaden_Theme_Excerpt {
 	 * @param \WP_Block $instance Block instance (for context).
 	 * @return string
 	 */
-	public static function maybe_remove_more_link($content, $block, $instance): string {
+	public static function maybe_remove_more_link( $content, $block, $instance ): string {
 		$post_id = $instance->context['postId'] ?? get_the_ID();
-		if (! $post_id) {
+		if ( ! $post_id ) {
 			return $content;
 		}
 
-		$length = isset($block['attrs']['excerptLength'])
+		$length = isset( $block['attrs']['excerptLength'] )
 			? (int) $block['attrs']['excerptLength']
 			: self::DEFAULT_LENGTH;
 
-		if (self::is_truncated(get_post($post_id), $length)) {
+		if ( self::is_truncated( get_post( $post_id ), $length ) ) {
 			return $content;
 		}
 
@@ -100,14 +100,14 @@ class Rockaden_Theme_Excerpt {
 	 * @param int           $length Excerpt length in words.
 	 * @return bool
 	 */
-	private static function is_truncated($post, int $length): bool {
-		if (! $post instanceof \WP_Post) {
+	private static function is_truncated( $post, int $length ): bool {
+		if ( ! $post instanceof \WP_Post ) {
 			return false;
 		}
-		if (has_excerpt($post)) {
+		if ( has_excerpt( $post ) ) {
 			return true; // Manual teaser — assume there's a fuller article behind it.
 		}
-		return count(self::content_words($post)) > $length + self::GRACE;
+		return count( self::content_words( $post ) ) > $length + self::GRACE;
 	}
 
 	/**
@@ -117,14 +117,14 @@ class Rockaden_Theme_Excerpt {
 	 * @param \WP_Post $post The post.
 	 * @return array<int, string>
 	 */
-	private static function content_words(\WP_Post $post): array {
-		$text = get_the_content('', false, $post);
-		$text = excerpt_remove_blocks($text);
-		$text = strip_shortcodes($text);
-		$text = wp_strip_all_tags($text);
-		$text = trim(preg_replace('/\s+/u', ' ', $text));
+	private static function content_words( \WP_Post $post ): array {
+		$text = get_the_content( '', false, $post );
+		$text = excerpt_remove_blocks( $text );
+		$text = strip_shortcodes( $text );
+		$text = wp_strip_all_tags( $text );
+		$text = trim( preg_replace( '/\s+/u', ' ', $text ) );
 
-		return '' === $text ? [] : explode(' ', $text);
+		return '' === $text ? [] : explode( ' ', $text );
 	}
 
 	/**
@@ -134,6 +134,6 @@ class Rockaden_Theme_Excerpt {
 	 * @return int
 	 */
 	private static function length(): int {
-		return (int) apply_filters('excerpt_length', self::DEFAULT_LENGTH);
+		return (int) apply_filters( 'excerpt_length', self::DEFAULT_LENGTH );
 	}
 }

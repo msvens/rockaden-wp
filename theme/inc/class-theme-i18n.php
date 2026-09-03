@@ -10,7 +10,7 @@
  * Front-end only: the admin keeps the user's / site's own locale.
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
 class Rockaden_Theme_I18n {
 
@@ -23,18 +23,18 @@ class Rockaden_Theme_I18n {
 	 *
 	 * @var string[]
 	 */
-	private const ALLOWED = ['sv_SE', 'en_US'];
+	private const ALLOWED = [ 'sv_SE', 'en_US' ];
 
 	/**
 	 * Register hooks. Called from functions.php.
 	 */
 	public static function register(): void {
-		add_filter('locale', [self::class, 'filter_locale']);
-		add_filter('language_attributes', [self::class, 'add_lang_attribute']);
+		add_filter( 'locale', [ self::class, 'filter_locale' ] );
+		add_filter( 'language_attributes', [ self::class, 'add_lang_attribute' ] );
 		// Priority 1 — block patterns register on `init` (priority 10) and
 		// have their PHP rendered with gettext applied at that time, so the
 		// textdomain must be loaded first.
-		add_action('init', [self::class, 'load_textdomain'], 1);
+		add_action( 'init', [ self::class, 'load_textdomain' ], 1 );
 	}
 
 	/**
@@ -43,8 +43,8 @@ class Rockaden_Theme_I18n {
 	 * @param string $locale The locale WordPress determined.
 	 * @return string
 	 */
-	public static function filter_locale(string $locale): string {
-		if (is_admin()) {
+	public static function filter_locale( string $locale ): string {
+		if ( is_admin() ) {
 			return $locale;
 		}
 		return self::current_locale();
@@ -54,8 +54,8 @@ class Rockaden_Theme_I18n {
 	 * The resolved front-end locale (cookie value if valid, else default).
 	 */
 	public static function current_locale(): string {
-		$cookie = isset($_COOKIE[self::COOKIE]) ? sanitize_text_field(wp_unslash($_COOKIE[self::COOKIE])) : '';
-		if (in_array($cookie, self::ALLOWED, true)) {
+		$cookie = isset( $_COOKIE[ self::COOKIE ] ) ? sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE ] ) ) : '';
+		if ( in_array( $cookie, self::ALLOWED, true ) ) {
 			return $cookie;
 		}
 		return self::DEFAULT_LOCALE;
@@ -66,7 +66,7 @@ class Rockaden_Theme_I18n {
 	 * Used for the data-lang attribute the docs CSS keys off.
 	 */
 	public static function current_lang(): string {
-		return str_starts_with(self::current_locale(), 'en') ? 'en' : 'sv';
+		return str_starts_with( self::current_locale(), 'en' ) ? 'en' : 'sv';
 	}
 
 	/**
@@ -76,11 +76,11 @@ class Rockaden_Theme_I18n {
 	 * @param string $output The language attributes string.
 	 * @return string
 	 */
-	public static function add_lang_attribute(string $output): string {
-		if (is_admin()) {
+	public static function add_lang_attribute( string $output ): string {
+		if ( is_admin() ) {
 			return $output;
 		}
-		return $output . ' data-lang="' . esc_attr(self::current_lang()) . '"';
+		return $output . ' data-lang="' . esc_attr( self::current_lang() ) . '"';
 	}
 
 	/**
@@ -92,9 +92,9 @@ class Rockaden_Theme_I18n {
 	 */
 	public static function load_textdomain(): void {
 		$locale = determine_locale();
-		$mofile = get_theme_file_path('languages/rockaden-theme-' . $locale . '.mo');
-		if (file_exists($mofile)) {
-			load_textdomain('rockaden-theme', $mofile, $locale);
+		$mofile = get_theme_file_path( 'languages/rockaden-theme-' . $locale . '.mo' );
+		if ( file_exists( $mofile ) ) {
+			load_textdomain( 'rockaden-theme', $mofile, $locale );
 		}
 	}
 }
