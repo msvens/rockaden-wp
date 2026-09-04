@@ -31,11 +31,16 @@ $shop_posts = get_posts(
 
 $items = array_map( [ Rockaden_Theme_Shop::class, 'format_item' ], $shop_posts );
 
-// The "more" link only makes sense when the grid is actually hiding items.
-// On a show-all grid (count <= 0) or when everything already fits, it must
-// never appear (it would just link back to the page you're on).
-$total_published = (int) wp_count_posts( Rockaden_Theme_Shop::POST_TYPE )->publish;
-$show_more       = $count > 0 && $total_published > $count && '' !== $more_url;
+// A capped grid (count > 0) is a teaser on some other page, so it always needs
+// a way through to the shop — a card is never itself a link, and condensed mode
+// hides the buy link too, so without this the teaser is a dead end.
+//
+// Deliberately NOT conditioned on there being more items than are shown: that
+// conflates "everything fits" with "you are already on the shop page". Only the
+// latter should suppress the link, and count <= 0 already covers it.
+//
+// Nothing to link to when there is nothing to show, hence the items check.
+$show_more = $count > 0 && '' !== $more_url && ! empty( $items );
 
 $classes = 'rockaden-shop-grid rockaden-shop-grid--' . $layout;
 if ( $condensed ) {
@@ -81,7 +86,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => $classes ] );
 									<?php endif; ?>
 									<?php if ( $item['memberPrice'] ) : ?>
 										<span class="rockaden-shop-card__price-row rockaden-shop-card__price-row--member">
-											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Medlem', 'rockaden-theme' ); ?></span>
+											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Rockaden SK Medlem', 'rockaden-theme' ); ?></span>
 											<span class="rockaden-shop-card__price-value"><?php echo esc_html( $item['memberPrice'] ); ?></span>
 										</span>
 									<?php endif; ?>

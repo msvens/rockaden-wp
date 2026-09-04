@@ -1458,19 +1458,14 @@ body > .wp-site-blocks > main.rockaden-landing {
 }
 
 .rockaden-shop-card__price-label {
-  color: var(--wp--preset--color--on-surface-muted);
-  font-weight: 400;
+  color: var(--wp--preset--color--on-surface);
+  font-weight: 600;
 }
 
 .rockaden-shop-card__price-value {
   color: var(--wp--preset--color--on-surface);
-  font-weight: 600;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
-}
-
-/* The member price is the one worth noticing. */
-.rockaden-shop-card__price-row--member .rockaden-shop-card__price-label {
-  color: var(--wp--preset--color--on-surface);
 }
 
 .rockaden-shop-card__stock {
