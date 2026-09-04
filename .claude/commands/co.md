@@ -10,8 +10,8 @@ Validate and commit changes: $ARGUMENTS
    - If no changes, inform user and stop
 
 2. **Run CI checks**
-   - Run `pnpm run check` (typecheck, lint, build for JS/TS)
-   - Run `composer -d plugin lint:php` (PHPStan + phpcs)
+   - Run `pnpm run check` — typecheck, ESLint, PHPStan + phpcs for **both**
+     `plugin/` and `theme/`, then build
    - If any step fails: Stop and report errors
 
 3. **Analyze changes for commit**

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ruleset name="Rockaden Theme">
+    <description>WordPress coding standards for Rockaden Theme</description>
+
+    <file>functions.php</file>
+    <file>inc/</file>
+    <file>blocks/</file>
+    <file>patterns/</file>
+
+    <exclude-pattern>*.js</exclude-pattern>
+    <exclude-pattern>*.css</exclude-pattern>
+    <!-- Hand-authored dependency stubs for the no-build blocks. -->
+    <exclude-pattern>*.asset.php</exclude-pattern>
+    <!-- Generated gettext artifacts. -->
+    <exclude-pattern>*/languages/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
+    <!-- WordPress coding standards -->
+    <rule ref="WordPress">
+        <!-- Allow short array syntax [] instead of array() -->
+        <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+        <!-- Theme uses class-*.php naming, not WP's file naming rules -->
+        <exclude name="WordPress.Files.FileName"/>
+        <!-- Allow short ternary -->
+        <exclude name="Universal.Operators.DisallowShortTernary"/>
+    </rule>
+
+    <!-- PHP compatibility -->
+    <config name="testVersion" value="8.1-"/>
+    <rule ref="PHPCompatibilityWP"/>
+
+    <!-- Minimum WP version for deprecated function checks -->
+    <config name="minimum_wp_version" value="6.4"/>
+
+    <!--
+        Parallel-array settings fields are sanitized element-by-element inside
+        these two helpers (sanitize_text_field / wp_kses_post / esc_url_raw),
+        one level below where the sniff can see. Declaring them keeps the check
+        active everywhere else instead of suppressing it at each call site.
+    -->
+    <rule ref="WordPress.Security.ValidatedSanitizedInput">
+        <properties>
+            <property name="customSanitizingFunctions" type="array">
+                <element value="sanitize_nav_items"/>
+                <element value="sanitize_sidebar_cards"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Text domain for i18n -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="rockaden-theme"/>
+            </property>
+        </properties>
+    </rule>
+</ruleset>

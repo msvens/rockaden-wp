@@ -1,0 +1,13 @@
+parameters:
+    level: 6
+    paths:
+        - functions.php
+        - inc/
+        - blocks/
+        - patterns/
+    excludePaths:
+        # Hand-authored dependency stubs for the no-build blocks.
+        - blocks/*/index.asset.php
+    scanDirectories:
+        - vendor/php-stubs/wordpress-stubs/
+    reportUnmatchedIgnoredErrors: false

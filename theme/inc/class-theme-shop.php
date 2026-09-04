@@ -9,10 +9,16 @@
  *
  * CPT slug and all rc_* meta keys are intentionally kept identical to the
  * plugin's former implementation so existing content needs no migration.
+ *
+ * @package Rockaden_Theme
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
+/**
+ * Shop items: the rc_shop_item post type, its pricing meta box and read-only
+ * REST endpoint.
+ */
 class Rockaden_Theme_Shop {
 
 	public const POST_TYPE = 'rc_shop_item';
@@ -34,25 +40,25 @@ class Rockaden_Theme_Shop {
 		register_post_type(
 			self::POST_TYPE,
 			[
-				'labels'       => [
-					'name'          => __('Shop Items', 'rockaden-theme'),
-					'singular_name' => __('Shop Item', 'rockaden-theme'),
-					'add_new_item'  => __('Add New Shop Item', 'rockaden-theme'),
-					'edit_item'     => __('Edit Shop Item', 'rockaden-theme'),
+				'labels'              => [
+					'name'          => __( 'Shop Items', 'rockaden-theme' ),
+					'singular_name' => __( 'Shop Item', 'rockaden-theme' ),
+					'add_new_item'  => __( 'Add New Shop Item', 'rockaden-theme' ),
+					'edit_item'     => __( 'Edit Shop Item', 'rockaden-theme' ),
 				],
 				// Items are shown only inside the shop grid block — there are no
 				// per-item front-end pages. Keep the admin UI + REST for editing,
 				// but no public single pages / archive / rewrite (the latter also
 				// avoids clashing with the 'shop' page slug).
-				'public'             => false,
-				'show_ui'            => true,
-				'show_in_rest'       => true,
-				'publicly_queryable' => false,
+				'public'              => false,
+				'show_ui'             => true,
+				'show_in_rest'        => true,
+				'publicly_queryable'  => false,
 				'exclude_from_search' => true,
-				'supports'           => ['title', 'editor', 'thumbnail', 'excerpt'],
-				'has_archive'        => false,
-				'menu_icon'          => 'dashicons-cart',
-				'rewrite'            => false,
+				'supports'            => [ 'title', 'editor', 'thumbnail', 'excerpt' ],
+				'has_archive'         => false,
+				'menu_icon'           => 'dashicons-cart',
+				'rewrite'             => false,
 			]
 		);
 	}
@@ -62,14 +68,29 @@ class Rockaden_Theme_Shop {
 	 */
 	private static function register_meta(): void {
 		$meta_fields = [
-			'rc_price'        => ['type' => 'string', 'default' => ''],
-			'rc_sale_price'   => ['type' => 'string', 'default' => ''],
-			'rc_buy_url'      => ['type' => 'string', 'default' => ''],
-			'rc_stock_status' => ['type' => 'string', 'default' => 'in_stock'],
-			'rc_how_to_order' => ['type' => 'string', 'default' => ''],
+			'rc_price'        => [
+				'type'    => 'string',
+				'default' => '',
+			],
+			'rc_sale_price'   => [
+				'type'    => 'string',
+				'default' => '',
+			],
+			'rc_buy_url'      => [
+				'type'    => 'string',
+				'default' => '',
+			],
+			'rc_stock_status' => [
+				'type'    => 'string',
+				'default' => 'in_stock',
+			],
+			'rc_how_to_order' => [
+				'type'    => 'string',
+				'default' => '',
+			],
 		];
 
-		foreach ($meta_fields as $key => $args) {
+		foreach ( $meta_fields as $key => $args ) {
 			register_post_meta(
 				self::POST_TYPE,
 				$key,
@@ -78,15 +99,17 @@ class Rockaden_Theme_Shop {
 					'single'        => true,
 					'type'          => $args['type'],
 					'default'       => $args['default'],
-					'auth_callback' => fn () => current_user_can('edit_posts'),
+					'auth_callback' => fn () => current_user_can( 'edit_posts' ),
 				]
 			);
 		}
 	}
 
-	/* ---------------------------------------------------------------------
+	/*
+	---------------------------------------------------------------------
 	 * REST API
-	 * ------------------------------------------------------------------- */
+	 * -------------------------------------------------------------------
+	*/
 
 	/**
 	 * Register REST routes.
@@ -97,7 +120,7 @@ class Rockaden_Theme_Shop {
 			'/shop-items',
 			[
 				'methods'             => 'GET',
-				'callback'            => [self::class, 'list_items'],
+				'callback'            => [ self::class, 'list_items' ],
 				'permission_callback' => '__return_true',
 				'args'                => [
 					'count' => [
@@ -117,8 +140,8 @@ class Rockaden_Theme_Shop {
 	 * @param WP_REST_Request $request The incoming request.
 	 * @return WP_REST_Response
 	 */
-	public static function list_items(WP_REST_Request $request): WP_REST_Response {
-		$count = (int) $request->get_param('count');
+	public static function list_items( WP_REST_Request $request ): WP_REST_Response {
+		$count = (int) $request->get_param( 'count' );
 
 		$args = [
 			'post_type'      => self::POST_TYPE,
@@ -128,10 +151,10 @@ class Rockaden_Theme_Shop {
 			'order'          => 'ASC',
 		];
 
-		$posts = get_posts($args);
-		$items = array_map([self::class, 'format_item'], $posts);
+		$posts = get_posts( $args );
+		$items = array_map( [ self::class, 'format_item' ], $posts );
 
-		return new WP_REST_Response($items);
+		return new WP_REST_Response( $items );
 	}
 
 	/**
@@ -140,26 +163,28 @@ class Rockaden_Theme_Shop {
 	 * @param WP_Post $post The post to format.
 	 * @return array<string, mixed>
 	 */
-	public static function format_item(WP_Post $post): array {
-		$thumb_id = (int) get_post_thumbnail_id($post->ID);
+	public static function format_item( WP_Post $post ): array {
+		$thumb_id = (int) get_post_thumbnail_id( $post->ID );
 		return [
 			'id'          => $post->ID,
 			'title'       => $post->post_title,
 			'excerpt'     => $post->post_excerpt,
 			'content'     => $post->post_content,
-			'price'       => get_post_meta($post->ID, 'rc_price', true) ?: '',
-			'salePrice'   => get_post_meta($post->ID, 'rc_sale_price', true) ?: '',
-			'buyUrl'      => get_post_meta($post->ID, 'rc_buy_url', true) ?: '',
-			'stockStatus' => get_post_meta($post->ID, 'rc_stock_status', true) ?: 'in_stock',
-			'howToOrder'  => get_post_meta($post->ID, 'rc_how_to_order', true) ?: '',
-			'imageUrl'    => $thumb_id ? wp_get_attachment_image_url($thumb_id, 'medium') : '',
-			'imageAlt'    => $thumb_id ? get_post_meta($thumb_id, '_wp_attachment_image_alt', true) : '',
+			'price'       => get_post_meta( $post->ID, 'rc_price', true ) ?: '',
+			'salePrice'   => get_post_meta( $post->ID, 'rc_sale_price', true ) ?: '',
+			'buyUrl'      => get_post_meta( $post->ID, 'rc_buy_url', true ) ?: '',
+			'stockStatus' => get_post_meta( $post->ID, 'rc_stock_status', true ) ?: 'in_stock',
+			'howToOrder'  => get_post_meta( $post->ID, 'rc_how_to_order', true ) ?: '',
+			'imageUrl'    => $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium' ) : '',
+			'imageAlt'    => $thumb_id ? get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ) : '',
 		];
 	}
 
-	/* ---------------------------------------------------------------------
+	/*
+	---------------------------------------------------------------------
 	 * Pricing & Purchase meta box
-	 * ------------------------------------------------------------------- */
+	 * -------------------------------------------------------------------
+	*/
 
 	/**
 	 * Register the meta box.
@@ -167,8 +192,8 @@ class Rockaden_Theme_Shop {
 	public static function add_meta_box(): void {
 		add_meta_box(
 			'rc_shop_item_pricing',
-			__('Pricing & Purchase', 'rockaden-theme'),
-			[self::class, 'render_meta_box'],
+			__( 'Pricing & Purchase', 'rockaden-theme' ),
+			[ self::class, 'render_meta_box' ],
 			self::POST_TYPE,
 			'side',
 			'high'
@@ -180,39 +205,39 @@ class Rockaden_Theme_Shop {
 	 *
 	 * @param WP_Post $post The current post object.
 	 */
-	public static function render_meta_box(WP_Post $post): void {
-		wp_nonce_field('rc_shop_item_meta', 'rc_shop_item_meta_nonce');
+	public static function render_meta_box( WP_Post $post ): void {
+		wp_nonce_field( 'rc_shop_item_meta', 'rc_shop_item_meta_nonce' );
 
-		$price        = get_post_meta($post->ID, 'rc_price', true);
-		$sale_price   = get_post_meta($post->ID, 'rc_sale_price', true);
-		$buy_url      = get_post_meta($post->ID, 'rc_buy_url', true);
-		$stock_status = get_post_meta($post->ID, 'rc_stock_status', true) ?: 'in_stock';
-		$how_to_order = get_post_meta($post->ID, 'rc_how_to_order', true);
+		$price        = get_post_meta( $post->ID, 'rc_price', true );
+		$sale_price   = get_post_meta( $post->ID, 'rc_sale_price', true );
+		$buy_url      = get_post_meta( $post->ID, 'rc_buy_url', true );
+		$stock_status = get_post_meta( $post->ID, 'rc_stock_status', true ) ?: 'in_stock';
+		$how_to_order = get_post_meta( $post->ID, 'rc_how_to_order', true );
 		?>
 		<p>
-			<label for="rc_price"><strong><?php esc_html_e('Price', 'rockaden-theme'); ?></strong></label><br />
-			<input type="text" id="rc_price" name="rc_price" value="<?php echo esc_attr($price); ?>" class="widefat" placeholder="910 kr" />
+			<label for="rc_price"><strong><?php esc_html_e( 'Price', 'rockaden-theme' ); ?></strong></label><br />
+			<input type="text" id="rc_price" name="rc_price" value="<?php echo esc_attr( $price ); ?>" class="widefat" placeholder="910 kr" />
 		</p>
 		<p>
-			<label for="rc_sale_price"><strong><?php esc_html_e('Sale price', 'rockaden-theme'); ?></strong></label><br />
-			<input type="text" id="rc_sale_price" name="rc_sale_price" value="<?php echo esc_attr($sale_price); ?>" class="widefat" placeholder="780 kr" />
-			<span class="description"><?php esc_html_e('Optional. When set, the regular price is shown struck through.', 'rockaden-theme'); ?></span>
+			<label for="rc_sale_price"><strong><?php esc_html_e( 'Sale price', 'rockaden-theme' ); ?></strong></label><br />
+			<input type="text" id="rc_sale_price" name="rc_sale_price" value="<?php echo esc_attr( $sale_price ); ?>" class="widefat" placeholder="780 kr" />
+			<span class="description"><?php esc_html_e( 'Optional. When set, the regular price is shown struck through.', 'rockaden-theme' ); ?></span>
 		</p>
 		<p>
-			<label for="rc_buy_url"><strong><?php esc_html_e('Buy URL', 'rockaden-theme'); ?></strong></label><br />
-			<input type="url" id="rc_buy_url" name="rc_buy_url" value="<?php echo esc_attr($buy_url); ?>" class="widefat" placeholder="https://…" />
+			<label for="rc_buy_url"><strong><?php esc_html_e( 'Buy URL', 'rockaden-theme' ); ?></strong></label><br />
+			<input type="url" id="rc_buy_url" name="rc_buy_url" value="<?php echo esc_attr( $buy_url ); ?>" class="widefat" placeholder="https://…" />
 		</p>
 		<p>
-			<label for="rc_stock_status"><strong><?php esc_html_e('Stock status', 'rockaden-theme'); ?></strong></label><br />
+			<label for="rc_stock_status"><strong><?php esc_html_e( 'Stock status', 'rockaden-theme' ); ?></strong></label><br />
 			<select id="rc_stock_status" name="rc_stock_status" class="widefat">
-				<option value="in_stock" <?php selected($stock_status, 'in_stock'); ?>><?php esc_html_e('In stock', 'rockaden-theme'); ?></option>
-				<option value="out_of_stock" <?php selected($stock_status, 'out_of_stock'); ?>><?php esc_html_e('Out of stock', 'rockaden-theme'); ?></option>
+				<option value="in_stock" <?php selected( $stock_status, 'in_stock' ); ?>><?php esc_html_e( 'In stock', 'rockaden-theme' ); ?></option>
+				<option value="out_of_stock" <?php selected( $stock_status, 'out_of_stock' ); ?>><?php esc_html_e( 'Out of stock', 'rockaden-theme' ); ?></option>
 			</select>
 		</p>
 		<p>
-			<label for="rc_how_to_order"><strong><?php esc_html_e('How to order', 'rockaden-theme'); ?></strong></label><br />
-			<textarea id="rc_how_to_order" name="rc_how_to_order" rows="3" class="widefat" placeholder="<?php esc_attr_e('e.g. Come to the club to buy, or email …', 'rockaden-theme'); ?>"><?php echo esc_textarea($how_to_order); ?></textarea>
-			<span class="description"><?php esc_html_e('Optional. Shown on the public shop card when set.', 'rockaden-theme'); ?></span>
+			<label for="rc_how_to_order"><strong><?php esc_html_e( 'How to order', 'rockaden-theme' ); ?></strong></label><br />
+			<textarea id="rc_how_to_order" name="rc_how_to_order" rows="3" class="widefat" placeholder="<?php esc_attr_e( 'e.g. Come to the club to buy, or email …', 'rockaden-theme' ); ?>"><?php echo esc_textarea( $how_to_order ); ?></textarea>
+			<span class="description"><?php esc_html_e( 'Optional. Shown on the public shop card when set.', 'rockaden-theme' ); ?></span>
 		</p>
 		<?php
 	}
@@ -223,29 +248,29 @@ class Rockaden_Theme_Shop {
 	 * @param int     $post_id The post ID.
 	 * @param WP_Post $post    The post object.
 	 */
-	public static function save(int $post_id, WP_Post $post): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Required by save_post hook signature.
-		if (!isset($_POST['rc_shop_item_meta_nonce'])) {
+	public static function save( int $post_id, WP_Post $post ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed -- Required by save_post hook signature.
+		if ( ! isset( $_POST['rc_shop_item_meta_nonce'] ) ) {
 			return;
 		}
-		if (!wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rc_shop_item_meta_nonce'])), 'rc_shop_item_meta')) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rc_shop_item_meta_nonce'] ) ), 'rc_shop_item_meta' ) ) {
 			return;
 		}
-		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
-		if (!current_user_can('edit_post', $post_id)) {
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
 
-		update_post_meta($post_id, 'rc_price', sanitize_text_field(wp_unslash($_POST['rc_price'] ?? '')));
-		update_post_meta($post_id, 'rc_sale_price', sanitize_text_field(wp_unslash($_POST['rc_sale_price'] ?? '')));
-		update_post_meta($post_id, 'rc_buy_url', esc_url_raw(wp_unslash($_POST['rc_buy_url'] ?? '')));
+		update_post_meta( $post_id, 'rc_price', sanitize_text_field( wp_unslash( $_POST['rc_price'] ?? '' ) ) );
+		update_post_meta( $post_id, 'rc_sale_price', sanitize_text_field( wp_unslash( $_POST['rc_sale_price'] ?? '' ) ) );
+		update_post_meta( $post_id, 'rc_buy_url', esc_url_raw( wp_unslash( $_POST['rc_buy_url'] ?? '' ) ) );
 
-		$stock_status = sanitize_text_field(wp_unslash($_POST['rc_stock_status'] ?? 'in_stock'));
-		if (!in_array($stock_status, ['in_stock', 'out_of_stock'], true)) {
+		$stock_status = sanitize_text_field( wp_unslash( $_POST['rc_stock_status'] ?? 'in_stock' ) );
+		if ( ! in_array( $stock_status, [ 'in_stock', 'out_of_stock' ], true ) ) {
 			$stock_status = 'in_stock';
 		}
-		update_post_meta($post_id, 'rc_stock_status', $stock_status);
-		update_post_meta($post_id, 'rc_how_to_order', sanitize_textarea_field(wp_unslash($_POST['rc_how_to_order'] ?? '')));
+		update_post_meta( $post_id, 'rc_stock_status', $stock_status );
+		update_post_meta( $post_id, 'rc_how_to_order', sanitize_textarea_field( wp_unslash( $_POST['rc_how_to_order'] ?? '' ) ) );
 	}
 }

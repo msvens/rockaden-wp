@@ -10,7 +10,10 @@
  *  - is-light is folded into the className attribute (not free-floating in HTML)
  *  - span has only has-background-dim (no -50 variant — dimRatioToClass(50)
  *    returns null in core/cover; only non-default ratios get a class)
+ *
+ * @package Rockaden_Theme
  */
+
 ?>
 <!-- wp:cover {"dimRatio":50,"align":"full","className":"is-light rockaden-landing-hero"} -->
 <div class="wp-block-cover alignfull is-light rockaden-landing-hero"><span aria-hidden="true" class="wp-block-cover__background has-background-dim"></span><div class="wp-block-cover__inner-container">

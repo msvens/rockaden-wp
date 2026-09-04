@@ -7,8 +7,9 @@
     "dev": "pnpm --filter plugin dev",
     "typecheck": "pnpm --filter plugin typecheck",
     "lint": "pnpm --filter plugin lint:js",
-    "check": "pnpm typecheck && pnpm lint && pnpm build",
-    "package": "pnpm build && node scripts/package.mjs"
+    "check": "pnpm typecheck && pnpm lint && pnpm run lint:php && pnpm build",
+    "package": "pnpm build && node scripts/package.mjs",
+    "lint:php": "composer -d plugin lint:php && composer -d theme lint:php"
   },
   "devDependencies": {
     "typescript": "^5.7.0"

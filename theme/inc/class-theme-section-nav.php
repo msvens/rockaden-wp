@@ -14,8 +14,11 @@
  * @package Rockaden
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
+/**
+ * Builds the section menu shared by the front-end block and the editor meta box.
+ */
 class Rockaden_Theme_Section_Nav {
 
 	/**
@@ -38,11 +41,11 @@ class Rockaden_Theme_Section_Nav {
 			'single'            => true,
 			'show_in_rest'      => true,
 			'sanitize_callback' => 'sanitize_text_field',
-			'auth_callback'     => [self::class, 'can_edit_meta'],
+			'auth_callback'     => [ self::class, 'can_edit_meta' ],
 			'default'           => '',
 		];
-		register_post_meta('page', self::LABEL_META_KEY, $args);
-		register_post_meta('page', self::HIDDEN_META_KEY, $args);
+		register_post_meta( 'page', self::LABEL_META_KEY, $args );
+		register_post_meta( 'page', self::HIDDEN_META_KEY, $args );
 	}
 
 	/**
@@ -53,7 +56,7 @@ class Rockaden_Theme_Section_Nav {
 	 * @return bool
 	 */
 	public static function can_edit_meta(): bool {
-		return current_user_can('edit_others_pages');
+		return current_user_can( 'edit_others_pages' );
 	}
 
 	/**
@@ -62,9 +65,9 @@ class Rockaden_Theme_Section_Nav {
 	 * @param int $page_id Page ID.
 	 * @return int Root page ID, or 0 if the ID is not a valid page.
 	 */
-	public static function get_root_id(int $page_id): int {
-		$post = get_post($page_id);
-		if (!$post instanceof WP_Post || 'page' !== $post->post_type) {
+	public static function get_root_id( int $page_id ): int {
+		$post = get_post( $page_id );
+		if ( ! $post instanceof WP_Post || 'page' !== $post->post_type ) {
 			return 0;
 		}
 
@@ -78,13 +81,13 @@ class Rockaden_Theme_Section_Nav {
 	 * @param int $page_id Page ID.
 	 * @return string
 	 */
-	public static function get_label(int $page_id): string {
-		$override = get_post_meta($page_id, self::LABEL_META_KEY, true);
-		if (is_string($override) && '' !== trim($override)) {
+	public static function get_label( int $page_id ): string {
+		$override = get_post_meta( $page_id, self::LABEL_META_KEY, true );
+		if ( is_string( $override ) && '' !== trim( $override ) ) {
 			return $override;
 		}
 
-		return get_the_title($page_id);
+		return get_the_title( $page_id );
 	}
 
 	/**
@@ -97,14 +100,14 @@ class Rockaden_Theme_Section_Nav {
 	 * @param int $page_id Page ID.
 	 * @return list<array{id:int,label:string,url:string,is_current:bool,is_root:bool,hidden:bool}>
 	 */
-	public static function get_menu_items(int $page_id): array {
-		$root_id = self::get_root_id($page_id);
-		if (0 === $root_id) {
+	public static function get_menu_items( int $page_id ): array {
+		$root_id = self::get_root_id( $page_id );
+		if ( 0 === $root_id ) {
 			return [];
 		}
 
-		$root = get_post($root_id);
-		if (!$root instanceof WP_Post) {
+		$root = get_post( $root_id );
+		if ( ! $root instanceof WP_Post ) {
 			return [];
 		}
 
@@ -114,22 +117,22 @@ class Rockaden_Theme_Section_Nav {
 				'sort_column' => 'menu_order,post_title',
 			]
 		);
-		if (empty($children)) {
+		if ( empty( $children ) ) {
 			return [];
 		}
 
-		$posts = array_merge([$root], $children);
+		$posts = array_merge( [ $root ], $children );
 
 		$items = [];
-		foreach ($posts as $index => $item) {
-			$url = get_permalink($item->ID);
+		foreach ( $posts as $index => $item ) {
+			$url     = get_permalink( $item->ID );
 			$items[] = [
 				'id'         => (int) $item->ID,
-				'label'      => self::get_label((int) $item->ID),
+				'label'      => self::get_label( (int) $item->ID ),
 				'url'        => false === $url ? '' : $url,
 				'is_current' => (int) $item->ID === $page_id,
 				'is_root'    => 0 === $index,
-				'hidden'     => '1' === get_post_meta((int) $item->ID, self::HIDDEN_META_KEY, true),
+				'hidden'     => '1' === get_post_meta( (int) $item->ID, self::HIDDEN_META_KEY, true ),
 			];
 		}
 

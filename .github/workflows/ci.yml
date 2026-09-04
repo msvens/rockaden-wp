@@ -61,3 +61,15 @@ jobs:
       - name: PHP_CodeSniffer
         working-directory: plugin
         run: composer phpcs
+
+      - name: Install Composer dependencies (theme)
+        working-directory: theme
+        run: composer install --no-interaction --prefer-dist
+
+      - name: PHPStan (theme)
+        working-directory: theme
+        run: composer phpstan
+
+      - name: PHP_CodeSniffer (theme)
+        working-directory: theme
+        run: composer phpcs

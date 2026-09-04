@@ -3,25 +3,30 @@
  * Rockaden Theme Setup.
  *
  * Creates stub pages and default settings on theme activation.
+ *
+ * @package Rockaden_Theme
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
+/**
+ * Theme activation: stub pages, the landing page, and default settings.
+ */
 class Rockaden_Theme_Setup {
 
 	/**
 	 * Pages to create on activation: title => slug.
 	 */
 	private const STUB_PAGES = [
-		'Nyheter'      => 'nyheter',
-		'Kalender'     => 'kalender',
-		'Träning'      => 'training',
-		'Turneringar'  => 'tournaments',
-		'Handla'       => 'shop',
-		'Medlemmar'    => 'medlemmar',
-		'Om Rockaden'  => 'om-rockaden',
-		'Kontakt'      => 'kontakt',
-		'Bli medlem'   => 'bli-medlem',
+		'Nyheter'     => 'nyheter',
+		'Kalender'    => 'kalender',
+		'Träning'     => 'training',
+		'Turneringar' => 'tournaments',
+		'Handla'      => 'shop',
+		'Medlemmar'   => 'medlemmar',
+		'Om Rockaden' => 'om-rockaden',
+		'Kontakt'     => 'kontakt',
+		'Bli medlem'  => 'bli-medlem',
 	];
 
 	/**
@@ -52,43 +57,47 @@ class Rockaden_Theme_Setup {
 	 *    the admin hasn't picked a different home-page setup.
 	 */
 	private static function create_landing_page(): void {
-		$page = get_page_by_path('hem');
+		$page = get_page_by_path( 'hem' );
 
-		if (!$page) {
+		if ( ! $page ) {
 			$content = self::build_landing_content();
 
-			$page_id = wp_insert_post([
-				'post_title'   => 'Hem',
-				'post_name'    => 'hem',
-				'post_status'  => 'publish',
-				'post_type'    => 'page',
-				'post_content' => $content,
-				'meta_input'   => [
-					'_wp_page_template' => 'page-landing',
-				],
-			]);
+			$page_id = wp_insert_post(
+				[
+					'post_title'   => 'Hem',
+					'post_name'    => 'hem',
+					'post_status'  => 'publish',
+					'post_type'    => 'page',
+					'post_content' => $content,
+					'meta_input'   => [
+						'_wp_page_template' => 'page-landing',
+					],
+				]
+			);
 
-			if (is_wp_error($page_id) || !$page_id) {
+			// wp_insert_post() only returns WP_Error when called with
+			// $wp_error = true; otherwise failure is 0.
+			if ( ! $page_id ) {
 				return;
 			}
 		} else {
 			$page_id = $page->ID;
 			// Only assign the landing template if the page has none yet —
 			// don't revert an admin's deliberate template change.
-			if (get_post_meta($page_id, '_wp_page_template', true) === '') {
-				update_post_meta($page_id, '_wp_page_template', 'page-landing');
+			if ( get_post_meta( $page_id, '_wp_page_template', true ) === '' ) {
+				update_post_meta( $page_id, '_wp_page_template', 'page-landing' );
 			}
 		}
 
 		// Only set front-page mode if admin hasn't chosen something else
 		// (e.g. left the default "Latest posts" or pointed at a different page).
-		if (get_option('show_on_front') !== 'page') {
-			update_option('show_on_front', 'page');
+		if ( get_option( 'show_on_front' ) !== 'page' ) {
+			update_option( 'show_on_front', 'page' );
 		}
 
 		// Only set page_on_front when nothing is set (0 = unset).
-		if ((int) get_option('page_on_front') === 0) {
-			update_option('page_on_front', (int) $page_id);
+		if ( (int) get_option( 'page_on_front' ) === 0 ) {
+			update_option( 'page_on_front', (int) $page_id );
 		}
 
 		// Wire the Nyheter stub page as WP's "Posts page" so /nyheter/ serves
@@ -96,9 +105,9 @@ class Rockaden_Theme_Setup {
 		// activate() run — page_for_posts is theme-owned routing, not an
 		// editor-facing choice, so no guard against existing values. This is
 		// also self-healing if the option ever points at a deleted/orphan page.
-		$nyheter = get_page_by_path('nyheter');
-		if ($nyheter) {
-			update_option('page_for_posts', (int) $nyheter->ID);
+		$nyheter = get_page_by_path( 'nyheter' );
+		if ( $nyheter ) {
+			update_option( 'page_for_posts', (int) $nyheter->ID );
 		}
 	}
 
@@ -118,39 +127,50 @@ class Rockaden_Theme_Setup {
 
 		// Patterns are auto-registered from theme/patterns/ during init; ensure
 		// they're available even if activation runs before that.
-		if (function_exists('_register_theme_block_patterns')) {
+		if ( function_exists( '_register_theme_block_patterns' ) ) {
 			_register_theme_block_patterns();
 		}
 
 		$registry = \WP_Block_Patterns_Registry::get_instance();
 		$parts    = [];
 
-		foreach ($slugs as $slug) {
-			if ($registry->get_registered($slug)) {
-				$parts[] = '<!-- wp:pattern {"slug":"' . esc_attr($slug) . '"} /-->';
+		foreach ( $slugs as $slug ) {
+			if ( $registry->get_registered( $slug ) ) {
+				$parts[] = '<!-- wp:pattern {"slug":"' . esc_attr( $slug ) . '"} /-->';
 			}
 		}
 
-		return implode("\n\n", $parts);
+		return implode( "\n\n", $parts );
 	}
 
 	/**
 	 * Create stub pages if they don't already exist.
 	 */
 	private static function create_stub_pages(): void {
-		foreach (self::STUB_PAGES as $title => $slug) {
-			$existing = get_page_by_path($slug);
-			if ($existing) {
+		foreach ( self::STUB_PAGES as $title => $slug ) {
+			$existing = get_page_by_path( $slug );
+			if ( $existing ) {
 				continue;
 			}
 
-			wp_insert_post([
-				'post_title'   => $title,
-				'post_name'    => $slug,
-				'post_status'  => 'publish',
-				'post_type'    => 'page',
-				'post_content' => '<!-- wp:paragraph --><p>Innehåll kommer snart.</p><!-- /wp:paragraph -->',
-			]);
+			// Nyheter is wired as WP's page_for_posts below, so its content is
+			// never rendered — /nyheter/ is drawn entirely by home.html. Seed it
+			// empty: placeholder text there looks like real content, and a
+			// non-empty body also suppresses core's classic-editor lock, which
+			// is conditional on `empty( $post->post_content )`.
+			$content = ( 'nyheter' === $slug )
+				? ''
+				: '<!-- wp:paragraph --><p>Innehåll kommer snart.</p><!-- /wp:paragraph -->';
+
+			wp_insert_post(
+				[
+					'post_title'   => $title,
+					'post_name'    => $slug,
+					'post_status'  => 'publish',
+					'post_type'    => 'page',
+					'post_content' => $content,
+				]
+			);
 		}
 	}
 
@@ -158,22 +178,40 @@ class Rockaden_Theme_Setup {
 	 * Set default theme options if they don't exist.
 	 */
 	private static function set_default_options(): void {
-		if (get_option(Rockaden_Theme_Settings::OPTION_KEY) !== false) {
+		if ( get_option( Rockaden_Theme_Settings::OPTION_KEY ) !== false ) {
 			return;
 		}
 
 		$defaults             = Rockaden_Theme_Settings::defaults();
 		$defaults['main_nav'] = [
-			['label' => 'Nyheter',   'url' => '/nyheter'],
-			['label' => 'Kalender',  'url' => '/kalender'],
-			['label' => 'Träning',   'url' => '/training'],
-			['label' => 'Medlemmar', 'url' => '/medlemmar'],
+			[
+				'label' => 'Nyheter',
+				'url'   => '/nyheter',
+			],
+			[
+				'label' => 'Kalender',
+				'url'   => '/kalender',
+			],
+			[
+				'label' => 'Träning',
+				'url'   => '/training',
+			],
+			[
+				'label' => 'Medlemmar',
+				'url'   => '/medlemmar',
+			],
 		];
 		$defaults['more_nav'] = [
-			['label' => 'Om Rockaden', 'url' => '/om-rockaden'],
-			['label' => 'Kontakt',     'url' => '/kontakt'],
+			[
+				'label' => 'Om Rockaden',
+				'url'   => '/om-rockaden',
+			],
+			[
+				'label' => 'Kontakt',
+				'url'   => '/kontakt',
+			],
 		];
 
-		update_option(Rockaden_Theme_Settings::OPTION_KEY, $defaults);
+		update_option( Rockaden_Theme_Settings::OPTION_KEY, $defaults );
 	}
 }
