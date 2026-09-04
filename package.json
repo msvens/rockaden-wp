@@ -7,9 +7,11 @@
     "dev": "pnpm --filter plugin dev",
     "typecheck": "pnpm --filter plugin typecheck",
     "lint": "pnpm --filter plugin lint:js",
-    "check": "pnpm typecheck && pnpm lint && pnpm run lint:php && pnpm build",
+    "check": "pnpm typecheck && pnpm lint && pnpm run lint:php && pnpm run i18n:check && pnpm build",
     "package": "pnpm build && node scripts/package.mjs",
-    "lint:php": "composer -d plugin lint:php && composer -d theme lint:php"
+    "lint:php": "composer -d plugin lint:php && composer -d theme lint:php",
+    "i18n": "node scripts/i18n.mjs",
+    "i18n:check": "node scripts/i18n-check.mjs"
   },
   "devDependencies": {
     "typescript": "^5.7.0"

@@ -2,227 +2,394 @@
 # This file is distributed under the MIT.
 msgid ""
 msgstr ""
-"Project-Id-Version: Rockaden Theme 0.18.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/rockaden-theme\n"
+"Project-Id-Version: Rockaden Theme 0.38.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/theme\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-26T17:10:51+00:00\n"
+"POT-Creation-Date: 2026-09-04T08:15:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: rockaden-theme\n"
 
 #. Theme Name of the theme
-#: style.css
+#: style.css:2
 msgid "Rockaden Theme"
 msgstr ""
 
 #. Theme URI of the theme
-#: style.css
+#: style.css:3
 msgid "https://github.com/msvens/rockaden-wp"
 msgstr ""
 
 #. Description of the theme
-#: style.css
+#: style.css:6
 msgid "Block theme for SK Rockaden chess club. Dark mode support, chess club colors."
 msgstr ""
 
 #. Author of the theme
-#: style.css
+#: style.css:4
 msgid "SK Rockaden"
 msgstr ""
 
 #. Author URI of the theme
-#: style.css
+#: style.css:5
 msgid "https://rockaden.se"
+msgstr ""
+
+#: blocks/feedback-form/render.php:40
+msgid "Skickar…"
+msgstr ""
+
+#: blocks/feedback-form/render.php:41
+msgid "Tack! Ditt meddelande har skickats."
+msgstr ""
+
+#: blocks/feedback-form/render.php:42
+msgid "Något gick fel. Försök igen."
+msgstr ""
+
+#: blocks/feedback-form/render.php:45
+#: inc/class-theme-feedback.php:214
+#: inc/class-theme-feedback.php:253
+msgid "Namn"
+msgstr ""
+
+#: blocks/feedback-form/render.php:49
+#: inc/class-theme-feedback.php:216
+#: inc/class-theme-feedback.php:255
+#: inc/class-theme-feedback.php:274
+msgid "E-post"
+msgstr ""
+
+#: blocks/feedback-form/render.php:51
+msgid "Valfritt – fyll i om du vill att vi ska kunna kontakta dig."
+msgstr ""
+
+#: blocks/feedback-form/render.php:54
+msgid "Meddelande"
+msgstr ""
+
+#: blocks/feedback-form/render.php:60
+msgid "Webbplats"
+msgstr ""
+
+#: blocks/feedback-form/render.php:64
+msgid "Skicka"
+msgstr ""
+
+#: blocks/feedback-form/render.php:68
+msgid "Aktivera JavaScript för att skicka feedback."
 msgstr ""
 
 #: blocks/shop-grid/render.php:14
 msgid "Mer schackmateriel"
 msgstr ""
 
-#: blocks/shop-grid/render.php:42
+#: blocks/shop-grid/render.php:49
 msgid "No shop items yet."
 msgstr ""
 
-#: blocks/shop-grid/render.php:58
+#: blocks/shop-grid/render.php:65
 msgid "Slut i lager"
 msgstr ""
 
-#: blocks/shop-grid/render.php:78
+#: blocks/shop-grid/render.php:90
 msgid "Köp"
 msgstr ""
 
-#: functions.php:169
+#: functions.php:208
 msgid "Rockaden"
 msgstr ""
 
-#: inc/class-theme-settings.php:134
+#: inc/class-theme-feedback.php:37
+#: inc/class-theme-feedback.php:38
+#: inc/class-theme-feedback.php:40
+msgid "Feedback"
+msgstr ""
+
+#: inc/class-theme-feedback.php:39
+msgid "Visa feedback"
+msgstr ""
+
+#: inc/class-theme-feedback.php:150
+msgid "Fyll i ditt namn och ett meddelande."
+msgstr ""
+
+#: inc/class-theme-feedback.php:157
+msgid "Ange en giltig e-postadress eller lämna fältet tomt."
+msgstr ""
+
+#. translators: %s: sender name.
+#: inc/class-theme-feedback.php:168
+#, php-format
+msgid "Feedback från %s"
+msgstr ""
+
+#: inc/class-theme-feedback.php:177
+msgid "Kunde inte spara ditt meddelande. Försök igen."
+msgstr ""
+
+#. translators: %s: sender name.
+#: inc/class-theme-feedback.php:211
+#, php-format
+msgid "Webbplatsfeedback från %s"
+msgstr ""
+
+#: inc/class-theme-feedback.php:236
+msgid "Avsändare"
+msgstr ""
+
+#: inc/class-theme-feedback.php:273
+msgid "Från"
+msgstr ""
+
+#: inc/class-theme-settings.php:237
 msgid "Mer"
 msgstr ""
 
-#: inc/class-theme-settings.php:135
+#: inc/class-theme-settings.php:238
 msgid "Språk"
 msgstr ""
 
-#: inc/class-theme-settings.php:136
+#: inc/class-theme-settings.php:239
 msgid "Mörkt läge"
 msgstr ""
 
-#: inc/class-theme-settings.php:137
+#: inc/class-theme-settings.php:240
 msgid "Dokumentation"
 msgstr ""
 
-#: inc/class-theme-shop.php:38
+#: inc/class-theme-settings.php:698
+msgid "Section menu"
+msgstr ""
+
+#: inc/class-theme-settings.php:722
+msgid "This page does not use the “Page (Section Nav)” template, so the sidebar will not show on the front end. Pick that template in the Page panel to display it."
+msgstr ""
+
+#: inc/class-theme-settings.php:728
+msgid "This page isn’t part of a section yet. Give it the “Page (Section Nav)” template and add child pages (or make it a child of a section page)."
+msgstr ""
+
+#: inc/class-theme-settings.php:747
+msgid "The section parent page is always first."
+msgstr ""
+
+#: inc/class-theme-settings.php:747
+msgid "Top"
+msgstr ""
+
+#: inc/class-theme-settings.php:750
+msgid "Move up"
+msgstr ""
+
+#: inc/class-theme-settings.php:751
+msgid "Move down"
+msgstr ""
+
+#: inc/class-theme-settings.php:761
+msgid "Menu label"
+msgstr ""
+
+#: inc/class-theme-settings.php:766
+msgid "Hidden"
+msgstr ""
+
+#: inc/class-theme-settings.php:772
+msgid "Show in menu"
+msgstr ""
+
+#: inc/class-theme-settings.php:780
+msgid "Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. Changes save right away. The parent page is always first."
+msgstr ""
+
+#: inc/class-theme-settings.php:782
+msgid "The section menu is managed by users who can edit all pages."
+msgstr ""
+
+#: inc/class-theme-settings.php:832
+msgid "Saving…"
+msgstr ""
+
+#: inc/class-theme-settings.php:833
+msgid "Saved"
+msgstr ""
+
+#: inc/class-theme-settings.php:834
+msgid "Couldn’t save — reload and try again."
+msgstr ""
+
+#: inc/class-theme-shop.php:44
 msgid "Shop Items"
 msgstr ""
 
-#: inc/class-theme-shop.php:39
+#: inc/class-theme-shop.php:45
 msgid "Shop Item"
 msgstr ""
 
-#: inc/class-theme-shop.php:40
+#: inc/class-theme-shop.php:46
 msgid "Add New Shop Item"
 msgstr ""
 
-#: inc/class-theme-shop.php:41
+#: inc/class-theme-shop.php:47
 msgid "Edit Shop Item"
 msgstr ""
 
-#: inc/class-theme-shop.php:164
+#: inc/class-theme-shop.php:195
 msgid "Pricing & Purchase"
 msgstr ""
 
-#: inc/class-theme-shop.php:187
+#: inc/class-theme-shop.php:218
 msgid "Price"
 msgstr ""
 
-#: inc/class-theme-shop.php:191
+#: inc/class-theme-shop.php:222
 msgid "Sale price"
 msgstr ""
 
-#: inc/class-theme-shop.php:193
+#: inc/class-theme-shop.php:224
 msgid "Optional. When set, the regular price is shown struck through."
 msgstr ""
 
-#: inc/class-theme-shop.php:196
+#: inc/class-theme-shop.php:227
 msgid "Buy URL"
 msgstr ""
 
-#: inc/class-theme-shop.php:200
+#: inc/class-theme-shop.php:231
 msgid "Stock status"
 msgstr ""
 
-#: inc/class-theme-shop.php:202
+#: inc/class-theme-shop.php:233
 msgid "In stock"
 msgstr ""
 
-#: inc/class-theme-shop.php:203
+#: inc/class-theme-shop.php:234
 msgid "Out of stock"
 msgstr ""
 
-#: inc/class-theme-shop.php:207
+#: inc/class-theme-shop.php:238
 msgid "How to order"
 msgstr ""
 
-#: inc/class-theme-shop.php:208
+#: inc/class-theme-shop.php:239
 msgid "e.g. Come to the club to buy, or email …"
 msgstr ""
 
-#: inc/class-theme-shop.php:209
+#: inc/class-theme-shop.php:240
 msgid "Optional. Shown on the public shop card when set."
 msgstr ""
 
-#: patterns/landing-hero.php
+#: patterns/landing-hero.php:3
 msgctxt "Pattern title"
 msgid "Landing Hero"
 msgstr ""
 
-#: patterns/landing-hero.php
+#: patterns/landing-hero.php:6
 msgctxt "Pattern description"
 msgid "Full-width hero banner with overlay text and CTA buttons."
 msgstr ""
 
-#: patterns/landing-hero.php:18
+#: patterns/landing-hero.php:21
 msgid "Upptäck schack hos SK Rockaden"
 msgstr ""
 
-#: patterns/landing-hero.php:22
+#: patterns/landing-hero.php:25
 msgid "Gemenskap, utveckling och spelglädje – för alla nivåer"
 msgstr ""
 
-#: patterns/landing-hero.php:27
+#: patterns/landing-hero.php:30
 msgid "Bli medlem"
 msgstr ""
 
-#: patterns/landing-hero.php:31
+#: patterns/landing-hero.php:34
 msgid "Prova gratis"
 msgstr ""
 
-#: patterns/landing-news-and-shop.php
+#: patterns/landing-news-and-shop.php:3
 msgctxt "Pattern title"
 msgid "Landing News & Shop"
 msgstr ""
 
-#: patterns/landing-news-and-shop.php
+#: patterns/landing-news-and-shop.php:6
 msgctxt "Pattern description"
 msgid "Two-column section: latest news on the left, shop items + upcoming events stacked on the right."
 msgstr ""
 
-#: patterns/landing-news-and-shop.php:21
+#: patterns/landing-news-and-shop.php:24
 msgid "Senaste nyheter"
 msgstr ""
 
-#: patterns/landing-news-and-shop.php:31
+#: patterns/landing-news-and-shop.php:34
 msgid "Schackmateriel"
 msgstr ""
 
-#: patterns/landing-news-and-shop.php:37
+#: patterns/landing-news-and-shop.php:40
 msgid "Kommande aktiviteter"
 msgstr ""
 
-#: patterns/landing-why.php
+#: patterns/landing-why.php:3
 msgctxt "Pattern title"
 msgid "Landing Why Section"
 msgstr ""
 
-#: patterns/landing-why.php
+#: patterns/landing-why.php:6
 msgctxt "Pattern description"
 msgid "\"Why Rockaden?\" section with feature cards on the left and image on the right."
 msgstr ""
 
-#: patterns/landing-why.php:31
+#: patterns/landing-why.php:34
 msgid "Varför välja SK Rockaden?"
 msgstr ""
 
-#: patterns/landing-why.php:41
+#: patterns/landing-why.php:44
 msgid "Träningsgrupper för alla åldrar"
 msgstr ""
 
-#: patterns/landing-why.php:45
+#: patterns/landing-why.php:48
 msgid "Nybörjare till elit"
 msgstr ""
 
-#: patterns/landing-why.php:57
+#: patterns/landing-why.php:60
 msgid "Tjejgrupp – trygg miljö och gemenskap"
 msgstr ""
 
-#: patterns/landing-why.php:61
+#: patterns/landing-why.php:64
 msgid "Gemenskap och fler tjejer på schackbrädet"
 msgstr ""
 
-#: patterns/landing-why.php:73
+#: patterns/landing-why.php:76
 msgid "Centralt i Hägersten"
 msgstr ""
 
-#: patterns/landing-why.php:77
+#: patterns/landing-why.php:80
 msgid "Riksdalergatan 2 / Sparbanksvägen 31"
 msgstr ""
 
-#: patterns/landing-why.php:87
+#: patterns/landing-why.php:90
 msgid "Barn spelar schack"
+msgstr ""
+
+#: blocks/feedback-form/block.json
+msgctxt "block title"
+msgid "Feedback Form"
+msgstr ""
+
+#: blocks/feedback-form/block.json
+msgctxt "block description"
+msgid "A 'send us feedback' form that emails the club and stores submissions."
+msgstr ""
+
+#: blocks/footer-nav/block.json
+msgctxt "block title"
+msgid "Footer Navigation"
+msgstr ""
+
+#: blocks/footer-nav/block.json
+msgctxt "block description"
+msgid "Renders the footer links and text configured under Appearance → Rockaden."
 msgstr ""
 
 #: blocks/page-title/block.json

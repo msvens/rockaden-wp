@@ -19,9 +19,11 @@ if ( file_exists( get_theme_file_path( 'vendor/autoload.php' ) ) ) {
 		'rockaden-theme'
 	);
 	// enableReleaseAssets() lives on the GitHub API subclass, not on the base
-	// Vcs\Api that getVcsApi() is typed to return.
+	// Vcs\Api that getVcsApi() is typed to return. Checked by method rather than
+	// by class: the library namespaces its classes by version (v5p6, v5p7, …),
+	// so naming one means a routine dependency bump silently stops matching.
 	$rockaden_vcs_api = $rockaden_theme_update_checker->getVcsApi();
-	if ( $rockaden_vcs_api instanceof YahnisElsts\PluginUpdateChecker\v5p6\Vcs\GitHubApi ) {
+	if ( method_exists( $rockaden_vcs_api, 'enableReleaseAssets' ) ) {
 		$rockaden_vcs_api->enableReleaseAssets( '/rockaden-theme\.zip$/' );
 	}
 }
