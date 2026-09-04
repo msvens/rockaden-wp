@@ -17,7 +17,7 @@ import { existsSync, readFileSync, writeFileSync, mkdtempSync, rmSync } from 'fs
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { PACKAGES, paths, root } from './lib/packages.mjs';
-import { parsePo, isTranslated } from './lib/po.mjs';
+import { parsePo, isTranslated, headerValue } from './lib/po.mjs';
 
 const run = ( cmd, args, opts = {} ) =>
 	execFileSync( cmd, args, { encoding: 'utf8', stdio: 'pipe', ...opts } );
@@ -29,6 +29,28 @@ function requireTool( cmd, hint ) {
 		console.error( `\n  Missing required tool: ${ cmd }\n  ${ hint }\n` );
 		process.exit( 1 );
 	}
+}
+
+/**
+ * Write a POT, keeping the previous POT-Creation-Date when nothing else changed.
+ *
+ * wp-cli stamps the current time on every run, so without this `pnpm i18n`
+ * would dirty both POT files every time it is invoked and `git status` would
+ * never come back clean after a no-op regeneration.
+ *
+ * @param {string} file    Destination path.
+ * @param {string} content Freshly generated POT.
+ */
+function writePot( file, content ) {
+	const DATE = /^"POT-Creation-Date:.*\\n"$/m;
+	if ( existsSync( file ) ) {
+		const previous = readFileSync( file, 'utf8' );
+		const prevDate = previous.match( DATE );
+		if ( prevDate && content.replace( DATE, '' ) === previous.replace( DATE, '' ) ) {
+			content = content.replace( DATE, prevDate[ 0 ] );
+		}
+	}
+	writeFileSync( file, content );
 }
 
 /**
@@ -49,7 +71,7 @@ function buildPot( pkg, p ) {
 		], { cwd: root } );
 
 		if ( ! pkg.tsSources.length ) {
-			writeFileSync( p.pot, readFileSync( wpPot ) );
+			writePot( p.pot, readFileSync( wpPot, 'utf8' ) );
 			return;
 		}
 
@@ -70,7 +92,9 @@ function buildPot( pkg, p ) {
 			...pkg.tsSources,
 		], { cwd: p.pkgDir } );
 
-		run( 'msgcat', [ '--use-first', '-o', p.pot, wpPot, tsPot ] );
+		const merged = join( tmp, 'merged.pot' );
+		run( 'msgcat', [ '--use-first', '-o', merged, wpPot, tsPot ] );
+		writePot( p.pot, readFileSync( merged, 'utf8' ) );
 	} finally {
 		rmSync( tmp, { recursive: true, force: true } );
 	}
@@ -84,8 +108,11 @@ function buildPot( pkg, p ) {
  * @param {string} locale Target locale.
  */
 function writeJed( p, locale ) {
-	const { entries } = parsePo( readFileSync( p.po, 'utf8' ) );
+	const { header, entries } = parsePo( readFileSync( p.po, 'utf8' ) );
 	const messages = { '': { domain: 'messages', lang: locale, 'plural-forms': 'nplurals=2; plural=n != 1;' } };
+	// Take the revision date from the .po rather than "now", so a no-op
+	// regeneration produces a byte-identical file.
+	const revision = ( headerValue( header, 'PO-Revision-Date' ) || '' ).slice( 0, 10 );
 
 	let skipped = 0;
 	for ( const e of entries ) {
@@ -102,7 +129,7 @@ function writeJed( p, locale ) {
 	writeFileSync(
 		p.json,
 		JSON.stringify( {
-			'translation-revision-date': new Date().toISOString().slice( 0, 10 ),
+			'translation-revision-date': revision,
 			generator: 'scripts/i18n.mjs',
 			domain: 'messages',
 			locale_data: { messages },
