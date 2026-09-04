@@ -31,11 +31,16 @@ $shop_posts = get_posts(
 
 $items = array_map( [ Rockaden_Theme_Shop::class, 'format_item' ], $shop_posts );
 
-// The "more" link only makes sense when the grid is actually hiding items.
-// On a show-all grid (count <= 0) or when everything already fits, it must
-// never appear (it would just link back to the page you're on).
-$total_published = (int) wp_count_posts( Rockaden_Theme_Shop::POST_TYPE )->publish;
-$show_more       = $count > 0 && $total_published > $count && '' !== $more_url;
+// A capped grid (count > 0) is a teaser on some other page, so it always needs
+// a way through to the shop — a card is never itself a link, and condensed mode
+// hides the buy link too, so without this the teaser is a dead end.
+//
+// Deliberately NOT conditioned on there being more items than are shown: that
+// conflates "everything fits" with "you are already on the shop page". Only the
+// latter should suppress the link, and count <= 0 already covers it.
+//
+// Nothing to link to when there is nothing to show, hence the items check.
+$show_more = $count > 0 && '' !== $more_url && ! empty( $items );
 
 $classes = 'rockaden-shop-grid rockaden-shop-grid--' . $layout;
 if ( $condensed ) {
@@ -65,14 +70,26 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => $classes ] );
 									<?php esc_html_e( 'Slut i lager', 'rockaden-theme' ); ?>
 								</p>
 							<?php endif; ?>
-							<?php if ( $item['salePrice'] ) : ?>
+							<?php
+							// Two prices, both labelled: these are the non-member and
+							// member prices, never a discount, so nothing is struck
+							// through. An item with only a member price is sold to
+							// members only.
+							if ( $item['price'] || $item['memberPrice'] ) :
+								?>
 								<p class="rockaden-shop-card__price">
-									<s class="rockaden-shop-card__price-original"><?php echo esc_html( $item['price'] ); ?></s>
-									<span class="rockaden-shop-card__price-sale"><?php echo esc_html( $item['salePrice'] ); ?></span>
-								</p>
-							<?php elseif ( $item['price'] ) : ?>
-								<p class="rockaden-shop-card__price">
-									<span><?php echo esc_html( $item['price'] ); ?></span>
+									<?php if ( $item['price'] ) : ?>
+										<span class="rockaden-shop-card__price-row">
+											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Pris', 'rockaden-theme' ); ?></span>
+											<span class="rockaden-shop-card__price-value"><?php echo esc_html( $item['price'] ); ?></span>
+										</span>
+									<?php endif; ?>
+									<?php if ( $item['memberPrice'] ) : ?>
+										<span class="rockaden-shop-card__price-row rockaden-shop-card__price-row--member">
+											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Rockaden SK Medlem', 'rockaden-theme' ); ?></span>
+											<span class="rockaden-shop-card__price-value"><?php echo esc_html( $item['memberPrice'] ); ?></span>
+										</span>
+									<?php endif; ?>
 								</p>
 							<?php endif; ?>
 							<?php if ( ! empty( $item['content'] ) ) : ?>

@@ -1447,17 +1447,25 @@ body > .wp-site-blocks > main.rockaden-landing {
 .rockaden-shop-card__price {
   margin: 0;
   font-size: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 }
 
-.rockaden-shop-card__price-original {
-  color: var(--wp--preset--color--on-surface-muted);
-  margin-right: 0.35rem;
-  font-weight: 400;
+.rockaden-shop-card__price-row {
+  display: flex;
+  gap: 0.35rem;
 }
 
-.rockaden-shop-card__price-sale {
+.rockaden-shop-card__price-label {
   color: var(--wp--preset--color--on-surface);
   font-weight: 600;
+}
+
+.rockaden-shop-card__price-value {
+  color: var(--wp--preset--color--on-surface);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
 }
 
 .rockaden-shop-card__stock {

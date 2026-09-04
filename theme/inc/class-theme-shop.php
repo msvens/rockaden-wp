@@ -68,10 +68,19 @@ class Rockaden_Theme_Shop {
 	 */
 	private static function register_meta(): void {
 		$meta_fields = [
+			// The non-member price.
 			'rc_price'        => [
 				'type'    => 'string',
 				'default' => '',
 			],
+			'rc_member_price' => [
+				'type'    => 'string',
+				'default' => '',
+			],
+			// Legacy key from when these were "regular" and "sale" prices. It
+			// always held what is now the member price, so it stays registered
+			// and is read as a fallback — see member_price(). Nothing is written
+			// to it any more and no migration is needed.
 			'rc_sale_price'   => [
 				'type'    => 'string',
 				'default' => '',
@@ -171,13 +180,32 @@ class Rockaden_Theme_Shop {
 			'excerpt'     => $post->post_excerpt,
 			'content'     => $post->post_content,
 			'price'       => get_post_meta( $post->ID, 'rc_price', true ) ?: '',
-			'salePrice'   => get_post_meta( $post->ID, 'rc_sale_price', true ) ?: '',
+			'memberPrice' => self::member_price( $post->ID ),
 			'buyUrl'      => get_post_meta( $post->ID, 'rc_buy_url', true ) ?: '',
 			'stockStatus' => get_post_meta( $post->ID, 'rc_stock_status', true ) ?: 'in_stock',
 			'howToOrder'  => get_post_meta( $post->ID, 'rc_how_to_order', true ) ?: '',
 			'imageUrl'    => $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'medium' ) : '',
 			'imageAlt'    => $thumb_id ? get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ) : '',
 		];
+	}
+
+	/**
+	 * An item's member price.
+	 *
+	 * Falls back to the legacy `rc_sale_price`, which is where this value lived
+	 * when the two prices were labelled "regular" and "sale". They were never a
+	 * discount — the lower figure has always been the price for club members —
+	 * so the old value is read as a member price and nothing needs migrating.
+	 *
+	 * @param int $post_id The shop item.
+	 * @return string The member price, or '' when the item has none.
+	 */
+	private static function member_price( int $post_id ): string {
+		$value = (string) get_post_meta( $post_id, 'rc_member_price', true );
+		if ( '' !== $value ) {
+			return $value;
+		}
+		return (string) get_post_meta( $post_id, 'rc_sale_price', true );
 	}
 
 	/*
@@ -209,19 +237,19 @@ class Rockaden_Theme_Shop {
 		wp_nonce_field( 'rc_shop_item_meta', 'rc_shop_item_meta_nonce' );
 
 		$price        = get_post_meta( $post->ID, 'rc_price', true );
-		$sale_price   = get_post_meta( $post->ID, 'rc_sale_price', true );
+		$member_price = self::member_price( $post->ID );
 		$buy_url      = get_post_meta( $post->ID, 'rc_buy_url', true );
 		$stock_status = get_post_meta( $post->ID, 'rc_stock_status', true ) ?: 'in_stock';
 		$how_to_order = get_post_meta( $post->ID, 'rc_how_to_order', true );
 		?>
 		<p>
-			<label for="rc_price"><strong><?php esc_html_e( 'Price', 'rockaden-theme' ); ?></strong></label><br />
+			<label for="rc_price"><strong><?php esc_html_e( 'Pris (icke-medlem)', 'rockaden-theme' ); ?></strong></label><br />
 			<input type="text" id="rc_price" name="rc_price" value="<?php echo esc_attr( $price ); ?>" class="widefat" placeholder="910 kr" />
 		</p>
 		<p>
-			<label for="rc_sale_price"><strong><?php esc_html_e( 'Sale price', 'rockaden-theme' ); ?></strong></label><br />
-			<input type="text" id="rc_sale_price" name="rc_sale_price" value="<?php echo esc_attr( $sale_price ); ?>" class="widefat" placeholder="780 kr" />
-			<span class="description"><?php esc_html_e( 'Optional. When set, the regular price is shown struck through.', 'rockaden-theme' ); ?></span>
+			<label for="rc_member_price"><strong><?php esc_html_e( 'Medlemspris', 'rockaden-theme' ); ?></strong></label><br />
+			<input type="text" id="rc_member_price" name="rc_member_price" value="<?php echo esc_attr( $member_price ); ?>" class="widefat" placeholder="780 kr" />
+			<span class="description"><?php esc_html_e( 'Lämna priset för icke-medlemmar tomt om varan bara säljs till medlemmar.', 'rockaden-theme' ); ?></span>
 		</p>
 		<p>
 			<label for="rc_buy_url"><strong><?php esc_html_e( 'Buy URL', 'rockaden-theme' ); ?></strong></label><br />
@@ -263,7 +291,11 @@ class Rockaden_Theme_Shop {
 		}
 
 		update_post_meta( $post_id, 'rc_price', sanitize_text_field( wp_unslash( $_POST['rc_price'] ?? '' ) ) );
-		update_post_meta( $post_id, 'rc_sale_price', sanitize_text_field( wp_unslash( $_POST['rc_sale_price'] ?? '' ) ) );
+		update_post_meta( $post_id, 'rc_member_price', sanitize_text_field( wp_unslash( $_POST['rc_member_price'] ?? '' ) ) );
+		// Saving moves the item off the legacy key for good. Without this,
+		// clearing the member price would let member_price() fall back to the
+		// old rc_sale_price and silently bring the value back.
+		delete_post_meta( $post_id, 'rc_sale_price' );
 		update_post_meta( $post_id, 'rc_buy_url', esc_url_raw( wp_unslash( $_POST['rc_buy_url'] ?? '' ) ) );
 
 		$stock_status = sanitize_text_field( wp_unslash( $_POST['rc_stock_status'] ?? 'in_stock' ) );
