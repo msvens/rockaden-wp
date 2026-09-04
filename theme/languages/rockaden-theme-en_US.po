@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rockaden Theme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/theme\n"
-"POT-Creation-Date: 2026-09-04T08:10:32+00:00\n"
+"POT-Creation-Date: 2026-09-04T09:34:36+00:00\n"
 "PO-Revision-Date: 2026-05-26\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,8 @@ msgstr "https://github.com/msvens/rockaden-wp"
 #: style.css:6
 msgid ""
 "Block theme for SK Rockaden chess club. Dark mode support, chess club colors."
-msgstr "Block theme for SK Rockaden chess club. Dark mode support, chess club colors."
+msgstr ""
+"Block theme for SK Rockaden chess club. Dark mode support, chess club colors."
 
 #. Author of the theme
 #: style.css:4
@@ -96,11 +97,19 @@ msgstr "No shop items yet."
 msgid "Slut i lager"
 msgstr "Out of stock"
 
-#: blocks/shop-grid/render.php:90
+#: blocks/shop-grid/render.php:78
+msgid "Pris"
+msgstr "Price"
+
+#: blocks/shop-grid/render.php:84
+msgid "Medlem"
+msgstr "Member"
+
+#: blocks/shop-grid/render.php:102
 msgid "Köp"
 msgstr "Buy"
 
-#: functions.php:208
+#: functions.php:210
 msgid "Rockaden"
 msgstr "Rockaden"
 
@@ -170,13 +179,18 @@ msgid ""
 "This page does not use the “Page (Section Nav)” template, so the sidebar "
 "will not show on the front end. Pick that template in the Page panel to "
 "display it."
-msgstr "This page does not use the “Page (Section Nav)” template, so the sidebar will not show on the front end. Pick that template in the Page panel to display it."
+msgstr ""
+"This page does not use the “Page (Section Nav)” template, so the sidebar "
+"will not show on the front end. Pick that template in the Page panel to "
+"display it."
 
 #: inc/class-theme-settings.php:728
 msgid ""
 "This page isn’t part of a section yet. Give it the “Page (Section Nav)” "
 "template and add child pages (or make it a child of a section page)."
-msgstr "This page isn’t part of a section yet. Give it the “Page (Section Nav)” template and add child pages (or make it a child of a section page)."
+msgstr ""
+"This page isn’t part of a section yet. Give it the “Page (Section Nav)” "
+"template and add child pages (or make it a child of a section page)."
 
 #: inc/class-theme-settings.php:747
 msgid "The section parent page is always first."
@@ -210,7 +224,9 @@ msgstr "Show in menu"
 msgid ""
 "Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. "
 "Changes save right away. The parent page is always first."
-msgstr "Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. Changes save right away. The parent page is always first."
+msgstr ""
+"Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. "
+"Changes save right away. The parent page is always first."
 
 #: inc/class-theme-settings.php:782
 msgid "The section menu is managed by users who can edit all pages."
@@ -244,47 +260,48 @@ msgstr "Add New Shop Item"
 msgid "Edit Shop Item"
 msgstr "Edit Shop Item"
 
-#: inc/class-theme-shop.php:195
+#: inc/class-theme-shop.php:223
 msgid "Pricing & Purchase"
 msgstr "Pricing & Purchase"
 
-#: inc/class-theme-shop.php:218
-msgid "Price"
-msgstr "Price"
+#: inc/class-theme-shop.php:246
+msgid "Pris (icke-medlem)"
+msgstr "Price (non-member)"
 
-#: inc/class-theme-shop.php:222
-msgid "Sale price"
-msgstr "Sale price"
+#: inc/class-theme-shop.php:250
+msgid "Medlemspris"
+msgstr "Member price"
 
-#: inc/class-theme-shop.php:224
-msgid "Optional. When set, the regular price is shown struck through."
-msgstr "Optional. When set, the regular price is shown struck through."
+#: inc/class-theme-shop.php:252
+msgid ""
+"Lämna priset för icke-medlemmar tomt om varan bara säljs till medlemmar."
+msgstr "Leave the non-member price empty if the item is sold to members only."
 
-#: inc/class-theme-shop.php:227
+#: inc/class-theme-shop.php:255
 msgid "Buy URL"
 msgstr "Buy URL"
 
-#: inc/class-theme-shop.php:231
+#: inc/class-theme-shop.php:259
 msgid "Stock status"
 msgstr "Stock status"
 
-#: inc/class-theme-shop.php:233
+#: inc/class-theme-shop.php:261
 msgid "In stock"
 msgstr "In stock"
 
-#: inc/class-theme-shop.php:234
+#: inc/class-theme-shop.php:262
 msgid "Out of stock"
 msgstr "Out of stock"
 
-#: inc/class-theme-shop.php:238
+#: inc/class-theme-shop.php:266
 msgid "How to order"
 msgstr "How to order"
 
-#: inc/class-theme-shop.php:239
+#: inc/class-theme-shop.php:267
 msgid "e.g. Come to the club to buy, or email …"
 msgstr "e.g. Come to the club to buy, or email …"
 
-#: inc/class-theme-shop.php:240
+#: inc/class-theme-shop.php:268
 msgid "Optional. Shown on the public shop card when set."
 msgstr "Optional. Shown on the public shop card when set."
 
@@ -324,7 +341,9 @@ msgctxt "Pattern description"
 msgid ""
 "Two-column section: latest news on the left, shop items + upcoming events "
 "stacked on the right."
-msgstr "Two-column section: latest news on the left, shop items + upcoming events stacked on the right."
+msgstr ""
+"Two-column section: latest news on the left, shop items + upcoming events "
+"stacked on the right."
 
 #: patterns/landing-news-and-shop.php:24
 msgid "Senaste nyheter"
@@ -348,7 +367,9 @@ msgctxt "Pattern description"
 msgid ""
 "\"Why Rockaden?\" section with feature cards on the left and image on the "
 "right."
-msgstr "\\\"Why Rockaden?\\\" section with feature cards on the left and image on the right."
+msgstr ""
+"\\\"Why Rockaden?\\\" section with feature cards on the left and image on "
+"the right."
 
 #: patterns/landing-why.php:34
 msgid "Varför välja SK Rockaden?"
@@ -401,7 +422,8 @@ msgstr "Footer Navigation"
 msgctxt "block description"
 msgid ""
 "Renders the footer links and text configured under Appearance → Rockaden."
-msgstr "Renders the footer links and text configured under Appearance → Rockaden."
+msgstr ""
+"Renders the footer links and text configured under Appearance → Rockaden."
 
 #: blocks/page-title/block.json
 msgctxt "block title"
@@ -422,7 +444,8 @@ msgstr "Section Navigation"
 msgctxt "block description"
 msgid ""
 "Auto-generates sidebar navigation from page hierarchy (parent + children)."
-msgstr "Auto-generates sidebar navigation from page hierarchy (parent + children)."
+msgstr ""
+"Auto-generates sidebar navigation from page hierarchy (parent + children)."
 
 #: blocks/shop-grid/block.json
 msgctxt "block title"
@@ -445,7 +468,10 @@ msgid ""
 "Sidebar cards configured under Appearance → Rockaden. Insert anywhere on a "
 "page; on templated pages (index.html, page.html) it's gated by the per-page "
 "\"Show sidebar\" checkbox."
-msgstr "Sidebar cards configured under Appearance → Rockaden. Insert anywhere on a page; on templated pages (index.html, page.html) it's gated by the per-page \\\"Show sidebar\\\" checkbox."
+msgstr ""
+"Sidebar cards configured under Appearance → Rockaden. Insert anywhere on a "
+"page; on templated pages (index.html, page.html) it's gated by the per-page "
+"\\\"Show sidebar\\\" checkbox."
 
 #: theme.json
 msgctxt "Color name"
@@ -571,3 +597,12 @@ msgstr "Header"
 msgctxt "Template part name"
 msgid "Footer"
 msgstr "Footer"
+
+#~ msgid "Price"
+#~ msgstr "Price"
+
+#~ msgid "Sale price"
+#~ msgstr "Sale price"
+
+#~ msgid "Optional. When set, the regular price is shown struck through."
+#~ msgstr "Optional. When set, the regular price is shown struck through."

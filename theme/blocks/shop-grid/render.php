@@ -65,14 +65,26 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => $classes ] );
 									<?php esc_html_e( 'Slut i lager', 'rockaden-theme' ); ?>
 								</p>
 							<?php endif; ?>
-							<?php if ( $item['salePrice'] ) : ?>
+							<?php
+							// Two prices, both labelled: these are the non-member and
+							// member prices, never a discount, so nothing is struck
+							// through. An item with only a member price is sold to
+							// members only.
+							if ( $item['price'] || $item['memberPrice'] ) :
+								?>
 								<p class="rockaden-shop-card__price">
-									<s class="rockaden-shop-card__price-original"><?php echo esc_html( $item['price'] ); ?></s>
-									<span class="rockaden-shop-card__price-sale"><?php echo esc_html( $item['salePrice'] ); ?></span>
-								</p>
-							<?php elseif ( $item['price'] ) : ?>
-								<p class="rockaden-shop-card__price">
-									<span><?php echo esc_html( $item['price'] ); ?></span>
+									<?php if ( $item['price'] ) : ?>
+										<span class="rockaden-shop-card__price-row">
+											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Pris', 'rockaden-theme' ); ?></span>
+											<span class="rockaden-shop-card__price-value"><?php echo esc_html( $item['price'] ); ?></span>
+										</span>
+									<?php endif; ?>
+									<?php if ( $item['memberPrice'] ) : ?>
+										<span class="rockaden-shop-card__price-row rockaden-shop-card__price-row--member">
+											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Medlem', 'rockaden-theme' ); ?></span>
+											<span class="rockaden-shop-card__price-value"><?php echo esc_html( $item['memberPrice'] ); ?></span>
+										</span>
+									<?php endif; ?>
 								</p>
 							<?php endif; ?>
 							<?php if ( ! empty( $item['content'] ) ) : ?>
