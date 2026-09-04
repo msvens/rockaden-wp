@@ -40,7 +40,7 @@ msgstr "Buy"
 msgid "Mer"
 msgstr "More"
 
-msgid "Mer schackmaterial"
+msgid "Mer schackmateriel"
 msgstr "More chess equipment"
 
 msgid "Mörkt läge"
@@ -52,7 +52,7 @@ msgstr "Beginner to elite"
 msgid "Prova gratis"
 msgstr "Try for free"
 
-msgid "Schackmaterial"
+msgid "Schackmateriel"
 msgstr "Chess equipment"
 
 msgid "Senaste nyheter"

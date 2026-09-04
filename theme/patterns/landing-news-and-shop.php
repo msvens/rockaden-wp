@@ -31,7 +31,7 @@
 <!-- wp:column {"className":"rockaden-landing-news-shop__shop"} -->
 <div class="wp-block-column rockaden-landing-news-shop__shop">
 <!-- wp:heading {"level":2,"className":"rockaden-landing-news-shop__heading"} -->
-<h2 class="wp-block-heading rockaden-landing-news-shop__heading"><?php esc_html_e( 'Schackmaterial', 'rockaden-theme' ); ?></h2>
+<h2 class="wp-block-heading rockaden-landing-news-shop__heading"><?php esc_html_e( 'Schackmateriel', 'rockaden-theme' ); ?></h2>
 <!-- /wp:heading -->
 
 <!-- wp:rockaden/shop-grid {"count":3,"layout":"column","display":"condensed"} /-->
