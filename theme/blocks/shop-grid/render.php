@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 $count      = isset( $attributes['count'] ) ? (int) $attributes['count'] : 0;
 $more_url   = (string) ( $attributes['moreUrl'] ?? '/shop' );
-$more_label = (string) ( $attributes['moreLabel'] ?? __( 'Mer schackmaterial', 'rockaden-theme' ) );
+$more_label = (string) ( $attributes['moreLabel'] ?? __( 'Mer schackmateriel', 'rockaden-theme' ) );
 $layout     = isset( $attributes['layout'] ) && 'column' === $attributes['layout'] ? 'column' : 'grid';
 $condensed  = isset( $attributes['display'] ) && 'condensed' === $attributes['display'];
 

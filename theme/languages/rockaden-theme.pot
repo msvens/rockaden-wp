@@ -40,7 +40,7 @@ msgid "https://rockaden.se"
 msgstr ""
 
 #: blocks/shop-grid/render.php:14
-msgid "Mer schackmaterial"
+msgid "Mer schackmateriel"
 msgstr ""
 
 #: blocks/shop-grid/render.php:42
@@ -176,7 +176,7 @@ msgid "Senaste nyheter"
 msgstr ""
 
 #: patterns/landing-news-and-shop.php:31
-msgid "Schackmaterial"
+msgid "Schackmateriel"
 msgstr ""
 
 #: patterns/landing-news-and-shop.php:37
