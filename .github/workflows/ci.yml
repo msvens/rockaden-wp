@@ -30,6 +30,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Translations
+        run: pnpm run i18n:check
+
       - name: Build
         run: pnpm build
 

@@ -46,9 +46,47 @@ npx wp-env run cli wp rewrite flush --hard
 ### Quality checks
 
 ```bash
-pnpm run check              # TypeScript + ESLint + build
-composer -d plugin lint:php  # PHPStan + phpcs
+pnpm run check     # TypeScript + ESLint + PHPStan/phpcs (both packages) + translations + build
 ```
+
+### Translations
+
+Both packages use gettext, but in **opposite directions**:
+
+| | source strings | catalogue |
+|---|---|---|
+| `plugin/` (`rockaden-chess`) | English | `sv_SE` |
+| `theme/` (`rockaden-theme`) | **Swedish** | `en_US` |
+
+The `.po` is the only file you edit. Everything else is generated:
+
+```bash
+pnpm i18n          # re-extract, merge into the .po, regenerate .mo/.l10n.php/.json
+pnpm i18n:check    # verify nothing has drifted (runs in `check` and CI)
+```
+
+**After adding or changing a user-facing string, run `pnpm i18n`**, then fill in any
+untranslated entries in the `.po` and run it again. Editing only the `.po` is not enough —
+WordPress 6.5+ reads the generated `.l10n.php` in preference to the `.mo`, so a string
+translated only in the `.po` still renders in English. `pnpm i18n:check` fails on exactly that.
+
+`msgmerge` may mark a reworded string **fuzzy**, carrying the old translation as a guess.
+Fuzzy entries are excluded from the compiled catalogue, so they render untranslated until
+reviewed — the check treats them as errors.
+
+Regenerating needs each package's `vendor/bin/wp` (`composer install`) and GNU gettext
+(`brew install gettext`). Checking needs neither, which is why CI only runs the check.
+
+Two notes specific to this project. The plugin serves **one** jed file for every script handle
+via a `pre_load_script_translations` filter rather than WordPress's per-script MD5 files — 23
+webpack entry points share one string set, so one file is simpler. And the theme's `en_US`
+catalogue contains many **identity** translations: its admin UI is written in English while its
+front-end strings are Swedish, so those entries are already correct English and are recorded as
+translating to themselves.
+
+Not everything user-facing goes through gettext. The bundled documentation ships both languages
+as `rc-doc-sv` / `rc-doc-en` elements toggled by CSS, and the theme's nav labels, CTA and footer
+text are per-locale option pairs edited in **Appearance → Rockaden**.
 
 ### Build & package
 
