@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { mkdirSync, existsSync } from 'fs';
+import { mkdirSync, existsSync, rmSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -8,6 +8,13 @@ const root = join(__dirname, '..');
 const dist = join(root, 'dist');
 
 if (!existsSync(dist)) mkdirSync(dist);
+
+// `zip -r` UPDATES an existing archive rather than replacing it, so anything
+// removed from a package (or newly excluded below) would linger in the zip
+// forever. Start from a clean file each time.
+for (const zip of ['rockaden-chess.zip', 'rockaden-theme.zip']) {
+  rmSync(join(dist, zip), { force: true });
+}
 
 // Re-install Composer deps without dev requirements so the bundled vendor/
 // only contains runtime libraries (e.g. plugin-update-checker), not PHPStan
@@ -19,13 +26,13 @@ execSync(`cd "${join(root, 'theme')}" && composer install --no-dev --no-progress
 
 console.log('Packaging plugin...');
 execSync(
-  `cd "${join(root, 'plugin')}" && zip -r "${join(dist, 'rockaden-chess.zip')}" . -x "node_modules/*" "js/*" "package.json" "webpack.config.js" "tsconfig.json" ".npmrc" "composer.json" "composer.lock" "phpstan.neon" "phpstan-bootstrap.php" "phpcs.xml" ".eslintrc.json"`,
+  `cd "${join(root, 'plugin')}" && zip -r "${join(dist, 'rockaden-chess.zip')}" . -x "node_modules/*" "js/*" "package.json" "webpack.config.js" "tsconfig.json" ".npmrc" "composer.json" "composer.lock" "phpstan.neon" "phpstan-bootstrap.php" "phpcs.xml" ".eslintrc.json" "languages/*.pot" "languages/*.po"`,
   { stdio: 'inherit' },
 );
 
 console.log('Packaging theme...');
 execSync(
-  `cd "${join(root, 'theme')}" && zip -r "${join(dist, 'rockaden-theme.zip')}" . -x "node_modules/*" "*/node_modules/*" "composer.json" "composer.lock" "phpstan.neon" "phpcs.xml" "package.json" ".eslintrc.json"`,
+  `cd "${join(root, 'theme')}" && zip -r "${join(dist, 'rockaden-theme.zip')}" . -x "node_modules/*" "*/node_modules/*" "composer.json" "composer.lock" "phpstan.neon" "phpcs.xml" "package.json" ".eslintrc.json" "languages/*.pot" "languages/*.po"`,
   { stdio: 'inherit' },
 );
 
