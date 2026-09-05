@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rockaden Theme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/theme\n"
-"POT-Creation-Date: 2026-09-05T05:04:29+00:00\n"
+"POT-Creation-Date: 2026-09-05T10:20:23+00:00\n"
 "PO-Revision-Date: 2026-05-26\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -102,8 +102,8 @@ msgid "Pris"
 msgstr "Price"
 
 #: blocks/shop-grid/render.php:89
-msgid "Rockaden SK Medlem"
-msgstr "Rockaden SK Member"
+msgid "Rockaden medlem"
+msgstr "Rockaden member"
 
 #: blocks/shop-grid/render.php:107
 msgid "Köp"
