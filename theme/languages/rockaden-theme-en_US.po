@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rockaden Theme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/theme\n"
-"POT-Creation-Date: 2026-09-04T09:53:39+00:00\n"
+"POT-Creation-Date: 2026-09-05T05:04:29+00:00\n"
 "PO-Revision-Date: 2026-05-26\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -89,23 +89,23 @@ msgstr "Please enable JavaScript to send feedback."
 msgid "Mer schackmateriel"
 msgstr "More chess equipment"
 
-#: blocks/shop-grid/render.php:49
+#: blocks/shop-grid/render.php:54
 msgid "No shop items yet."
 msgstr "No shop items yet."
 
-#: blocks/shop-grid/render.php:65
+#: blocks/shop-grid/render.php:70
 msgid "Slut i lager"
 msgstr "Out of stock"
 
-#: blocks/shop-grid/render.php:78
+#: blocks/shop-grid/render.php:83
 msgid "Pris"
 msgstr "Price"
 
-#: blocks/shop-grid/render.php:84
+#: blocks/shop-grid/render.php:89
 msgid "Rockaden SK Medlem"
 msgstr "Rockaden SK Member"
 
-#: blocks/shop-grid/render.php:102
+#: blocks/shop-grid/render.php:107
 msgid "Köp"
 msgstr "Buy"
 
