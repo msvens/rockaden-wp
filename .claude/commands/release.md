@@ -22,7 +22,15 @@ Create a new release tag and push it: $ARGUMENTS
    - `plugin/phpstan-bootstrap.php` — the `define( 'RC_VERSION', '...' )` line
    - `theme/style.css` — the `Version:` header line
 
-   Stage and commit these changes with message: `Bump version to <version>`
+   Then run `pnpm i18n` and stage the regenerated catalogues alongside them. `wp i18n make-pot`
+   builds `Project-Id-Version` from the plugin's `Version:` header, so bumping the version without
+   regenerating leaves both `.pot` files stale until someone happens to run `pnpm i18n` on an
+   unrelated branch — which then carries a confusing version diff that has nothing to do with its
+   own change. Expect header-only churn here: `pnpm run check` already gates `i18n:check`, so the
+   strings themselves are in sync by release time. If `pnpm i18n` reports anything needing
+   attention, stop — that is untranslated work, not release noise.
+
+   Stage and commit everything with message: `Bump version to <version>`
 
 4. **Show what will be released**
    - Run `git log --oneline <latest-tag>..HEAD` to show commits since last release
