@@ -15,15 +15,5 @@
   },
   "devDependencies": {
     "typescript": "^5.7.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@msvens/schack-se-sdk",
-      "@parcel/watcher",
-      "core-js",
-      "core-js-pure",
-      "esbuild",
-      "unrs-resolver"
-    ]
   }
 }
