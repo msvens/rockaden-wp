@@ -86,7 +86,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => $classes ] );
 									<?php endif; ?>
 									<?php if ( $item['memberPrice'] ) : ?>
 										<span class="rockaden-shop-card__price-row rockaden-shop-card__price-row--member">
-											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Rockaden SK Medlem', 'rockaden-theme' ); ?></span>
+											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Rockaden medlem', 'rockaden-theme' ); ?></span>
 											<span class="rockaden-shop-card__price-value"><?php echo esc_html( $item['memberPrice'] ); ?></span>
 										</span>
 									<?php endif; ?>
