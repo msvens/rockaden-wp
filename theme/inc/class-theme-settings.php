@@ -80,6 +80,12 @@ class Rockaden_Theme_Settings {
 			// Optional English target. Empty reuses cta_url, matching how nav
 			// items treat urlEn.
 			'cta_url_en'           => '',
+			// Page ID served at / when the visitor's locale is English. 0 means
+			// no English home page, and / keeps serving the Swedish one — the
+			// same "empty falls back to Swedish" rule the nav and CTA use.
+			// Stored as an ID, not a URL like the nav settings, because it
+			// stands in for WordPress's own page_on_front option.
+			'front_page_en'        => 0,
 			// Recipient for the feedback-form block. Empty falls back to the
 			// site admin email at send time.
 			'feedback_email'       => '',
@@ -176,6 +182,53 @@ class Rockaden_Theme_Settings {
 		);
 
 		return array_values( $resolved );
+	}
+
+	/**
+	 * Serve the English home page at / when the visitor's locale is English.
+	 *
+	 * WordPress stores a single page_on_front, so a per-locale home page has to
+	 * be a runtime substitution — the same approach the multilingual plugins
+	 * take. The URL is unchanged and no redirect happens; / simply resolves to
+	 * a different page.
+	 *
+	 * Guarded to the front end on purpose. In wp-admin the option must keep its
+	 * real value or Settings -> Reading would show, and could save back, the
+	 * wrong page; REST is excluded for the same reason, since that is how the
+	 * block editor asks about pages.
+	 *
+	 * Returning $value unchanged (false) lets WordPress read the stored option
+	 * as normal, so an unset or deleted English page falls back to the Swedish
+	 * one rather than breaking the front page.
+	 *
+	 * @param mixed $value Short-circuit value; false means "not overridden".
+	 * @return mixed
+	 */
+	public static function filter_front_page( $value ) {
+		if ( is_admin() || ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			return $value;
+		}
+
+		if ( 'en' !== Rockaden_Theme_I18n::current_lang() ) {
+			return $value;
+		}
+
+		$page_id = (int) ( self::get_options()['front_page_en'] ?? 0 );
+
+		if ( $page_id <= 0 ) {
+			return $value;
+		}
+
+		// Verify the page is still there and public before handing it to
+		// WordPress as the front page. Without this, trashing or deleting the
+		// English page turns / into a 404 for English visitors rather than
+		// falling back to the Swedish home page — measured, not theorised.
+		$page = get_post( $page_id );
+		if ( ! $page instanceof WP_Post || 'page' !== $page->post_type || 'publish' !== $page->post_status ) {
+			return $value;
+		}
+
+		return $page_id;
 	}
 
 	/**
@@ -332,6 +385,7 @@ class Rockaden_Theme_Settings {
 		$options['cta_label_en']   = sanitize_text_field( wp_unslash( $_POST['cta_label_en'] ?? 'Join' ) );
 		$options['cta_url']        = sanitize_text_field( wp_unslash( $_POST['cta_url'] ?? '' ) );
 		$options['cta_url_en']     = sanitize_text_field( wp_unslash( $_POST['cta_url_en'] ?? '' ) );
+		$options['front_page_en']  = absint( wp_unslash( $_POST['front_page_en'] ?? 0 ) );
 		$options['feedback_email'] = sanitize_email( wp_unslash( $_POST['feedback_email'] ?? '' ) );
 
 		// Sidebar route toggles.
@@ -979,6 +1033,34 @@ class Rockaden_Theme_Settings {
 							<?php self::render_page_select( $pages, $options['cta_url_en'] ); ?>
 							<input type="text" name="cta_url_en" value="<?php echo esc_attr( $options['cta_url_en'] ); ?>" class="regular-text rockaden-url-input" placeholder="/join" />
 							<p class="description">Leave empty to reuse the Swedish link.</p>
+						</td>
+					</tr>
+				</table>
+
+				<!-- English home page -->
+				<h2>English home page</h2>
+				<p class="description">
+					The page served at <code>/</code> when a visitor switches the site to English. Leave it
+					on &ldquo;&mdash; None &mdash;&rdquo; and <code>/</code> always serves the Swedish home page.
+					The address does not change either way, so no redirect is involved.
+					<strong>Give the page the &ldquo;Page (Landing)&rdquo; template</strong> in the page editor,
+					or it renders as an ordinary page without the full-width hero.
+				</p>
+				<table class="form-table">
+					<tr>
+						<th scope="row">Home page (EN)</th>
+						<td>
+							<?php
+							wp_dropdown_pages(
+								[
+									'name'              => 'front_page_en',
+									'id'                => 'front_page_en',
+									'selected'          => (int) $options['front_page_en'],
+									'show_option_none'  => '&mdash; None &mdash;',
+									'option_none_value' => '0',
+								]
+							);
+							?>
 						</td>
 					</tr>
 				</table>

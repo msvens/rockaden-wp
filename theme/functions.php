@@ -74,6 +74,10 @@ add_action( 'add_meta_boxes', [ 'Rockaden_Theme_Settings', 'register_page_displa
 add_action( 'save_post_page', [ 'Rockaden_Theme_Settings', 'save_page_display_meta' ] );
 add_filter( 'body_class', [ 'Rockaden_Theme_Settings', 'body_class_for_page_display' ] );
 
+// Swap in the English home page at / for English visitors. Front end only;
+// see Rockaden_Theme_Settings::filter_front_page() for why.
+add_filter( 'pre_option_page_on_front', [ 'Rockaden_Theme_Settings', 'filter_front_page' ] );
+
 // Section menu meta box (editor view + reorder/label/hide of the section sidebar menu).
 add_action( 'init', [ 'Rockaden_Theme_Section_Nav', 'register' ] );
 add_action( 'add_meta_boxes', [ 'Rockaden_Theme_Settings', 'register_section_menu_meta_box' ] );
