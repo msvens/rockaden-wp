@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rockaden Theme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/theme\n"
-"POT-Creation-Date: 2026-09-05T10:20:23+00:00\n"
+"POT-Creation-Date: 2026-09-05T12:50:36+00:00\n"
 "PO-Revision-Date: 2026-05-26\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -587,6 +587,16 @@ msgstr "Page (Section Nav)"
 msgctxt "Custom template name"
 msgid "Page (Landing)"
 msgstr "Page (Landing)"
+
+#: theme.json
+msgctxt "Custom template name"
+msgid "Tournament"
+msgstr "Tournament"
+
+#: theme.json
+msgctxt "Custom template name"
+msgid "Training Group"
+msgstr "Training Group"
 
 #: theme.json
 msgctxt "Template part name"

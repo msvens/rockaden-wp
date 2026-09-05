@@ -165,7 +165,9 @@
   },
   "customTemplates": [
     { "name": "page-section", "title": "Page (Section Nav)", "postTypes": ["page"] },
-    { "name": "page-landing", "title": "Page (Landing)", "postTypes": ["page"] }
+    { "name": "page-landing", "title": "Page (Landing)", "postTypes": ["page"] },
+    { "name": "single-rc_tournament", "title": "Tournament", "postTypes": ["rc_tournament"] },
+    { "name": "single-rc_training_group", "title": "Training Group", "postTypes": ["rc_training_group"] }
   ],
   "templateParts": [
     { "name": "header", "title": "Header", "area": "header" },
