@@ -132,37 +132,47 @@ class Rockaden_Theme_Setup {
 	 * own choice is never reverted.
 	 */
 	private static function create_landing_page_en(): void {
-		$page = get_page_by_path( 'home' );
-
-		if ( ! $page ) {
-			$page_id = wp_insert_post(
-				[
-					'post_title'   => 'Home',
-					'post_name'    => 'home',
-					'post_status'  => 'publish',
-					'post_type'    => 'page',
-					'post_content' => self::build_landing_content( self::LOCALE_EN ),
-					'meta_input'   => [
-						'_wp_page_template' => 'page-landing',
-					],
-				]
-			);
-
-			if ( ! $page_id ) {
-				return;
-			}
-		} else {
-			$page_id = $page->ID;
-			if ( '' === get_post_meta( $page_id, '_wp_page_template', true ) ) {
-				update_post_meta( $page_id, '_wp_page_template', 'page-landing' );
-			}
-		}
-
 		$options = get_option( Rockaden_Theme_Settings::OPTION_KEY, [] );
-		if ( is_array( $options ) && empty( $options['front_page_en'] ) ) {
-			$options['front_page_en'] = (int) $page_id;
-			update_option( Rockaden_Theme_Settings::OPTION_KEY, $options );
+		$chosen  = is_array( $options ) ? (int) ( $options['front_page_en'] ?? 0 ) : 0;
+
+		// An admin who has already nominated an English home page has answered
+		// this question; do not second-guess them with a page of our own.
+		if ( $chosen > 0 && 'page' === get_post_type( $chosen ) ) {
+			return;
 		}
+
+		// The slug is a guess, and on a site that already has a page called
+		// "home" it is probably somebody else's page about something else.
+		// Adopting it — assigning our template, making it the English front
+		// page — would be presumptuous, so leave it alone entirely and let the
+		// admin point the setting wherever they mean.
+		if ( get_page_by_path( 'home' ) ) {
+			return;
+		}
+
+		$page_id = wp_insert_post(
+			[
+				'post_title'   => 'Home',
+				'post_name'    => 'home',
+				'post_status'  => 'publish',
+				'post_type'    => 'page',
+				'post_content' => self::build_landing_content( self::LOCALE_EN ),
+				'meta_input'   => [
+					'_wp_page_template' => 'page-landing',
+				],
+			]
+		);
+
+		// wp_insert_post() returns 0 on failure unless asked for a WP_Error.
+		if ( ! $page_id ) {
+			return;
+		}
+
+		if ( ! is_array( $options ) ) {
+			$options = [];
+		}
+		$options['front_page_en'] = (int) $page_id;
+		update_option( Rockaden_Theme_Settings::OPTION_KEY, $options );
 	}
 
 	/**
