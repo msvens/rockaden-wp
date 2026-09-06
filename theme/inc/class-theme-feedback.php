@@ -218,7 +218,21 @@ class Rockaden_Theme_Feedback {
 			$message
 		);
 
-		wp_mail( $recipient, $subject, $body );
+		// Reply-To so hitting Reply in a mail client reaches the visitor rather
+		// than the site's own From address. Most people who fill in the optional
+		// email field are asking to be contacted, and without this the address
+		// has to be copied out of the body by hand.
+		//
+		// The bare address, deliberately, rather than "Name <address>": the name
+		// is free text that survives sanitize_text_field() with angle brackets
+		// intact, so "John <someone@example.com>" would build a malformed header
+		// carrying two addresses. The name is already in the subject line.
+		$headers = [];
+		if ( '' !== $email ) {
+			$headers[] = 'Reply-To: ' . $email;
+		}
+
+		wp_mail( $recipient, $subject, $body, $headers );
 	}
 
 	/*
