@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rockaden Theme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/theme\n"
-"POT-Creation-Date: 2026-09-05T12:50:36+00:00\n"
+"POT-Creation-Date: 2026-09-06T06:24:43+00:00\n"
 "PO-Revision-Date: 2026-05-26\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -109,7 +109,7 @@ msgstr "Rockaden member"
 msgid "Köp"
 msgstr "Buy"
 
-#: functions.php:210
+#: functions.php:214
 msgid "Rockaden"
 msgstr "Rockaden"
 
@@ -154,27 +154,27 @@ msgstr "Sender"
 msgid "Från"
 msgstr "From"
 
-#: inc/class-theme-settings.php:237
+#: inc/class-theme-settings.php:290
 msgid "Mer"
 msgstr "More"
 
-#: inc/class-theme-settings.php:238
+#: inc/class-theme-settings.php:291
 msgid "Språk"
 msgstr "Language"
 
-#: inc/class-theme-settings.php:239
+#: inc/class-theme-settings.php:292
 msgid "Mörkt läge"
 msgstr "Dark mode"
 
-#: inc/class-theme-settings.php:240
+#: inc/class-theme-settings.php:293
 msgid "Dokumentation"
 msgstr "Documentation"
 
-#: inc/class-theme-settings.php:698
+#: inc/class-theme-settings.php:752
 msgid "Section menu"
 msgstr "Section menu"
 
-#: inc/class-theme-settings.php:722
+#: inc/class-theme-settings.php:776
 msgid ""
 "This page does not use the “Page (Section Nav)” template, so the sidebar "
 "will not show on the front end. Pick that template in the Page panel to "
@@ -184,7 +184,7 @@ msgstr ""
 "will not show on the front end. Pick that template in the Page panel to "
 "display it."
 
-#: inc/class-theme-settings.php:728
+#: inc/class-theme-settings.php:782
 msgid ""
 "This page isn’t part of a section yet. Give it the “Page (Section Nav)” "
 "template and add child pages (or make it a child of a section page)."
@@ -192,35 +192,35 @@ msgstr ""
 "This page isn’t part of a section yet. Give it the “Page (Section Nav)” "
 "template and add child pages (or make it a child of a section page)."
 
-#: inc/class-theme-settings.php:747
+#: inc/class-theme-settings.php:801
 msgid "The section parent page is always first."
 msgstr "The section parent page is always first."
 
-#: inc/class-theme-settings.php:747
+#: inc/class-theme-settings.php:801
 msgid "Top"
 msgstr "Top"
 
-#: inc/class-theme-settings.php:750
+#: inc/class-theme-settings.php:804
 msgid "Move up"
 msgstr "Move up"
 
-#: inc/class-theme-settings.php:751
+#: inc/class-theme-settings.php:805
 msgid "Move down"
 msgstr "Move down"
 
-#: inc/class-theme-settings.php:761
+#: inc/class-theme-settings.php:815
 msgid "Menu label"
 msgstr "Menu label"
 
-#: inc/class-theme-settings.php:766
+#: inc/class-theme-settings.php:820
 msgid "Hidden"
 msgstr "Hidden"
 
-#: inc/class-theme-settings.php:772
+#: inc/class-theme-settings.php:826
 msgid "Show in menu"
 msgstr "Show in menu"
 
-#: inc/class-theme-settings.php:780
+#: inc/class-theme-settings.php:834
 msgid ""
 "Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. "
 "Changes save right away. The parent page is always first."
@@ -228,19 +228,19 @@ msgstr ""
 "Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. "
 "Changes save right away. The parent page is always first."
 
-#: inc/class-theme-settings.php:782
+#: inc/class-theme-settings.php:836
 msgid "The section menu is managed by users who can edit all pages."
 msgstr "The section menu is managed by users who can edit all pages."
 
-#: inc/class-theme-settings.php:832
+#: inc/class-theme-settings.php:886
 msgid "Saving…"
 msgstr "Saving…"
 
-#: inc/class-theme-settings.php:833
+#: inc/class-theme-settings.php:887
 msgid "Saved"
 msgstr "Saved"
 
-#: inc/class-theme-settings.php:834
+#: inc/class-theme-settings.php:888
 msgid "Couldn’t save — reload and try again."
 msgstr "Couldn’t save — reload and try again."
 
@@ -371,37 +371,33 @@ msgstr ""
 "\\\"Why Rockaden?\\\" section with feature cards on the left and image on "
 "the right."
 
-#: patterns/landing-why.php:34
+#: patterns/landing-why.php:40
 msgid "Varför välja SK Rockaden?"
 msgstr "Why choose SK Rockaden?"
 
-#: patterns/landing-why.php:44
+#: patterns/landing-why.php:50
 msgid "Träningsgrupper för alla åldrar"
 msgstr "Training groups for all ages"
 
-#: patterns/landing-why.php:48
+#: patterns/landing-why.php:54
 msgid "Nybörjare till elit"
 msgstr "Beginner to elite"
 
-#: patterns/landing-why.php:60
+#: patterns/landing-why.php:66
 msgid "Tjejgrupp – trygg miljö och gemenskap"
 msgstr "Girls' group — safe environment and community"
 
-#: patterns/landing-why.php:64
+#: patterns/landing-why.php:70
 msgid "Gemenskap och fler tjejer på schackbrädet"
 msgstr "Community and more girls at the chessboard"
 
-#: patterns/landing-why.php:76
+#: patterns/landing-why.php:82
 msgid "Centralt i Hägersten"
 msgstr "Central in Hägersten"
 
-#: patterns/landing-why.php:80
+#: patterns/landing-why.php:86
 msgid "Riksdalergatan 2 / Sparbanksvägen 31"
 msgstr "Riksdalergatan 2 / Sparbanksvägen 31"
-
-#: patterns/landing-why.php:90
-msgid "Barn spelar schack"
-msgstr "Children playing chess"
 
 #: blocks/feedback-form/block.json
 msgctxt "block title"
@@ -434,6 +430,26 @@ msgstr "Page Title (Conditional)"
 msgctxt "block description"
 msgid "Renders the page title unless hidden via per-page setting."
 msgstr "Renders the page title unless hidden via per-page setting."
+
+#: blocks/partner-logo/block.json
+msgctxt "block title"
+msgid "Partner Logo"
+msgstr "Partner Logo"
+
+#: blocks/partner-logo/block.json
+msgctxt "block description"
+msgid "One partner logo, optionally linked. Used inside a Partner Logos block."
+msgstr "One partner logo, optionally linked. Used inside a Partner Logos block."
+
+#: blocks/partner-logos/block.json
+msgctxt "block title"
+msgid "Partner Logos"
+msgstr "Partner Logos"
+
+#: blocks/partner-logos/block.json
+msgctxt "block description"
+msgid "A set of linked partner logos. Add one Partner Logo block per partner."
+msgstr "A set of linked partner logos. Add one Partner Logo block per partner."
 
 #: blocks/section-nav/block.json
 msgctxt "block title"
@@ -607,6 +623,9 @@ msgstr "Header"
 msgctxt "Template part name"
 msgid "Footer"
 msgstr "Footer"
+
+#~ msgid "Barn spelar schack"
+#~ msgstr "Children playing chess"
 
 #~ msgid "Medlem"
 #~ msgstr "Member"

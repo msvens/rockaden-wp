@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-05T12:50:36+00:00\n"
+"POT-Creation-Date: 2026-09-06T06:24:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: rockaden-theme\n"
@@ -108,7 +108,7 @@ msgstr ""
 msgid "Köp"
 msgstr ""
 
-#: functions.php:210
+#: functions.php:214
 msgid "Rockaden"
 msgstr ""
 
@@ -154,79 +154,79 @@ msgstr ""
 msgid "Från"
 msgstr ""
 
-#: inc/class-theme-settings.php:237
+#: inc/class-theme-settings.php:290
 msgid "Mer"
 msgstr ""
 
-#: inc/class-theme-settings.php:238
+#: inc/class-theme-settings.php:291
 msgid "Språk"
 msgstr ""
 
-#: inc/class-theme-settings.php:239
+#: inc/class-theme-settings.php:292
 msgid "Mörkt läge"
 msgstr ""
 
-#: inc/class-theme-settings.php:240
+#: inc/class-theme-settings.php:293
 msgid "Dokumentation"
 msgstr ""
 
-#: inc/class-theme-settings.php:698
+#: inc/class-theme-settings.php:752
 msgid "Section menu"
 msgstr ""
 
-#: inc/class-theme-settings.php:722
+#: inc/class-theme-settings.php:776
 msgid "This page does not use the “Page (Section Nav)” template, so the sidebar will not show on the front end. Pick that template in the Page panel to display it."
 msgstr ""
 
-#: inc/class-theme-settings.php:728
+#: inc/class-theme-settings.php:782
 msgid "This page isn’t part of a section yet. Give it the “Page (Section Nav)” template and add child pages (or make it a child of a section page)."
 msgstr ""
 
-#: inc/class-theme-settings.php:747
+#: inc/class-theme-settings.php:801
 msgid "The section parent page is always first."
 msgstr ""
 
-#: inc/class-theme-settings.php:747
+#: inc/class-theme-settings.php:801
 msgid "Top"
 msgstr ""
 
-#: inc/class-theme-settings.php:750
+#: inc/class-theme-settings.php:804
 msgid "Move up"
 msgstr ""
 
-#: inc/class-theme-settings.php:751
+#: inc/class-theme-settings.php:805
 msgid "Move down"
 msgstr ""
 
-#: inc/class-theme-settings.php:761
+#: inc/class-theme-settings.php:815
 msgid "Menu label"
 msgstr ""
 
-#: inc/class-theme-settings.php:766
+#: inc/class-theme-settings.php:820
 msgid "Hidden"
 msgstr ""
 
-#: inc/class-theme-settings.php:772
+#: inc/class-theme-settings.php:826
 msgid "Show in menu"
 msgstr ""
 
-#: inc/class-theme-settings.php:780
+#: inc/class-theme-settings.php:834
 msgid "Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. Changes save right away. The parent page is always first."
 msgstr ""
 
-#: inc/class-theme-settings.php:782
+#: inc/class-theme-settings.php:836
 msgid "The section menu is managed by users who can edit all pages."
 msgstr ""
 
-#: inc/class-theme-settings.php:832
+#: inc/class-theme-settings.php:886
 msgid "Saving…"
 msgstr ""
 
-#: inc/class-theme-settings.php:833
+#: inc/class-theme-settings.php:887
 msgid "Saved"
 msgstr ""
 
-#: inc/class-theme-settings.php:834
+#: inc/class-theme-settings.php:888
 msgid "Couldn’t save — reload and try again."
 msgstr ""
 
@@ -348,36 +348,32 @@ msgctxt "Pattern description"
 msgid "\"Why Rockaden?\" section with feature cards on the left and image on the right."
 msgstr ""
 
-#: patterns/landing-why.php:34
+#: patterns/landing-why.php:40
 msgid "Varför välja SK Rockaden?"
 msgstr ""
 
-#: patterns/landing-why.php:44
+#: patterns/landing-why.php:50
 msgid "Träningsgrupper för alla åldrar"
 msgstr ""
 
-#: patterns/landing-why.php:48
+#: patterns/landing-why.php:54
 msgid "Nybörjare till elit"
 msgstr ""
 
-#: patterns/landing-why.php:60
+#: patterns/landing-why.php:66
 msgid "Tjejgrupp – trygg miljö och gemenskap"
 msgstr ""
 
-#: patterns/landing-why.php:64
+#: patterns/landing-why.php:70
 msgid "Gemenskap och fler tjejer på schackbrädet"
 msgstr ""
 
-#: patterns/landing-why.php:76
+#: patterns/landing-why.php:82
 msgid "Centralt i Hägersten"
 msgstr ""
 
-#: patterns/landing-why.php:80
+#: patterns/landing-why.php:86
 msgid "Riksdalergatan 2 / Sparbanksvägen 31"
-msgstr ""
-
-#: patterns/landing-why.php:90
-msgid "Barn spelar schack"
 msgstr ""
 
 #: blocks/feedback-form/block.json
@@ -408,6 +404,26 @@ msgstr ""
 #: blocks/page-title/block.json
 msgctxt "block description"
 msgid "Renders the page title unless hidden via per-page setting."
+msgstr ""
+
+#: blocks/partner-logo/block.json
+msgctxt "block title"
+msgid "Partner Logo"
+msgstr ""
+
+#: blocks/partner-logo/block.json
+msgctxt "block description"
+msgid "One partner logo, optionally linked. Used inside a Partner Logos block."
+msgstr ""
+
+#: blocks/partner-logos/block.json
+msgctxt "block title"
+msgid "Partner Logos"
+msgstr ""
+
+#: blocks/partner-logos/block.json
+msgctxt "block description"
+msgid "A set of linked partner logos. Add one Partner Logo block per partner."
 msgstr ""
 
 #: blocks/section-nav/block.json
