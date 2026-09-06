@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rockaden Theme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/theme\n"
-"POT-Creation-Date: 2026-09-06T06:24:43+00:00\n"
+"POT-Creation-Date: 2026-09-06T09:53:30+00:00\n"
 "PO-Revision-Date: 2026-05-26\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -56,12 +56,12 @@ msgstr "Something went wrong. Please try again."
 
 # Feedback form (rockaden/feedback-form)
 #: blocks/feedback-form/render.php:45 inc/class-theme-feedback.php:214
-#: inc/class-theme-feedback.php:253
+#: inc/class-theme-feedback.php:267
 msgid "Namn"
 msgstr "Name"
 
 #: blocks/feedback-form/render.php:49 inc/class-theme-feedback.php:216
-#: inc/class-theme-feedback.php:255 inc/class-theme-feedback.php:274
+#: inc/class-theme-feedback.php:269 inc/class-theme-feedback.php:288
 msgid "E-post"
 msgstr "Email"
 
@@ -146,11 +146,11 @@ msgstr "Could not save your message. Please try again."
 msgid "Webbplatsfeedback från %s"
 msgstr "Website feedback from %s"
 
-#: inc/class-theme-feedback.php:236
+#: inc/class-theme-feedback.php:250
 msgid "Avsändare"
 msgstr "Sender"
 
-#: inc/class-theme-feedback.php:273
+#: inc/class-theme-feedback.php:287
 msgid "Från"
 msgstr "From"
 
@@ -439,7 +439,8 @@ msgstr "Partner Logo"
 #: blocks/partner-logo/block.json
 msgctxt "block description"
 msgid "One partner logo, optionally linked. Used inside a Partner Logos block."
-msgstr "One partner logo, optionally linked. Used inside a Partner Logos block."
+msgstr ""
+"One partner logo, optionally linked. Used inside a Partner Logos block."
 
 #: blocks/partner-logos/block.json
 msgctxt "block title"
