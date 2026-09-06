@@ -14,7 +14,13 @@
  *
  * - Left column holds the heading and feature cards (heading sits inside the
  *   column, naturally aligning the image's top edge to the heading's top edge).
- * - Right column holds the image, stretched via CSS to fill the column height.
+ * - Right column is left empty on purpose. It used to ship an <img src=""> as a
+ *   placeholder, which rendered as a broken image on a freshly seeded site and,
+ *   worse, carried no attachment ID — and Gutenberg's crop and rotate tools
+ *   require one, so the image could never be edited in place. An empty column
+ *   prompts the editor to insert a real image from the media library, which
+ *   arrives with an ID and full tooling. CSS stretches whatever lands there to
+ *   fill the column height.
  *
  * Default WP columns stack on mobile (≤782px viewport).
  *
@@ -86,9 +92,6 @@
 
 <!-- wp:column {"width":"40%","className":"rockaden-landing-why__media-col"} -->
 <div class="wp-block-column rockaden-landing-why__media-col" style="flex-basis:40%">
-<!-- wp:image {"sizeSlug":"large","className":"rockaden-landing-why__image"} -->
-<figure class="wp-block-image size-large rockaden-landing-why__image"><img src="" alt="<?php esc_attr_e( 'Barn spelar schack', 'rockaden-theme' ); ?>"/></figure>
-<!-- /wp:image -->
 </div>
 <!-- /wp:column -->
 

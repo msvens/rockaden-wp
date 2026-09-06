@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "rockaden/partner-logo",
+  "version": "0.1.0",
+  "title": "Partner Logo",
+  "category": "design",
+  "icon": "format-image",
+  "description": "One partner logo, optionally linked. Used inside a Partner Logos block.",
+  "textdomain": "rockaden-theme",
+  "parent": ["rockaden/partner-logos"],
+  "attributes": {
+    "mediaId": {
+      "type": "number",
+      "default": 0
+    },
+    "mediaUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "alt": {
+      "type": "string",
+      "default": ""
+    },
+    "url": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}
