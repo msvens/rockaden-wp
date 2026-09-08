@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "rockaden/sidebar",
+  "version": "0.1.0",
+  "title": "Sidebar",
+  "category": "design",
+  "icon": "columns",
+  "description": "A column of sidebar cards with their own content. Add one Sidebar Card per panel.",
+  "textdomain": "rockaden-theme",
+  "supports": {
+    "html": false,
+    "align": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}
