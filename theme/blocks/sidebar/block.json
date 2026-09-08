@@ -8,6 +8,12 @@
   "icon": "list-view",
   "description": "A column of sidebar cards with their own content. Add one Sidebar Card per panel.",
   "textdomain": "rockaden-theme",
+  "attributes": {
+    "maxWidth": {
+      "type": "string",
+      "default": ""
+    }
+  },
   "supports": {
     "html": false,
     "align": false

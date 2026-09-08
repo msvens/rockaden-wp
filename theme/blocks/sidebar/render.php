@@ -24,7 +24,17 @@ if ( '' === trim( $content ) ) {
 	return;
 }
 
-$rc_wrapper = get_block_wrapper_attributes( [ 'class' => 'rc-sidebar' ] );
+// A width cap set on the block, so the stack can be narrower than whatever
+// column it sits in. Validated rather than trusted: the value reaches a style
+// attribute, so anything that is not a plain CSS length is dropped.
+$rc_attrs     = [ 'class' => 'rc-sidebar' ];
+$rc_max_width = trim( (string) ( $attributes['maxWidth'] ?? '' ) );
+
+if ( '' !== $rc_max_width && preg_match( '/^\d+(\.\d+)?(px|rem|em|%|ch|vw)$/', $rc_max_width ) ) {
+	$rc_attrs['style'] = 'max-width:' . $rc_max_width;
+}
+
+$rc_wrapper = get_block_wrapper_attributes( $rc_attrs );
 ?>
 <aside <?php echo wp_kses_post( $rc_wrapper ); ?>>
 	<?php
