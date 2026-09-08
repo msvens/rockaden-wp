@@ -1016,19 +1016,23 @@ html.dark .rockaden-card:hover {
   letter-spacing: 1.6px;
 }
 
+/* max-width rather than width: an image renders at its natural size and only
+   shrinks to fit. width: 100% forces the upscale, which on mobile stretched a
+   logo across the whole viewport. Left-aligned by default — a logo narrower
+   than the column reads as deliberate on the left, adrift in the centre. */
 .rc-sidebar-card img {
-  width: 100%;
+  max-width: 100%;
   height: auto;
   border-radius: 0.25rem;
 }
 
+/* Full bleed drops the card's own chrome so a logo sits flush — but the image
+   keeps its rounded corners. At 0.25rem it is invisible on a logo with any
+   whitespace at its edges, and on an image that fills the frame square corners
+   read as abrupt where rounded reads as deliberate. */
 .rc-sidebar .rc-sidebar-card.rc-sidebar-card--full-bleed {
   background: transparent;
   padding: 0;
-  border-radius: 0;
-}
-
-.rc-sidebar-card--full-bleed img {
   border-radius: 0;
 }
 

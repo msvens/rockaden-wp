@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "title": "Sidebar",
   "category": "design",
-  "icon": "columns",
+  "icon": "list-view",
   "description": "A column of sidebar cards with their own content. Add one Sidebar Card per panel.",
   "textdomain": "rockaden-theme",
   "supports": {
