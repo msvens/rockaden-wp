@@ -301,8 +301,8 @@ add_action(
 		register_block_type( get_theme_file_path( 'blocks/shop-grid' ) );
 		register_block_type( get_theme_file_path( 'blocks/feedback-form' ) );
 		register_block_type( get_theme_file_path( 'blocks/footer-nav' ) );
-		register_block_type( get_theme_file_path( 'blocks/partner-logos' ) );
-		register_block_type( get_theme_file_path( 'blocks/partner-logo' ) );
+		register_block_type( get_theme_file_path( 'blocks/sidebar' ) );
+		register_block_type( get_theme_file_path( 'blocks/sidebar-card' ) );
 	}
 );
 

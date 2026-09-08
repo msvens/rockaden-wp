@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rockaden Theme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/theme\n"
-"POT-Creation-Date: 2026-09-06T09:53:30+00:00\n"
+"POT-Creation-Date: 2026-09-08T09:35:59+00:00\n"
 "PO-Revision-Date: 2026-05-26\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -399,6 +399,23 @@ msgstr "Central in Hägersten"
 msgid "Riksdalergatan 2 / Sparbanksvägen 31"
 msgstr "Riksdalergatan 2 / Sparbanksvägen 31"
 
+#: patterns/page-with-sidebar.php:3
+msgctxt "Pattern title"
+msgid "Page with sidebar"
+msgstr "Page with sidebar"
+
+#: patterns/page-with-sidebar.php:6
+msgctxt "Pattern description"
+msgid ""
+"Two columns — page content on the left, a sidebar of cards on the right."
+msgstr ""
+"Two columns — page content on the left, a sidebar of cards on the right."
+
+#: patterns/page-with-sidebar.php:37
+msgctxt "sidebar card placeholder"
+msgid "Title"
+msgstr "Title"
+
 #: blocks/feedback-form/block.json
 msgctxt "block title"
 msgid "Feedback Form"
@@ -431,27 +448,6 @@ msgctxt "block description"
 msgid "Renders the page title unless hidden via per-page setting."
 msgstr "Renders the page title unless hidden via per-page setting."
 
-#: blocks/partner-logo/block.json
-msgctxt "block title"
-msgid "Partner Logo"
-msgstr "Partner Logo"
-
-#: blocks/partner-logo/block.json
-msgctxt "block description"
-msgid "One partner logo, optionally linked. Used inside a Partner Logos block."
-msgstr ""
-"One partner logo, optionally linked. Used inside a Partner Logos block."
-
-#: blocks/partner-logos/block.json
-msgctxt "block title"
-msgid "Partner Logos"
-msgstr "Partner Logos"
-
-#: blocks/partner-logos/block.json
-msgctxt "block description"
-msgid "A set of linked partner logos. Add one Partner Logo block per partner."
-msgstr "A set of linked partner logos. Add one Partner Logo block per partner."
-
 #: blocks/section-nav/block.json
 msgctxt "block title"
 msgid "Section Navigation"
@@ -474,6 +470,20 @@ msgctxt "block description"
 msgid "Displays shop items (chess equipment for sale)."
 msgstr "Displays shop items (chess equipment for sale)."
 
+#: blocks/sidebar-card/block.json
+msgctxt "block title"
+msgid "Sidebar Card"
+msgstr "Sidebar Card"
+
+#: blocks/sidebar-card/block.json
+msgctxt "block description"
+msgid ""
+"One sidebar panel: a short text with an optional button, or a linked image. "
+"Used inside a Sidebar block."
+msgstr ""
+"One sidebar panel: a short text with an optional button, or a linked image. "
+"Used inside a Sidebar block."
+
 #: blocks/sidebar-panel/block.json
 msgctxt "block title"
 msgid "Sidebar Panel"
@@ -489,6 +499,20 @@ msgstr ""
 "Sidebar cards configured under Appearance → Rockaden. Insert anywhere on a "
 "page; on templated pages (index.html, page.html) it's gated by the per-page "
 "\\\"Show sidebar\\\" checkbox."
+
+#: blocks/sidebar/block.json
+msgctxt "block title"
+msgid "Sidebar"
+msgstr "Sidebar"
+
+#: blocks/sidebar/block.json
+msgctxt "block description"
+msgid ""
+"A column of sidebar cards with their own content. Add one Sidebar Card per "
+"panel."
+msgstr ""
+"A column of sidebar cards with their own content. Add one Sidebar Card per "
+"panel."
 
 #: theme.json
 msgctxt "Color name"
@@ -624,6 +648,26 @@ msgstr "Header"
 msgctxt "Template part name"
 msgid "Footer"
 msgstr "Footer"
+
+#~ msgctxt "block title"
+#~ msgid "Partner Logo"
+#~ msgstr "Partner Logo"
+
+#~ msgctxt "block description"
+#~ msgid ""
+#~ "One partner logo, optionally linked. Used inside a Partner Logos block."
+#~ msgstr ""
+#~ "One partner logo, optionally linked. Used inside a Partner Logos block."
+
+#~ msgctxt "block title"
+#~ msgid "Partner Logos"
+#~ msgstr "Partner Logos"
+
+#~ msgctxt "block description"
+#~ msgid ""
+#~ "A set of linked partner logos. Add one Partner Logo block per partner."
+#~ msgstr ""
+#~ "A set of linked partner logos. Add one Partner Logo block per partner."
 
 #~ msgid "Barn spelar schack"
 #~ msgstr "Children playing chess"

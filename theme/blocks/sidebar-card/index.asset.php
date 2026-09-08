@@ -1,6 +1,6 @@
 <?php
 /**
- * Asset manifest for the Partner Logos editor script.
+ * Asset manifest for the Sidebar Card editor script.
  *
  * Hand-authored (the theme has no build step) — mirrors blocks/shop-grid.
  *

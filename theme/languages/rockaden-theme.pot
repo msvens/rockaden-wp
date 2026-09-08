@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-07T10:15:24+00:00\n"
+"POT-Creation-Date: 2026-09-08T09:35:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: rockaden-theme\n"
@@ -376,6 +376,21 @@ msgstr ""
 msgid "Riksdalergatan 2 / Sparbanksvägen 31"
 msgstr ""
 
+#: patterns/page-with-sidebar.php:3
+msgctxt "Pattern title"
+msgid "Page with sidebar"
+msgstr ""
+
+#: patterns/page-with-sidebar.php:6
+msgctxt "Pattern description"
+msgid "Two columns — page content on the left, a sidebar of cards on the right."
+msgstr ""
+
+#: patterns/page-with-sidebar.php:37
+msgctxt "sidebar card placeholder"
+msgid "Title"
+msgstr ""
+
 #: blocks/feedback-form/block.json
 msgctxt "block title"
 msgid "Feedback Form"
@@ -406,26 +421,6 @@ msgctxt "block description"
 msgid "Renders the page title unless hidden via per-page setting."
 msgstr ""
 
-#: blocks/partner-logo/block.json
-msgctxt "block title"
-msgid "Partner Logo"
-msgstr ""
-
-#: blocks/partner-logo/block.json
-msgctxt "block description"
-msgid "One partner logo, optionally linked. Used inside a Partner Logos block."
-msgstr ""
-
-#: blocks/partner-logos/block.json
-msgctxt "block title"
-msgid "Partner Logos"
-msgstr ""
-
-#: blocks/partner-logos/block.json
-msgctxt "block description"
-msgid "A set of linked partner logos. Add one Partner Logo block per partner."
-msgstr ""
-
 #: blocks/section-nav/block.json
 msgctxt "block title"
 msgid "Section Navigation"
@@ -446,6 +441,16 @@ msgctxt "block description"
 msgid "Displays shop items (chess equipment for sale)."
 msgstr ""
 
+#: blocks/sidebar-card/block.json
+msgctxt "block title"
+msgid "Sidebar Card"
+msgstr ""
+
+#: blocks/sidebar-card/block.json
+msgctxt "block description"
+msgid "One sidebar panel: a short text with an optional button, or a linked image. Used inside a Sidebar block."
+msgstr ""
+
 #: blocks/sidebar-panel/block.json
 msgctxt "block title"
 msgid "Sidebar Panel"
@@ -454,6 +459,16 @@ msgstr ""
 #: blocks/sidebar-panel/block.json
 msgctxt "block description"
 msgid "Sidebar cards configured under Appearance → Rockaden. Insert anywhere on a page; on templated pages (index.html, page.html) it's gated by the per-page \"Show sidebar\" checkbox."
+msgstr ""
+
+#: blocks/sidebar/block.json
+msgctxt "block title"
+msgid "Sidebar"
+msgstr ""
+
+#: blocks/sidebar/block.json
+msgctxt "block description"
+msgid "A column of sidebar cards with their own content. Add one Sidebar Card per panel."
 msgstr ""
 
 #: theme.json

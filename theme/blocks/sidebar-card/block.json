@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "rockaden/sidebar-card",
+  "version": "0.1.0",
+  "title": "Sidebar Card",
+  "category": "design",
+  "icon": "index-card",
+  "description": "One sidebar panel: a short text with an optional button, or a linked image. Used inside a Sidebar block.",
+  "textdomain": "rockaden-theme",
+  "parent": ["rockaden/sidebar"],
+  "attributes": {
+    "cardType": { "type": "string", "default": "text", "enum": ["text", "image"] },
+    "title": { "type": "string", "default": "" },
+    "showTitle": { "type": "boolean", "default": true },
+    "content": { "type": "string", "default": "" },
+    "mediaId": { "type": "number", "default": 0 },
+    "mediaUrl": { "type": "string", "default": "" },
+    "alt": { "type": "string", "default": "" },
+    "fullBleed": { "type": "boolean", "default": false },
+    "linkUrl": { "type": "string", "default": "" },
+    "linkLabel": { "type": "string", "default": "" }
+  },
+  "supports": {
+    "html": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}
