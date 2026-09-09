@@ -89,6 +89,14 @@ class Rockaden_Theme_Settings {
 			// Recipient for the feedback-form block. Empty falls back to the
 			// site admin email at send time.
 			'feedback_email'       => '',
+			// Emoji reactions under news posts. The list is space-separated;
+			// Rockaden_Theme_Reactions::emojis() parses and validates it.
+			'reactions_enabled'    => true,
+			// Also under each post in the news list / archives (single posts
+			// always show the bar while enabled; Latest News cards have their
+			// own toggle in the block).
+			'reactions_in_lists'   => true,
+			'reaction_emojis'      => Rockaden_Theme_Reactions::DEFAULT_EMOJIS,
 			'main_nav'             => [
 				[
 					'label' => 'Nyheter',
@@ -387,6 +395,10 @@ class Rockaden_Theme_Settings {
 		$options['cta_url_en']     = sanitize_text_field( wp_unslash( $_POST['cta_url_en'] ?? '' ) );
 		$options['front_page_en']  = absint( wp_unslash( $_POST['front_page_en'] ?? 0 ) );
 		$options['feedback_email'] = sanitize_email( wp_unslash( $_POST['feedback_email'] ?? '' ) );
+
+		$options['reactions_enabled']  = ! empty( $_POST['reactions_enabled'] );
+		$options['reactions_in_lists'] = ! empty( $_POST['reactions_in_lists'] );
+		$options['reaction_emojis']    = sanitize_text_field( wp_unslash( $_POST['reaction_emojis'] ?? '' ) );
 
 		// Sidebar route toggles.
 		$options['sidebar_routes'] = [
@@ -1073,6 +1085,39 @@ class Rockaden_Theme_Settings {
 						<th scope="row">Recipient email</th>
 						<td>
 							<input type="email" name="feedback_email" value="<?php echo esc_attr( $options['feedback_email'] ); ?>" class="regular-text" placeholder="kontakt@example.com" />
+						</td>
+					</tr>
+				</table>
+
+				<!-- Reactions -->
+				<h2>Reactions</h2>
+				<p class="description">Emoji reactions under news posts — in the news list, on single posts and on the Latest News cards. Readers can react without signing in; their choice is remembered in their own browser only, so the counts are approximate by design.</p>
+				<table class="form-table">
+					<tr>
+						<th scope="row">Show reactions</th>
+						<td>
+							<label>
+								<input type="checkbox" name="reactions_enabled" value="1"
+									<?php checked( ! empty( $options['reactions_enabled'] ) ); ?> />
+								Show the reactions bar under news posts
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">In news lists</th>
+						<td>
+							<label>
+								<input type="checkbox" name="reactions_in_lists" value="1"
+									<?php checked( ! empty( $options['reactions_in_lists'] ) ); ?> />
+								Also show it under each post in the news list and archives (single posts always show it). The Latest News block has its own toggle in the block settings.
+							</label>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Emoji</th>
+						<td>
+							<input type="text" name="reaction_emojis" value="<?php echo esc_attr( (string) $options['reaction_emojis'] ); ?>" class="regular-text" placeholder="<?php echo esc_attr( Rockaden_Theme_Reactions::DEFAULT_EMOJIS ); ?>" />
+							<p class="description">Space-separated, shown in this order. Leave empty for the default set. Removing an emoji hides its count on existing posts without deleting it.</p>
 						</td>
 					</tr>
 				</table>

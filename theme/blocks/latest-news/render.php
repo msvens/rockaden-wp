@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
 $count      = isset( $attributes['count'] ) ? max( 1, (int) $attributes['count'] ) : 3;
 $more_url   = (string) ( $attributes['moreUrl'] ?? '/nyheter' );
 $more_label = (string) ( $attributes['moreLabel'] ?? __( 'Mer nyheter', 'rockaden-theme' ) );
+$reactions  = ! isset( $attributes['showReactions'] ) || false !== $attributes['showReactions'];
 
 $news_posts = get_posts(
 	[
@@ -58,6 +59,9 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-lates
 						<a href="<?php echo esc_url( $permalink ); ?>" class="rockaden-news-card__more">
 							<?php esc_html_e( 'Läs mer', 'rockaden-theme' ); ?>
 						</a>
+						<?php if ( $reactions ) : ?>
+							<?php Rockaden_Theme_Reactions::render( (int) $news_post->ID ); ?>
+						<?php endif; ?>
 					</div>
 				</li>
 			<?php endforeach; ?>

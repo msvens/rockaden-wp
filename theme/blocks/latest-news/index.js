@@ -16,6 +16,7 @@
 	var InspectorControls = blockEditor.InspectorControls;
 	var PanelBody = components.PanelBody;
 	var TextControl = components.TextControl;
+	var ToggleControl = components.ToggleControl;
 
 	blocks.registerBlockType( 'rockaden/latest-news', {
 		edit: function ( props ) {
@@ -53,6 +54,14 @@
 							value: attributes.moreLabel,
 							onChange: function ( val ) {
 								setAttributes( { moreLabel: val } );
+							},
+						} ),
+						el( ToggleControl, {
+							label: 'Show reactions',
+							help: 'The emoji reactions bar on each card (needs reactions enabled under Appearance → Rockaden).',
+							checked: attributes.showReactions !== false,
+							onChange: function ( val ) {
+								setAttributes( { showReactions: !! val } );
 							},
 						} )
 					)
