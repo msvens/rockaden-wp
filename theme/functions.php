@@ -37,6 +37,7 @@ require_once get_theme_file_path( 'inc/class-theme-section-nav.php' );
 require_once get_theme_file_path( 'inc/class-theme-comments.php' );
 require_once get_theme_file_path( 'inc/class-theme-excerpt.php' );
 require_once get_theme_file_path( 'inc/class-theme-i18n.php' );
+require_once get_theme_file_path( 'inc/class-theme-reactions.php' );
 
 // Cookie-driven front-end locale + data-lang + textdomain (visitor SV/EN switch).
 Rockaden_Theme_I18n::register();
@@ -63,6 +64,11 @@ add_action( 'rest_api_init', [ 'Rockaden_Theme_Feedback', 'register_routes' ] );
 add_action( 'add_meta_boxes', [ 'Rockaden_Theme_Feedback', 'add_meta_box' ] );
 add_filter( 'manage_rc_feedback_posts_columns', [ 'Rockaden_Theme_Feedback', 'columns' ] );
 add_action( 'manage_rc_feedback_posts_custom_column', [ 'Rockaden_Theme_Feedback', 'column_content' ], 10, 2 );
+
+// Emoji reactions on news posts (rc_reactions meta + public REST endpoint
+// behind the reactions block and the latest-news cards).
+add_action( 'init', [ 'Rockaden_Theme_Reactions', 'register' ] );
+add_action( 'rest_api_init', [ 'Rockaden_Theme_Reactions', 'register_routes' ] );
 
 // Admin settings page.
 add_action( 'admin_menu', [ 'Rockaden_Theme_Settings', 'register_page' ] );
@@ -304,6 +310,7 @@ add_action(
 		register_block_type( get_theme_file_path( 'blocks/sidebar' ) );
 		register_block_type( get_theme_file_path( 'blocks/sidebar-card' ) );
 		register_block_type( get_theme_file_path( 'blocks/latest-news' ) );
+		register_block_type( get_theme_file_path( 'blocks/reactions' ) );
 	}
 );
 

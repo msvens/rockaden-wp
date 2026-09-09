@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "rockaden/reactions",
+  "version": "0.1.0",
+  "title": "Reactions",
+  "category": "widgets",
+  "icon": "smiley",
+  "description": "Lets readers react to a news post with an emoji. Which emoji are offered is set under Appearance → Rockaden.",
+  "textdomain": "rockaden-theme",
+  "usesContext": ["postId"],
+  "supports": {
+    "html": false,
+    "multiple": false
+  },
+  "editorScript": "file:./index.js",
+  "viewScript": "rockaden-reactions",
+  "render": "file:./render.php"
+}

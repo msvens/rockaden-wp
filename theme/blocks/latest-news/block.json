@@ -19,6 +19,10 @@
     },
     "moreLabel": {
       "type": "string"
+    },
+    "showReactions": {
+      "type": "boolean",
+      "default": true
     }
   },
   "supports": {
