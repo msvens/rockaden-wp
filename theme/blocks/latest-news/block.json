@@ -7,7 +7,7 @@
   "category": "widgets",
   "icon": "media-document",
   "description": "Displays the latest news posts as cards with a link to the full archive.",
-  "textdomain": "rockaden-chess",
+  "textdomain": "rockaden-theme",
   "attributes": {
     "count": {
       "type": "number",
@@ -25,7 +25,6 @@
     "html": false,
     "align": ["wide", "full"]
   },
-  "editorScript": "file:../../../build/blocks/latest-news/index.js",
-  "viewStyle": "file:./latest-news.css",
+  "editorScript": "file:./index.js",
   "render": "file:./render.php"
 }

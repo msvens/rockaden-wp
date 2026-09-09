@@ -303,6 +303,7 @@ add_action(
 		register_block_type( get_theme_file_path( 'blocks/footer-nav' ) );
 		register_block_type( get_theme_file_path( 'blocks/sidebar' ) );
 		register_block_type( get_theme_file_path( 'blocks/sidebar-card' ) );
+		register_block_type( get_theme_file_path( 'blocks/latest-news' ) );
 	}
 );
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rockaden Theme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/theme\n"
-"POT-Creation-Date: 2026-09-08T09:35:59+00:00\n"
+"POT-Creation-Date: 2026-09-09T12:17:07+00:00\n"
 "PO-Revision-Date: 2026-05-26\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -84,6 +84,18 @@ msgstr "Send"
 #: blocks/feedback-form/render.php:68
 msgid "Aktivera JavaScript för att skicka feedback."
 msgstr "Please enable JavaScript to send feedback."
+
+#: blocks/latest-news/render.php:18
+msgid "Mer nyheter"
+msgstr "More news"
+
+#: blocks/latest-news/render.php:32
+msgid "Inga nyheter än."
+msgstr "No news yet."
+
+#: blocks/latest-news/render.php:59
+msgid "Läs mer"
+msgstr "Read more"
 
 #: blocks/shop-grid/render.php:14
 msgid "Mer schackmateriel"
@@ -437,6 +449,17 @@ msgid ""
 "Renders the footer links and text configured under Appearance → Rockaden."
 msgstr ""
 "Renders the footer links and text configured under Appearance → Rockaden."
+
+#: blocks/latest-news/block.json
+msgctxt "block title"
+msgid "Latest News"
+msgstr "Latest News"
+
+#: blocks/latest-news/block.json
+msgctxt "block description"
+msgid ""
+"Displays the latest news posts as cards with a link to the full archive."
+msgstr "Displays the latest news posts as cards with a link to the full archive."
 
 #: blocks/page-title/block.json
 msgctxt "block title"
