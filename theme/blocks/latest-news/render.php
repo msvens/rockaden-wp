@@ -2,7 +2,11 @@
 /**
  * Server-side render for the Latest News block.
  *
- * @package Rockaden
+ * Moved here from the plugin: ordinary news posts are the theme's business,
+ * the plugin only knows about chess. The block name is unchanged so saved
+ * content keeps working.
+ *
+ * @package RockadenTheme
  *
  * @var array<string, mixed> $attributes Block attributes.
  */
@@ -11,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 $count      = isset( $attributes['count'] ) ? max( 1, (int) $attributes['count'] ) : 3;
 $more_url   = (string) ( $attributes['moreUrl'] ?? '/nyheter' );
-$more_label = (string) ( $attributes['moreLabel'] ?? __( 'More news', 'rockaden-chess' ) );
+$more_label = (string) ( $attributes['moreLabel'] ?? __( 'Mer nyheter', 'rockaden-theme' ) );
 
 $news_posts = get_posts(
 	[
@@ -25,7 +29,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-lates
 ?>
 <div <?php echo wp_kses_post( $wrapper_attributes ); ?>>
 	<?php if ( empty( $news_posts ) ) : ?>
-		<p class="rockaden-latest-news__empty"><?php esc_html_e( 'No news yet.', 'rockaden-chess' ); ?></p>
+		<p class="rockaden-latest-news__empty"><?php esc_html_e( 'Inga nyheter än.', 'rockaden-theme' ); ?></p>
 	<?php else : ?>
 		<ul class="rockaden-latest-news__list">
 			<?php foreach ( $news_posts as $news_post ) : ?>
@@ -52,7 +56,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-lates
 							<p class="rockaden-news-card__excerpt"><?php echo esc_html( $excerpt ); ?></p>
 						<?php endif; ?>
 						<a href="<?php echo esc_url( $permalink ); ?>" class="rockaden-news-card__more">
-							<?php esc_html_e( 'Read more', 'rockaden-chess' ); ?>
+							<?php esc_html_e( 'Läs mer', 'rockaden-theme' ); ?>
 						</a>
 					</div>
 				</li>
