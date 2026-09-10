@@ -22,9 +22,13 @@ if ( file_exists( get_theme_file_path( 'vendor/autoload.php' ) ) ) {
 	// Vcs\Api that getVcsApi() is typed to return. Checked by method rather than
 	// by class: the library namespaces its classes by version (v5p6, v5p7, …),
 	// so naming one means a routine dependency bump silently stops matching.
+	// REQUIRE_RELEASE_ASSETS: a release without a matching asset must never be
+	// replaced by its auto-generated source zip, which lacks vendor/ and would
+	// install a broken copy. (The constant is inherited from Vcs\Api, so the
+	// versioned class name is still not spelled out).
 	$rockaden_vcs_api = $rockaden_theme_update_checker->getVcsApi();
 	if ( method_exists( $rockaden_vcs_api, 'enableReleaseAssets' ) ) {
-		$rockaden_vcs_api->enableReleaseAssets( '/rockaden-theme\.zip$/' );
+		$rockaden_vcs_api->enableReleaseAssets( '/rockaden-theme\.zip$/', $rockaden_vcs_api::REQUIRE_RELEASE_ASSETS );
 	}
 }
 
