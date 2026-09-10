@@ -1,8 +1,5 @@
 node_modules/
-plugin/build/
-plugin/vendor/
-theme/vendor/
-shared/dist/
+vendor/
 *.log
 .wp-env/
 .DS_Store

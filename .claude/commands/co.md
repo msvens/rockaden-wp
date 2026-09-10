@@ -1,7 +1,6 @@
-
 # Commit Command
 
-Validate and commit changes: $ARGUMENTS
+Validate and commit changes:
 
 ## Steps
 
@@ -10,8 +9,7 @@ Validate and commit changes: $ARGUMENTS
    - If no changes, inform user and stop
 
 2. **Run CI checks**
-   - Run `pnpm run check` — typecheck, ESLint, PHPStan + phpcs for **both**
-     `plugin/` and `theme/`, then build
+   - Run `pnpm run check` — PHPStan + phpcs, then translations
    - If any step fails: Stop and report errors
 
 3. **Analyze changes for commit**
@@ -45,7 +43,7 @@ Validate and commit changes: $ARGUMENTS
 
 ## Important
 
-- **Abort immediately** if `pnpm run check` or `composer -d plugin lint:php` fails
+- **Abort immediately** if `pnpm run check` fails
 - **Never** add co-authored-by or Claude attribution to commits
 - **Never** commit sensitive files (.env, credentials, etc.)
 - Only push when "push" is in arguments

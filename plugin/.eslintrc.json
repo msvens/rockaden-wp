@@ -1,8 +1,0 @@
-{
-	"extends": "plugin:@wordpress/eslint-plugin/recommended",
-	"rules": {
-		"@wordpress/no-unsafe-wp-apis": "off",
-		"no-nested-ternary": "off",
-		"jsx-a11y/label-has-associated-control": "off"
-	}
-}

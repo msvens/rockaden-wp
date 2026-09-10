@@ -4,41 +4,22 @@ import { fileURLToPath } from 'url';
 export const root = join( dirname( fileURLToPath( import.meta.url ) ), '..', '..' );
 
 /**
- * The two translatable packages.
+ * The one translatable package: this repository, at its root.
  *
- * Each owns its tooling and catalogue; nothing here couples them. The shipped
- * plugin and theme stay independent — this is a monorepo dev script, in the
- * same spirit as scripts/package.mjs.
+ * Kept as a list so the i18n scripts stay identical to the plugin's copy
+ * (chess-wp-plugin/scripts) — only this file differs between the two.
  */
 export const PACKAGES = [
 	{
-		name: 'plugin',
-		dir: 'plugin',
-		domain: 'rockaden-chess',
-		// English source, Swedish catalogue.
-		locales: [ 'sv_SE' ],
-		// build/ holds compiled copies of every render.php — scanning it made the
-		// old POT list each block string twice.
-		exclude: 'build,node_modules,vendor,docs',
-		// wp-cli parses JavaScript but not TypeScript, and every __() call in the
-		// plugin lives in this one .ts file. xgettext handles it; the two POTs are
-		// then merged with msgcat.
-		tsSources: [ 'js/shared/translations.ts' ],
-		// Serve one jed file for all script handles rather than the usual
-		// per-script MD5 files — see the pre_load_script_translations filter in
-		// plugin/rockaden-chess.php.
-		jed: true,
-	},
-	{
 		name: 'theme',
-		dir: 'theme',
+		dir: '.',
 		domain: 'rockaden-theme',
-		// Reversed: Swedish source, English catalogue.
+		// Reversed relative to the plugin: Swedish source, English catalogue.
 		locales: [ 'en_US' ],
-		exclude: 'node_modules,vendor,docs',
+		exclude: 'node_modules,vendor,docs,dist,scripts',
 		tsSources: [],
 		// The theme ships no JS translations; its few JS strings are passed in
-		// already-translated via wp_localize_script.
+		// already-translated via wp_localize_script or data-* attributes.
 		jed: false,
 	},
 ];

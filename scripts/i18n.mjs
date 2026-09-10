@@ -148,7 +148,7 @@ for ( const pkg of PACKAGES ) {
 	const base = paths( pkg, pkg.locales[ 0 ] );
 
 	if ( ! existsSync( base.wp ) ) {
-		console.error( `  vendor/bin/wp missing — run: composer -d ${ pkg.dir } install` );
+		console.error( `  vendor/bin/wp missing — run: composer install` );
 		process.exit( 1 );
 	}
 

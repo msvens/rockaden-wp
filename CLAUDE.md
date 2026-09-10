@@ -1,128 +1,67 @@
-# rockaden-wp
+# rockaden-wp — Rockaden theme
 
-WordPress plugin + block theme for SK Rockaden chess club (Stockholm).
+WordPress block theme `rockaden-theme` for SK Rockaden chess club (Stockholm). This repository
+holds only the theme, at its root. The chess plugin `rockaden-chess` lives in
+[chess-wp-plugin](https://github.com/msvens/chess-wp-plugin) (sibling checkout `../chess-wp-plugin`).
+Until v0.45.0 both were released from here.
 
-## Project Overview
-
-Monorepo with two packages:
-- **`plugin/`** (`rockaden-chess`) — WordPress plugin. PHP backend (CPTs, REST API, admin pages) + React frontend (wp-scripts/webpack). Shared TypeScript utilities (roundRobin, translations, expandRecurringEvents, calendar types) live in `plugin/js/shared/`.
-- **`theme/`** (`rockaden-theme`) — WordPress block theme. theme.json design tokens, templates, dark mode.
-
-Package manager: **pnpm** (workspace monorepo).
-
-## Origin
-
-Ported from `/Users/msvens/projects/github.com/msvens/rockaden2` (PayloadCMS + Next.js POC). The `plugin/js/shared/` directory contains framework-agnostic logic copied from that project. The plugin reimplements the backend in PHP and will port the React components to use `@wordpress/components` instead of Tailwind.
+**Where things belong:** anything chess (training, tournaments, calendar, SSF, and their blocks)
+goes in the plugin; anything about the site (design, templates, shop, feedback, sidebars, reactions,
+news presentation, settings page) goes here. The plugin never depends on the theme. The theme places
+three plugin blocks by name (`rockaden/tournament`, `rockaden/training-group`,
+`rockaden/upcoming-events`), provides `single-rc_tournament.html` / `single-rc_training_group.html`,
+and registers its docs through the plugin's `rc_register_docs` action, guarded by `class_exists`.
 
 ## Architecture
 
-### Plugin (rockaden-chess)
-- **PSR-4 autoloader** in `rockaden-chess.php`, namespace `Rockaden\`
-- **Custom Post Types**: `rc_training_group`, `rc_training_session`, `rc_event` — all data stored as post meta (JSON strings for arrays)
-- **REST API** (`/wp-json/rockaden/v1/`):
-  - `ssf/{path}` — Proxy to member.schack.se (solves CORS)
-  - `training-groups`, `training-groups/{id}`, participants, sessions CRUD
-  - `training-sessions/{id}/attendance`, `/games/{idx}`, `/notes`
-  - `events?month=YYYY-MM` — with server-side recurring event expansion
-- **Admin pages**: React training manager (mount point in TrainingAdmin.php), Settings page (SSF club ID)
-- **Gutenberg blocks**: calendar, ranking-list, standings, training-group, training-groups (block.json registered)
-- **wp-scripts** build with custom webpack.config.js (5 entry points)
-- **Shared TypeScript** (`plugin/js/shared/`):
-  - `roundRobin.ts` — Berger method pairing generator + standings computation
-  - `expandRecurringEvents.ts` — Expands recurring events (weekly/biweekly) into individual occurrences
-  - `translations.ts` — en/sv translations for training + calendar UI
-  - `types.ts` — CalendarEvent, EventCategory, Language
-
-### Theme (rockaden-theme)
-- Block theme (FSE) with theme.json v3, `functions.php` for setup + block registration
-- Colors: blue-600 (#2563eb) primary, gray palette (matching rockaden2 design)
-- Typography: Geist Sans variable font, weight 300 headings, letter-spacing 0.025em
-- Templates: index, single, page, archive, page-section, author
-- Parts: header (white bg, fixed, uppercase nav, dark toggle), footer (minimal centered links)
-- Patterns: hero, news-grid, page-with-sidebar, page-three-column
-- **Theme blocks**: `rockaden/section-nav` — server-rendered sidebar navigation from page hierarchy (`theme/blocks/section-nav/`)
-- Dark mode: `html.dark` class, localStorage `theme` key, system preference default, flicker-free inline script
+- Block theme (FSE), `theme.json` v3, `functions.php` for setup + block registration, classes in
+  `inc/class-theme-*.php` (`Rockaden_Theme_*`, all static, required from `functions.php`)
+- **Theme blocks** (`blocks/*/block.json`, server-rendered, no build): section-nav, sidebar-panel,
+  page-title, shop-grid, feedback-form, footer-nav, sidebar, sidebar-card, latest-news, reactions.
+  Editor scripts are hand-written `index.js` + `index.asset.php`; view scripts are vanilla ES5 IIFEs
+  reading `data-*` attributes (strings translated in PHP).
+- **Site features in `inc/`**: settings page (Appearance → Rockaden, `rockaden_theme_options`,
+  hand-rolled admin-post form — every new key must be assigned in `handle_save()` or it is lost),
+  shop CPT `rc_shop_item` + REST, feedback CPT `rc_feedback` + public REST with nonce, reactions
+  (post meta `rc_reactions` + public REST), cookie-driven SV/EN locale (`rc_locale`), section nav,
+  comments off, content-aware excerpts, setup/seeding on activation
+- Colors: `primary` #2563eb + gray palette; dark mode = `html.dark` overriding
+  `--wp--preset--color--*` in `assets/css/custom.css` (also loaded as editor style); typography Geist
+- Templates: index, home, single, page, archive, author, page-section, page-landing, the two CPT
+  singles (declared in theme.json `customTemplates`); parts header/footer; patterns in `patterns/`
+- Docs: `docs/*.html` (sv/en) rendered by the plugin's documentation block
 
 ## Development
 
 ```bash
-pnpm install
-npx wp-env start          # WordPress at http://localhost:8888 (admin/password)
-pnpm dev                  # wp-scripts watch for JS hot-reload
-# PHP changes are instant (symlinked by wp-env)
+composer install
+npx wp-env start          # http://localhost:8888 (admin/password); mounts ../chess-wp-plugin as rockaden-chess
+# no build step; PHP/CSS/JS served as-is (custom.css is versioned by theme version → hard reload)
 ```
 
-Requires Docker running.
-
-## Build
+## Quality
 
 ```bash
-pnpm build                # Builds plugin JS (wp-scripts)
-pnpm package              # Creates dist/rockaden-chess.zip + dist/rockaden-theme.zip
+pnpm run check            # PHPStan level 6 + phpcs (WordPress standard, text domain rockaden-theme) + i18n:check
+pnpm i18n                 # regenerate catalogues; edit only languages/rockaden-theme-en_US.po; READ EVERY FUZZY (msgmerge guesses wrong)
+pnpm package              # dist/rockaden-theme.zip with root folder rockaden-theme (the install slug)
 ```
 
-## Implementation Status
+- Never add phpstan-ignore / phpcs:ignore / eslint-disable silently — discuss first
+- Theme JS is deliberately no-build and unlinted (ES5 style)
+- `pnpm package` runs `composer install --no-dev`; re-run `composer install` afterwards
 
-### Phase 1: Project Setup — DONE
-- Monorepo structure, pnpm workspace, .wp-env.json
-- Shared TypeScript utilities in plugin/js/shared/
-- Plugin skeleton: PHP entry point, autoloader, 3 CPTs with meta fields, full REST API (SSF proxy, training CRUD, events with recurring expansion), admin pages, 3 Gutenberg block definitions
-- Theme skeleton: theme.json, templates, parts, patterns, dark mode
-- Full build verified (`pnpm build` succeeds)
+## Release
 
-### Phase 2: Plugin Backend Testing — DONE
-- All 3 CPTs register correctly (rc_training_group, rc_training_session, rc_event)
-- All REST endpoints tested: training groups CRUD, participants, sessions, attendance, games, notes, events
-- SSF proxy works against live member.schack.se (federation + district/clubs)
-
-### Phase 3: Admin Training UI — DONE
-- Training manager SPA with group list, group detail, session detail views
-- CreateGroupModal with WP DateTimePicker, inline date pickers
-- @wordpress/api-fetch for REST calls, @wordpress/components UI
-
-### Phase 4: Theme — DONE
-- Restyled to match rockaden2 design (Geist font, gray/blue palette, light weights)
-- Fixed header with uppercase nav, sun/moon dark toggle
-- Dark mode with system preference default, flicker-free inline script
-- Card styles, sidebar nav, page layout patterns (2-col, 3-col)
-- Minimal footer with centered links
-
-### Phase 5: Gutenberg Blocks — DONE
-- Calendar block (server render + React hydration)
-- Standings block (server render)
-- Training Group block
-
-### Phase 6: Polish — DONE
-- Define per-heading-level font sizes in theme.json (H1→xxx-large, H2→xx-large, H3→x-large, etc.) so headings are consistent without manual sizing
-- Dark-mode-safe color strategy: consider disabling custom colors (`"color": { "custom": false }`) to force palette-only; document "always use palette colors" for content editors
-- Evaluate adding page templates (e.g., page-with-sidebar.html) vs relying on patterns
-- Swedish .po/.mo translations
-- WP-CLI seed command (training groups, participants, sessions, events — needed for quick setup after wp-env destroy)
-- Edit Group Modal: allow editing the linked event inline (change schedule, location, recurrence) — currently only group fields are editable
-- Add Participant Modal: keep search box open after adding a participant so multiple can be added without reopening
-- Define per-heading-level spacing/margins in theme.json or CSS so page content doesn't have excessive gap below the page heading
-- Add block theme support for hiding page headings (useful for pages where the content starts with its own heading or doesn't need the default page title)
-- Training group visibility controls: per-group toggles for showing/hiding participants list and tournament standings in the public view (privacy for junior groups, secret standings). Part of a larger effort around user roles and public vs. authenticated content.
-- Documentation
-
-### Phase 7: Polish Round 2
-- Audit link styles for consistency: define clear rules for inline content links (blue, hover behavior), navigational links (post titles, nav, footer — muted/text color), and ensure all link contexts follow the same pattern across light and dark mode
-- UI consistency pass: review heading weights/sizes across all contexts (sidebar cards, post lists, page content), ensure font sizes feel proportional at each level, audit spacing/margins for visual rhythm
-- Review typography scale: evaluate if current font sizes (small→xxx-large) provide enough differentiation, especially at H3–H5 levels which are close in size
-
-## Key Files
-- `plugin/rockaden-chess.php` — Plugin entry point + autoloader
-- `plugin/src/Api/TrainingApi.php` — Main REST API (training CRUD)
-- `plugin/src/Api/SsfProxy.php` — SSF proxy endpoint
-- `plugin/src/Api/EventApi.php` — Calendar events with recurring expansion
-- `plugin/webpack.config.js` — Custom wp-scripts entry points
-- `plugin/js/admin/training-manager.tsx` — React admin app (placeholder)
-- `plugin/js/shared/roundRobin.ts` — Tournament pairing logic
-- `plugin/js/shared/index.ts` — Shared module barrel export
-- `theme/theme.json` — Design tokens
+`/release` bumps `Version:` in `style.css`, regenerates catalogues, commits, tags `vX.Y.Z`, pushes;
+`release.yml` builds the zip. Sites update through the plugin-update-checker reading this
+repository's releases (asset `rockaden-theme.zip`, `REQUIRE_RELEASE_ASSETS`). **Never push a version
+bump without its tag, never push tags by hand**: with no release the checker falls back to the branch
+source zip, which has no `vendor/`. Live and test sites update manually from Dashboard → Updates.
 
 ## Conventions
-- PHP: PSR-4 namespacing under `Rockaden\`, meta keys prefixed `rc_`
-- REST: namespace `rockaden/v1`, editor capability for writes, public reads
-- JSON meta: participants, attendance, games stored as JSON strings in post_meta
-- TypeScript: wp-scripts handles compilation via Babel
+- Meta keys / CPTs prefixed `rc_`, options `rockaden_`, REST namespace `rockaden/v1`, CSS classes
+  `rockaden-*` / `rc-*`, no global functions (static classes only)
+- Prefer WordPress preset slugs and Gutenberg primitives over bespoke tokens/CSS
+- Git: never commit, push or open PRs without an explicit request; one PR at a time; no Claude
+  attribution or session links in commits or PR bodies

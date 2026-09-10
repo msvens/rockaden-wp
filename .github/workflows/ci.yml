@@ -5,36 +5,16 @@ on:
     branches: [main]
 
 jobs:
-  js:
-    name: JS/TS Check
+  translations:
+    name: Translations
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Type check
-        run: pnpm typecheck
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Translations
-        run: pnpm run i18n:check
-
-      - name: Build
-        run: pnpm build
+      - name: Check catalogues
+        run: node scripts/i18n-check.mjs
 
   php:
     name: PHP Check (${{ matrix.php-version }})
@@ -54,25 +34,10 @@ jobs:
           tools: composer
 
       - name: Install Composer dependencies
-        working-directory: plugin
         run: composer install --no-interaction --prefer-dist
 
       - name: PHPStan
-        working-directory: plugin
         run: composer phpstan
 
       - name: PHP_CodeSniffer
-        working-directory: plugin
-        run: composer phpcs
-
-      - name: Install Composer dependencies (theme)
-        working-directory: theme
-        run: composer install --no-interaction --prefer-dist
-
-      - name: PHPStan (theme)
-        working-directory: theme
-        run: composer phpstan
-
-      - name: PHP_CodeSniffer (theme)
-        working-directory: theme
         run: composer phpcs
