@@ -1,9 +1,11 @@
 {
   "core": "WordPress/WordPress#6.7",
-  "plugins": ["./plugin"],
-  "themes": ["./theme"],
   "port": 8888,
   "testsEnvironment": false,
+  "mappings": {
+    "wp-content/themes/rockaden-theme": ".",
+    "wp-content/plugins/rockaden-chess": "../chess-wp-plugin"
+  },
   "config": {
     "WP_DEBUG": true,
     "SCRIPT_DEBUG": true
