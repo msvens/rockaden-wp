@@ -2,6 +2,10 @@
 
 WordPress plugin and block theme for [SK Rockaden](https://rockaden.se) chess club (Stockholm).
 
+> **This repository is being split.** The plugin now lives in
+> [chess-wp-plugin](https://github.com/msvens/chess-wp-plugin) and will be removed from here; this
+> repository keeps the theme. Release v0.45.0 is the last one to ship both packages.
+
 - **rockaden-chess** — Plugin with training management, calendar, SSF integration, and Gutenberg blocks
 - **rockaden-theme** — Block theme with dark mode, chess club colors, and responsive layout
 
