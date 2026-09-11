@@ -29,9 +29,30 @@
 </p>
 
 <div class="rc-docs-tip">
-	<span class="rc-doc-sv"><strong>Så här använder du:</strong> Skapa en föräldersida och lägg till undersidor. Välj mallen "Page (Section Nav)" i sidans inställningar. Alla barn-sidor får automatiskt navigering i vänsterkolumnen.</span>
-	<span class="rc-doc-en"><strong>How to use:</strong> Create a parent page and add child pages. Select the "Page (Section Nav)" template in the page settings. All child pages automatically get navigation in the left column.</span>
+	<span class="rc-doc-sv"><strong>Så här använder du:</strong> Skapa en föräldersida och lägg till undersidor. Välj mallen "Page (Section Nav)" i sidans inställningar. Alla barn-sidor får automatiskt navigering i vänsterkolumnen. Steg för steg: se guiden <em>Bygg en sektionssida</em>.</span>
+	<span class="rc-doc-en"><strong>How to use:</strong> Create a parent page and add child pages. Select the "Page (Section Nav)" template in the page settings. All child pages automatically get navigation in the left column. Step by step: see the <em>Build a section page</em> guide.</span>
 </div>
+
+<h4 class="rc-doc-sv">Att tänka på</h4>
+<h4 class="rc-doc-en">Things to know</h4>
+
+<ul>
+	<li><span class="rc-doc-sv"><strong>Bara en nivå.</strong> Sidomenyn visar roten och dess direkta undersidor. Barnbarn (undersidor till undersidor) visas inte.</span><span class="rc-doc-en"><strong>One level only.</strong> The side menu shows the root and its direct sub-pages. Grandchildren (sub-pages of sub-pages) are not listed.</span></li>
+	<li><span class="rc-doc-sv"><strong>Inga undersidor = ingen meny.</strong> Har rotsidan inga undersidor visas ingen sidomeny alls. Lägg till minst en undersida, eller välj en annan sidmall.</span><span class="rc-doc-en"><strong>No sub-pages = no menu.</strong> If the root page has no sub-pages, no side menu is shown at all. Add at least one sub-page, or use a different template.</span></li>
+	<li><span class="rc-doc-sv"><strong>Mallen måste sättas på varje sida</strong> i sektionen, både rot och undersidor. Glömmer du den renderas sidan utan sidomeny.</span><span class="rc-doc-en"><strong>The template must be set on every page</strong> in the section, root and sub-pages alike. If you forget it, the page renders without the side menu.</span></li>
+	<li><span class="rc-doc-sv"><strong>URL-strukturen.</strong> Med förälder satt blir undersidans adress <code>/rotsida/undersida/</code>. Det sköter WordPress automatiskt.</span><span class="rc-doc-en"><strong>URL structure.</strong> With a parent set, the sub-page's address becomes <code>/root-page/sub-page/</code>. WordPress handles this automatically.</span></li>
+	<li><span class="rc-doc-sv"><strong>Förälder, inte adress.</strong> En undersida hör till sektionen genom <em>Parent</em> &ndash; att adressen liknar de andras räcker inte.</span><span class="rc-doc-en"><strong>Parent, not address.</strong> A sub-page belongs to the section through its <em>Parent</em> setting &ndash; a similar-looking address is not enough.</span></li>
+</ul>
+
+<h2 class="rc-doc-sv">Sidor som temat skapar</h2>
+<h2 class="rc-doc-en">Pages the theme creates</h2>
+
+<p class="rc-doc-sv">
+	Vid aktivering skapar temat ett antal startsidor, t.ex. <em>Hem</em>, <em>Nyheter</em>, <em>Kalender</em> och <em>Träning</em>. Innehållet är fritt redigerbart &ndash; temat skriver bara innehållet vid den första aktiveringen, aldrig därefter.
+</p>
+<p class="rc-doc-en">
+	On activation the theme creates a set of starting pages, for example <em>Hem</em>, <em>Nyheter</em>, <em>Kalender</em> and <em>Träning</em>. Their content is freely editable &ndash; the theme writes the initial content on first activation only, never again.
+</p>
 
 <h2 class="rc-doc-sv">Sidvisning</h2>
 <h2 class="rc-doc-en">Page Display</h2>
