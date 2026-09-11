@@ -248,6 +248,15 @@ add_action(
 				'order'      => 10,
 			],
 			[
+				'slug'       => 'monster',
+				'title_sv'   => 'Mönster',
+				'title_en'   => 'Patterns',
+				'section_sv' => 'Tema',
+				'section_en' => 'Theme',
+				'file'       => $docs_dir . 'monster.html',
+				'order'      => 15,
+			],
+			[
 				'slug'       => 'innehall',
 				'title_sv'   => 'Innehåll',
 				'title_en'   => 'Content',
