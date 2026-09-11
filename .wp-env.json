@@ -4,7 +4,8 @@
   "testsEnvironment": false,
   "mappings": {
     "wp-content/themes/rockaden-theme": ".",
-    "wp-content/plugins/rockaden-chess": "../chess-wp-plugin"
+    "wp-content/plugins/rockaden-chess": "../chess-wp-plugin",
+    "wp-content/plugins/rockaden-skolschack": "../rockaden-skolschack"
   },
   "config": {
     "WP_DEBUG": true,
