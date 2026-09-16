@@ -106,7 +106,7 @@ add_action(
 	(function(){var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark');})();
 	</script>
 	<style>
-	:root { --rockaden-logo-url: url('<?php echo esc_url( get_theme_file_uri( 'assets/images/logo.png' ) ); ?>'); }
+	:root { --rockaden-logo-url: url('<?php echo esc_url( get_theme_file_uri( 'assets/images/logo-2024.png' ) ); ?>'); }
 	</style>
 		<?php
 	},
