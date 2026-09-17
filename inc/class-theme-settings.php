@@ -193,6 +193,46 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
+	 * Resolve sidebar cards to a single set of fields for the active locale.
+	 *
+	 * Cards store Swedish in `title` / `content` / `link_url` / `link_label`
+	 * and optional English in the matching `*_en` keys. Each field falls back
+	 * on its own, so a card translated only in its title still shows its
+	 * Swedish body — the common case, and why every English field is optional.
+	 *
+	 * The `*_en` keys are stripped from the result, so callers only ever see
+	 * the canonical Swedish-key shape and need no locale awareness of their own.
+	 *
+	 * Unlike localize_nav_items() this tests `'' !== trim()` rather than
+	 * `! empty()`: a card body of "0" is legitimate content that `! empty()`
+	 * would throw away as untranslated.
+	 *
+	 * @param array<int, array<string, mixed>> $cards Saved sidebar cards.
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function localize_sidebar_cards( array $cards ): array {
+		$is_en = ( 'en' === Rockaden_Theme_I18n::current_lang() );
+
+		$resolved = array_map(
+			static function ( $card ) use ( $is_en ): array {
+				$card = (array) $card;
+				foreach ( [ 'title', 'content', 'link_url', 'link_label' ] as $field ) {
+					$en_key = $field . '_en';
+					$en     = (string) ( $card[ $en_key ] ?? '' );
+					if ( $is_en && '' !== trim( $en ) ) {
+						$card[ $field ] = $en;
+					}
+					unset( $card[ $en_key ] );
+				}
+				return $card;
+			},
+			$cards
+		);
+
+		return array_values( $resolved );
+	}
+
+	/**
 	 * Serve the English home page at / when the visitor's locale is English.
 	 *
 	 * WordPress stores a single page_on_front, so a per-locale home page has to
@@ -407,16 +447,24 @@ class Rockaden_Theme_Settings {
 			'single_shop_item' => ! empty( $_POST['sidebar_route_single_shop_item'] ),
 		];
 
-		// Sidebar cards.
+		// Sidebar cards. Passed as a keyed map rather than positional arguments:
+		// with English variants there are twelve of these, and one transposed
+		// argument would silently store a link label as a card body.
 		$options['sidebar_cards'] = self::sanitize_sidebar_cards(
-			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_type'] ?? [] ) ),
-			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_title'] ?? [] ) ),
-			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_show_title'] ?? [] ) ),
-			array_map( 'wp_kses_post', (array) wp_unslash( $_POST['sidebar_card_content'] ?? [] ) ),
-			array_map( 'esc_url_raw', (array) wp_unslash( $_POST['sidebar_card_link_url'] ?? [] ) ),
-			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_link_label'] ?? [] ) ),
-			array_map( 'esc_url_raw', (array) wp_unslash( $_POST['sidebar_card_image_url'] ?? [] ) ),
-			array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_full_bleed'] ?? [] ) )
+			[
+				'type'          => array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_type'] ?? [] ) ),
+				'title'         => array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_title'] ?? [] ) ),
+				'show_title'    => array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_show_title'] ?? [] ) ),
+				'content'       => array_map( 'wp_kses_post', (array) wp_unslash( $_POST['sidebar_card_content'] ?? [] ) ),
+				'link_url'      => array_map( 'esc_url_raw', (array) wp_unslash( $_POST['sidebar_card_link_url'] ?? [] ) ),
+				'link_label'    => array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_link_label'] ?? [] ) ),
+				'image_url'     => array_map( 'esc_url_raw', (array) wp_unslash( $_POST['sidebar_card_image_url'] ?? [] ) ),
+				'full_bleed'    => array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_full_bleed'] ?? [] ) ),
+				'title_en'      => array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_title_en'] ?? [] ) ),
+				'content_en'    => array_map( 'wp_kses_post', (array) wp_unslash( $_POST['sidebar_card_content_en'] ?? [] ) ),
+				'link_url_en'   => array_map( 'esc_url_raw', (array) wp_unslash( $_POST['sidebar_card_link_url_en'] ?? [] ) ),
+				'link_label_en' => array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['sidebar_card_link_label_en'] ?? [] ) ),
+			]
 		);
 
 		// Navigation items.
@@ -459,48 +507,60 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
-	 * Sanitize parallel arrays of sidebar card fields into card items.
+	 * Sanitize parallel arrays of card fields into sidebar cards.
 	 *
-	 * The settings form posts one array per field rather than one array per
-	 * card, so these are zipped together by index here.
+	 * Fields arrive as one array per field and are zipped by index: the card at
+	 * position N is built from element N of every array. Taking them as a keyed
+	 * map rather than twelve positional parameters keeps the call site readable
+	 * and turns a mis-wired field into a visible key mismatch instead of a
+	 * silent swap.
 	 *
-	 * @param array<int, string> $types       Card type, 'text' or 'image'.
-	 * @param array<int, string> $titles      Card titles.
-	 * @param array<int, string> $show_titles Checkbox values; presence means shown.
-	 * @param array<int, string> $contents    Card body HTML.
-	 * @param array<int, string> $link_urls   Card link targets.
-	 * @param array<int, string> $link_labels Card link labels.
-	 * @param array<int, string> $image_urls  Image card sources.
-	 * @param array<int, string> $full_bleeds Checkbox values; presence means full bleed.
+	 * English values are written only when non-empty, so cards saved before
+	 * translations existed keep their stored shape and need no migration.
+	 *
+	 * @param array<string, array<int, string>> $fields Sanitized values keyed by card field.
 	 * @return array<int, array<string, mixed>>
 	 */
-	private static function sanitize_sidebar_cards(
-		array $types,
-		array $titles,
-		array $show_titles,
-		array $contents,
-		array $link_urls,
-		array $link_labels,
-		array $image_urls,
-		array $full_bleeds
-	): array {
+	private static function sanitize_sidebar_cards( array $fields ): array {
+		$at = static function ( string $field, int $i ) use ( $fields ): string {
+			return (string) ( $fields[ $field ][ $i ] ?? '' );
+		};
+
 		$cards = [];
-		$count = count( $types );
+		$count = count( $fields['type'] ?? [] );
 		for ( $i = 0; $i < $count; $i++ ) {
-			$type = sanitize_text_field( $types[ $i ] ?? 'text' );
+			$type = sanitize_text_field( $at( 'type', $i ) );
 			if ( ! in_array( $type, [ 'text', 'image' ], true ) ) {
 				$type = 'text';
 			}
-			$cards[] = [
+
+			$card = [
 				'type'       => $type,
-				'title'      => sanitize_text_field( $titles[ $i ] ?? '' ),
-				'show_title' => ! empty( $show_titles[ $i ] ),
-				'content'    => wp_kses_post( $contents[ $i ] ?? '' ),
-				'link_url'   => esc_url_raw( $link_urls[ $i ] ?? '' ),
-				'link_label' => sanitize_text_field( $link_labels[ $i ] ?? '' ),
-				'image_url'  => esc_url_raw( $image_urls[ $i ] ?? '' ),
-				'full_bleed' => ! empty( $full_bleeds[ $i ] ),
+				'title'      => sanitize_text_field( $at( 'title', $i ) ),
+				'show_title' => ! empty( $fields['show_title'][ $i ] ),
+				'content'    => wp_kses_post( $at( 'content', $i ) ),
+				'link_url'   => esc_url_raw( $at( 'link_url', $i ) ),
+				'link_label' => sanitize_text_field( $at( 'link_label', $i ) ),
+				'image_url'  => esc_url_raw( $at( 'image_url', $i ) ),
+				'full_bleed' => ! empty( $fields['full_bleed'][ $i ] ),
 			];
+
+			// An absent key means "not translated", which is exactly what
+			// localize_sidebar_cards() falls back on. Storing empty strings
+			// instead would bloat every untranslated card in the option.
+			$english = [
+				'title_en'      => sanitize_text_field( $at( 'title_en', $i ) ),
+				'content_en'    => wp_kses_post( $at( 'content_en', $i ) ),
+				'link_url_en'   => esc_url_raw( $at( 'link_url_en', $i ) ),
+				'link_label_en' => sanitize_text_field( $at( 'link_label_en', $i ) ),
+			];
+			foreach ( $english as $key => $value ) {
+				if ( '' !== trim( $value ) ) {
+					$card[ $key ] = $value;
+				}
+			}
+
+			$cards[] = $card;
 		}
 		return $cards;
 	}
@@ -625,6 +685,187 @@ class Rockaden_Theme_Settings {
 				<button type="button" class="button rockaden-nav-move-up" title="Move up" aria-label="Move up">&uarr;</button>
 				<button type="button" class="button rockaden-nav-move-down" title="Move down" aria-label="Move down">&darr;</button>
 				<button type="button" class="button rockaden-remove-row">&times;</button>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Render one sidebar card panel.
+	 *
+	 * Serves both the saved cards and the <template> that theme-settings.js
+	 * clones for new ones, so this markup exists in exactly one place. Pass
+	 * $index for a saved card; null renders the blank template variant.
+	 *
+	 * The Swedish body is a wp_editor(); the English one is a plain textarea
+	 * that the JS upgrades to TinyMCE the first time its section is opened.
+	 * wp_editor() initialises eagerly, so using it here would load a second
+	 * editor for every card whether or not anyone ever translates it.
+	 *
+	 * @param array<string, mixed> $card  Saved card, or empty for a blank one.
+	 * @param int|null             $index Position among saved cards; null for the template.
+	 */
+	private static function render_sidebar_card( array $card = [], ?int $index = null ): void {
+		$type       = (string) ( $card['type'] ?? 'text' );
+		$title      = (string) ( $card['title'] ?? '' );
+		$show_title = (bool) ( $card['show_title'] ?? true );
+		$content    = (string) ( $card['content'] ?? '' );
+		$link_url   = (string) ( $card['link_url'] ?? '' );
+		$link_label = (string) ( $card['link_label'] ?? '' );
+		$image_url  = (string) ( $card['image_url'] ?? '' );
+		$full_bleed = ! empty( $card['full_bleed'] );
+
+		$title_en      = (string) ( $card['title_en'] ?? '' );
+		$content_en    = (string) ( $card['content_en'] ?? '' );
+		$link_url_en   = (string) ( $card['link_url_en'] ?? '' );
+		$link_label_en = (string) ( $card['link_label_en'] ?? '' );
+		$has_en        = ( '' !== $title_en || '' !== $content_en || '' !== $link_url_en || '' !== $link_label_en );
+
+		$is_image = ( 'image' === $type );
+		$preview  = '' !== $title ? $title : 'New card';
+
+		// The template copy carries no textarea id: ids must stay unique, so the
+		// JS assigns one when it clones the card.
+		$en_editor_id = ( null === $index ) ? '' : 'sidebar_card_content_en_' . $index;
+		?>
+		<div class="rc-card-panel">
+			<div class="rc-card-header">
+				<span class="rc-card-title-preview"><?php echo esc_html( $preview ); ?></span>
+				<span class="rc-card-type-badge"><?php echo esc_html( ucfirst( $type ) ); ?></span>
+				<span class="rc-card-header-actions">
+					<button type="button" class="button-link rc-card-move-up" title="Move up">&uarr;</button>
+					<button type="button" class="button-link rc-card-move-down" title="Move down">&darr;</button>
+					<button type="button" class="button-link rc-card-collapse" title="Collapse">&#9656;</button>
+					<button type="button" class="button-link rc-card-remove" title="Remove">&times;</button>
+				</span>
+			</div>
+			<div class="rc-card-body">
+				<p>
+					<label>Type</label><br>
+					<select name="sidebar_card_type[]" class="rc-card-type-select">
+						<option value="text" <?php selected( $type, 'text' ); ?>>Text</option>
+						<option value="image" <?php selected( $type, 'image' ); ?>>Image</option>
+					</select>
+				</p>
+				<p>
+					<label>Title</label><br>
+					<input type="text" name="sidebar_card_title[]" value="<?php echo esc_attr( $title ); ?>" class="regular-text rc-card-title-input" />
+				</p>
+				<p>
+					<label>Show title on frontend</label><br>
+					<select name="sidebar_card_show_title[]" class="rc-card-show-title-select">
+						<option value="1" <?php selected( $show_title, true ); ?>>Yes</option>
+						<option value="0" <?php selected( $show_title, false ); ?>>No</option>
+					</select>
+				</p>
+				<div class="rc-card-text-fields"
+					<?php if ( $is_image ) : ?>
+						style="display:none"
+					<?php endif; ?>
+				>
+					<p><label>Content</label></p>
+					<?php if ( null === $index ) : ?>
+						<textarea name="sidebar_card_content[]" class="rc-card-content-textarea" rows="5" style="width:100%"></textarea>
+					<?php else : ?>
+						<?php
+						wp_editor(
+							$content,
+							'sidebar_card_content_' . $index,
+							[
+								'teeny'         => true,
+								'media_buttons' => false,
+								'textarea_rows' => 5,
+								'quicktags'     => false,
+								'textarea_name' => 'sidebar_card_content[]',
+							]
+						);
+						?>
+					<?php endif; ?>
+				</div>
+				<div class="rc-card-image-fields"
+					<?php if ( ! $is_image ) : ?>
+						style="display:none"
+					<?php endif; ?>
+				>
+					<p>
+						<label>Image</label><br>
+						<input type="hidden" name="sidebar_card_image_url[]" value="<?php echo esc_attr( $image_url ); ?>" class="rc-card-image-url" />
+						<button type="button" class="button rc-card-select-image">Select Image</button>
+						<button type="button" class="button rc-card-remove-image"
+							<?php if ( '' === $image_url ) : ?>
+								style="display:none"
+							<?php endif; ?>
+						>Remove</button>
+					</p>
+					<div class="rc-card-image-preview">
+						<?php if ( '' !== $image_url ) : ?>
+							<img src="<?php echo esc_url( $image_url ); ?>" alt="" />
+						<?php endif; ?>
+					</div>
+					<p>
+						<label>Full card image</label><br>
+						<select name="sidebar_card_full_bleed[]" class="rc-card-full-bleed-select">
+							<option value="0" <?php selected( $full_bleed, false ); ?>>No</option>
+							<option value="1" <?php selected( $full_bleed, true ); ?>>Yes &mdash; remove padding and background</option>
+						</select>
+					</p>
+				</div>
+				<p class="rc-card-link-url-field">
+					<label>Link URL</label><br>
+					<input type="text" name="sidebar_card_link_url[]" value="<?php echo esc_attr( $link_url ); ?>" class="regular-text" placeholder="/page-url or https://..." />
+				</p>
+				<p class="rc-card-link-label-field"
+					<?php if ( $is_image ) : ?>
+						style="display:none"
+					<?php endif; ?>
+				>
+					<label>Link Label</label><br>
+					<input type="text" name="sidebar_card_link_label[]" value="<?php echo esc_attr( $link_label ); ?>" class="regular-text" placeholder="Button text" />
+				</p>
+
+				<?php // Deliberately outside .rc-card-text-fields, which the type toggle hides wholesale for image cards — Title (EN) and Link URL (EN) still apply to those. ?>
+				<div class="rc-card-en">
+					<button type="button" class="button-link rc-card-en-toggle" aria-expanded="false">
+						<span class="rc-card-en-state" aria-hidden="true">&#9656;</span>
+						<span class="rc-card-en-tag" aria-hidden="true">EN</span>
+						<span>English version</span>
+						<?php if ( $has_en ) : ?>
+							<span class="rc-card-en-filled">&bull; translated</span>
+						<?php endif; ?>
+					</button>
+					<div class="rc-card-en-fields" hidden>
+						<p class="description">Leave a field empty to use the Swedish value.</p>
+						<p>
+							<label>Title (EN)</label><br>
+							<input type="text" name="sidebar_card_title_en[]" value="<?php echo esc_attr( $title_en ); ?>" class="regular-text" placeholder="Same as Swedish" />
+						</p>
+						<div class="rc-card-en-text-fields"
+							<?php if ( $is_image ) : ?>
+								style="display:none"
+							<?php endif; ?>
+						>
+							<p><label>Content (EN)</label></p>
+							<textarea
+								<?php if ( '' !== $en_editor_id ) : ?>
+									id="<?php echo esc_attr( $en_editor_id ); ?>"
+								<?php endif; ?>
+								name="sidebar_card_content_en[]" class="rc-card-content-en-textarea" rows="5"
+							><?php echo esc_textarea( $content_en ); ?></textarea>
+						</div>
+						<p class="rc-card-en-link-url-field">
+							<label>Link URL (EN)</label><br>
+							<input type="text" name="sidebar_card_link_url_en[]" value="<?php echo esc_attr( $link_url_en ); ?>" class="regular-text" placeholder="Same as Swedish" />
+						</p>
+						<p class="rc-card-en-link-label-field"
+							<?php if ( $is_image ) : ?>
+								style="display:none"
+							<?php endif; ?>
+						>
+							<label>Link Label (EN)</label><br>
+							<input type="text" name="sidebar_card_link_label_en[]" value="<?php echo esc_attr( $link_label_en ); ?>" class="regular-text" placeholder="Same as Swedish" />
+						</p>
+					</div>
+				</div>
 			</div>
 		</div>
 		<?php
@@ -1154,176 +1395,16 @@ class Rockaden_Theme_Settings {
 				<p class="description">Cards displayed in the sidebar panel. Drag to reorder, collapse to save space.</p>
 				<div id="rc-sidebar-cards">
 					<?php
-					$cards           = $options['sidebar_cards'] ?? [];
-					$editor_settings = [
-						'teeny'         => true,
-						'media_buttons' => false,
-						'textarea_rows' => 5,
-						'quicktags'     => false,
-					];
-					foreach ( $cards as $i => $card ) :
-						$card_type       = $card['type'] ?? 'text';
-						$card_title      = $card['title'] ?? '';
-						$card_show_title = $card['show_title'] ?? true;
-						$card_content    = $card['content'] ?? '';
-						$card_link       = $card['link_url'] ?? '';
-						$card_label      = $card['link_label'] ?? '';
-						$card_image      = $card['image_url'] ?? '';
-						$card_full_bleed = $card['full_bleed'] ?? false;
-						$preview         = '' !== $card_title ? $card_title : 'New card';
-						?>
-					<div class="rc-card-panel">
-						<div class="rc-card-header">
-							<span class="rc-card-title-preview"><?php echo esc_html( $preview ); ?></span>
-							<span class="rc-card-type-badge"><?php echo esc_html( ucfirst( $card_type ) ); ?></span>
-							<span class="rc-card-header-actions">
-								<button type="button" class="button-link rc-card-move-up" title="Move up">&uarr;</button>
-								<button type="button" class="button-link rc-card-move-down" title="Move down">&darr;</button>
-								<button type="button" class="button-link rc-card-collapse" title="Collapse">&#9656;</button>
-								<button type="button" class="button-link rc-card-remove" title="Remove">&times;</button>
-							</span>
-						</div>
-						<div class="rc-card-body">
-							<p>
-								<label>Type</label><br>
-								<select name="sidebar_card_type[]" class="rc-card-type-select">
-									<option value="text" <?php selected( $card_type, 'text' ); ?>>Text</option>
-									<option value="image" <?php selected( $card_type, 'image' ); ?>>Image</option>
-								</select>
-							</p>
-							<p>
-								<label>Title</label><br>
-								<input type="text" name="sidebar_card_title[]" value="<?php echo esc_attr( $card_title ); ?>" class="regular-text rc-card-title-input" />
-							</p>
-							<p>
-								<label>Show title on frontend</label><br>
-								<select name="sidebar_card_show_title[]" class="rc-card-show-title-select">
-									<option value="1" <?php selected( $card_show_title, true ); ?>>Yes</option>
-									<option value="0" <?php selected( $card_show_title, false ); ?>>No</option>
-								</select>
-							</p>
-							<div class="rc-card-text-fields" 
-							<?php
-							if ( 'image' === $card_type ) {
-								echo 'style="display:none"';}
-							?>
-								>
-								<p><label>Content</label></p>
-								<?php wp_editor( $card_content, 'sidebar_card_content_' . $i, array_merge( $editor_settings, [ 'textarea_name' => 'sidebar_card_content[]' ] ) ); ?>
-							</div>
-							<div class="rc-card-image-fields" 
-							<?php
-							if ( 'image' !== $card_type ) {
-								echo 'style="display:none"';}
-							?>
-								>
-								<p>
-									<label>Image</label><br>
-									<input type="hidden" name="sidebar_card_image_url[]" value="<?php echo esc_attr( $card_image ); ?>" class="rc-card-image-url" />
-									<button type="button" class="button rc-card-select-image">Select Image</button>
-									<button type="button" class="button rc-card-remove-image" 
-									<?php
-									if ( '' === $card_image ) {
-										echo 'style="display:none"';}
-									?>
-										>Remove</button>
-								</p>
-								<?php if ( '' !== $card_image ) : ?>
-								<div class="rc-card-image-preview">
-									<img src="<?php echo esc_url( $card_image ); ?>" alt="" />
-								</div>
-								<?php else : ?>
-								<div class="rc-card-image-preview"></div>
-								<?php endif; ?>
-								<p>
-									<label>Full card image</label><br>
-									<select name="sidebar_card_full_bleed[]" class="rc-card-full-bleed-select">
-										<option value="0" <?php selected( $card_full_bleed, false ); ?>>No</option>
-										<option value="1" <?php selected( $card_full_bleed, true ); ?>>Yes — remove padding and background</option>
-									</select>
-								</p>
-							</div>
-							<p class="rc-card-link-url-field">
-								<label>Link URL</label><br>
-								<input type="text" name="sidebar_card_link_url[]" value="<?php echo esc_attr( $card_link ); ?>" class="regular-text" placeholder="/page-url or https://..." />
-							</p>
-							<p class="rc-card-link-label-field" 
-							<?php
-							if ( 'image' === $card_type ) {
-								echo 'style="display:none"';}
-							?>
-								>
-								<label>Link Label</label><br>
-								<input type="text" name="sidebar_card_link_label[]" value="<?php echo esc_attr( $card_label ); ?>" class="regular-text" placeholder="Button text" />
-							</p>
-						</div>
-					</div>
-					<?php endforeach; ?>
+					foreach ( (array) ( $options['sidebar_cards'] ?? [] ) as $i => $card ) {
+						self::render_sidebar_card( (array) $card, (int) $i );
+					}
+					?>
 				</div>
 				<button type="button" class="button" id="rc-add-sidebar-card">+ Add Card</button>
 
 				<!-- Template for new sidebar cards (JS clones this) -->
 				<template id="rc-sidebar-card-template">
-					<div class="rc-card-panel">
-						<div class="rc-card-header">
-							<span class="rc-card-title-preview">New card</span>
-							<span class="rc-card-type-badge">Text</span>
-							<span class="rc-card-header-actions">
-								<button type="button" class="button-link rc-card-move-up" title="Move up">&uarr;</button>
-								<button type="button" class="button-link rc-card-move-down" title="Move down">&darr;</button>
-								<button type="button" class="button-link rc-card-collapse" title="Collapse">&#9656;</button>
-								<button type="button" class="button-link rc-card-remove" title="Remove">&times;</button>
-							</span>
-						</div>
-						<div class="rc-card-body">
-							<p>
-								<label>Type</label><br>
-								<select name="sidebar_card_type[]" class="rc-card-type-select">
-									<option value="text">Text</option>
-									<option value="image">Image</option>
-								</select>
-							</p>
-							<p>
-								<label>Title</label><br>
-								<input type="text" name="sidebar_card_title[]" value="" class="regular-text rc-card-title-input" />
-							</p>
-							<p>
-								<label>Show title on frontend</label><br>
-								<select name="sidebar_card_show_title[]" class="rc-card-show-title-select">
-									<option value="1" selected>Yes</option>
-									<option value="0">No</option>
-								</select>
-							</p>
-							<div class="rc-card-text-fields">
-								<p><label>Content</label></p>
-								<textarea name="sidebar_card_content[]" class="rc-card-content-textarea" rows="5" style="width:100%"></textarea>
-							</div>
-							<div class="rc-card-image-fields" style="display:none">
-								<p>
-									<label>Image</label><br>
-									<input type="hidden" name="sidebar_card_image_url[]" value="" class="rc-card-image-url" />
-									<button type="button" class="button rc-card-select-image">Select Image</button>
-									<button type="button" class="button rc-card-remove-image" style="display:none">Remove</button>
-								</p>
-								<div class="rc-card-image-preview"></div>
-								<p>
-									<label>Full card image</label><br>
-									<select name="sidebar_card_full_bleed[]" class="rc-card-full-bleed-select">
-										<option value="0" selected>No</option>
-										<option value="1">Yes — remove padding and background</option>
-									</select>
-								</p>
-							</div>
-							<p class="rc-card-link-url-field">
-								<label>Link URL</label><br>
-								<input type="text" name="sidebar_card_link_url[]" value="" class="regular-text" placeholder="/page-url or https://..." />
-							</p>
-							<p class="rc-card-link-label-field">
-								<label>Link Label</label><br>
-								<input type="text" name="sidebar_card_link_label[]" value="" class="regular-text" placeholder="Button text" />
-							</p>
-						</div>
-					</div>
+					<?php self::render_sidebar_card(); ?>
 				</template>
 
 				<!-- Main Navigation -->

@@ -117,6 +117,20 @@
   var cardTemplate = document.getElementById('rc-sidebar-card-template');
   var cardCounter = document.querySelectorAll('.rc-card-panel').length;
 
+  /* Shared by the add-card handler and initEnEditor. Two copies of this would
+     let the Swedish and English toolbars drift apart. */
+  var EDITOR_OPTS = {
+    tinymce: {
+      wpautop: true,
+      toolbar1: 'bold,italic,link,bullist,numlist',
+      toolbar2: '',
+      toolbar3: '',
+      toolbar4: '',
+    },
+    quicktags: false,
+    mediaButtons: false,
+  };
+
   if (!cardsContainer) return;
 
   /* --- Sync TinyMCE editors before form submit --- */
@@ -134,7 +148,8 @@
     addCardBtn.addEventListener('click', function () {
       var clone = cardTemplate.content.cloneNode(true);
       var panel = clone.querySelector('.rc-card-panel');
-      var editorId = 'sidebar_card_content_new_' + cardCounter;
+      var suffix = cardCounter;
+      var editorId = 'sidebar_card_content_new_' + suffix;
       cardCounter++;
 
       // New cards start expanded so the user can fill them in.
@@ -147,22 +162,18 @@
       if (textarea) {
         textarea.id = editorId;
       }
+      // The English body stays a plain textarea until its section is opened,
+      // but it needs its id now so initEnEditor can find it later.
+      var enTextarea = panel.querySelector('.rc-card-content-en-textarea');
+      if (enTextarea) {
+        enTextarea.id = 'sidebar_card_content_en_new_' + suffix;
+      }
 
       cardsContainer.appendChild(clone);
 
       // Initialize TinyMCE on the new textarea
       if (window.wp && window.wp.editor) {
-        window.wp.editor.initialize(editorId, {
-          tinymce: {
-            wpautop: true,
-            toolbar1: 'bold,italic,link,bullist,numlist',
-            toolbar2: '',
-            toolbar3: '',
-            toolbar4: '',
-          },
-          quicktags: false,
-          mediaButtons: false,
-        });
+        window.wp.editor.initialize(editorId, EDITOR_OPTS);
       }
     });
   }
@@ -184,12 +195,34 @@
 
     /* Remove */
     if (btn.classList.contains('rc-card-remove')) {
-      // Clean up TinyMCE editor
-      var editorArea = panel.querySelector('.rc-card-text-fields textarea, .rc-card-text-fields .wp-editor-area');
-      if (editorArea && editorArea.id && window.wp && window.wp.editor) {
-        window.wp.editor.remove(editorArea.id);
+      // Clean up TinyMCE. A card can carry two editors (Swedish and English),
+      // and the English one may never have been initialised, so ask tinyMCE
+      // which ids it actually knows about rather than assuming.
+      if (window.wp && window.wp.editor) {
+        panel.querySelectorAll('textarea[id]').forEach(function (area) {
+          if (window.tinyMCE && window.tinyMCE.get(area.id)) {
+            window.wp.editor.remove(area.id);
+          }
+        });
       }
       panel.remove();
+      e.stopPropagation();
+      return;
+    }
+
+    /* English section toggle */
+    if (btn.classList.contains('rc-card-en-toggle')) {
+      var enFields = panel.querySelector('.rc-card-en-fields');
+      if (enFields) {
+        var opening = enFields.hidden;
+        enFields.hidden = !opening;
+        btn.setAttribute('aria-expanded', opening ? 'true' : 'false');
+        var state = btn.querySelector('.rc-card-en-state');
+        if (state) state.innerHTML = opening ? '&#9662;' : '&#9656;';
+        // Unhide before initialising: TinyMCE measures its container, and a
+        // hidden parent gives a zero-height iframe.
+        if (opening) initEnEditor(panel);
+      }
       e.stopPropagation();
       return;
     }
@@ -269,6 +302,14 @@
     if (linkLabelField) linkLabelField.style.display = type === 'image' ? 'none' : '';
     if (badge) badge.textContent = type === 'text' ? 'Text' : 'Image';
 
+    // Same rules for the English section. Title (EN) and Link URL (EN) stay
+    // visible for image cards: the title becomes the image alt text, and an
+    // image card can still be linked.
+    var enTextFields = panel.querySelector('.rc-card-en-text-fields');
+    var enLinkLabelField = panel.querySelector('.rc-card-en-link-label-field');
+    if (enTextFields) enTextFields.style.display = type === 'text' ? '' : 'none';
+    if (enLinkLabelField) enLinkLabelField.style.display = type === 'image' ? 'none' : '';
+
     // Smart defaults when switching type.
     var showTitleSelect = panel.querySelector('.rc-card-show-title-select');
     var fullBleedSelect = panel.querySelector('.rc-card-full-bleed-select');
@@ -294,12 +335,25 @@
 
   /* --- Helper: sync TinyMCE content to textarea before DOM reorder --- */
   function syncEditors(panel) {
-    var editorArea = panel.querySelector('.wp-editor-area');
-    if (!editorArea || !editorArea.id) return;
-    var editor = window.tinyMCE && window.tinyMCE.get(editorArea.id);
-    if (editor) {
-      editor.save();
-    }
+    if (!window.tinyMCE) return;
+    // Every textarea with an id, not just the first: a card holds a Swedish and
+    // an English body, and reordering without saving both loses the unsaved one.
+    panel.querySelectorAll('textarea[id]').forEach(function (area) {
+      var editor = window.tinyMCE.get(area.id);
+      if (editor) {
+        editor.save();
+      }
+    });
+  }
+
+  /* --- Helper: upgrade the English textarea to TinyMCE on first open --- */
+  function initEnEditor(panel) {
+    if (!window.wp || !window.wp.editor) return;
+    var area = panel.querySelector('.rc-card-content-en-textarea');
+    if (!area || !area.id) return;
+    // Already running — re-initialising would stack a second editor.
+    if (window.tinyMCE && window.tinyMCE.get(area.id)) return;
+    window.wp.editor.initialize(area.id, EDITOR_OPTS);
   }
 
   /* --- Helper: WP media picker --- */

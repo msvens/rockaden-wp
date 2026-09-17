@@ -24,6 +24,9 @@ defined( 'ABSPATH' ) || exit;
 
 $template_mode = ! empty( $attributes['templateMode'] );
 
+// Prefixed like the loop variables below: block render files share a scope.
+$theme_options = Rockaden_Theme_Settings::get_options();
+
 if ( $template_mode ) {
 	$route_key = null;
 	if ( is_home() ) {
@@ -34,7 +37,7 @@ if ( $template_mode ) {
 		$route_key = 'single_shop_item';
 	}
 
-	$routes = Rockaden_Theme_Settings::get_options()['sidebar_routes'] ?? [];
+	$routes = $theme_options['sidebar_routes'] ?? [];
 	$show   = $route_key && ! empty( $routes[ $route_key ] );
 
 	if ( ! $show ) {
@@ -43,7 +46,9 @@ if ( $template_mode ) {
 	}
 }
 
-$cards = Rockaden_Theme_Settings::get_options()['sidebar_cards'] ?? [];
+// Resolves each card's title/content/link to the visitor's locale, falling
+// back per field to Swedish, so the loop below stays locale-agnostic.
+$cards = Rockaden_Theme_Settings::localize_sidebar_cards( (array) ( $theme_options['sidebar_cards'] ?? [] ) );
 
 if ( empty( $cards ) ) {
 	// No cards configured — emit the hidden placeholder so a templated
