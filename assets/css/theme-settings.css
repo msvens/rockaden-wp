@@ -196,10 +196,6 @@
   padding: 12px 16px;
 }
 
-.rc-card-panel.is-collapsed .rc-card-body {
-  display: none;
-}
-
 .rc-card-body label {
   font-weight: 600;
 }
@@ -221,4 +217,55 @@
 
 #rc-add-sidebar-card {
   margin-top: 0.25em;
+}
+
+/* --- English variant section inside a card ---
+   Sits outside .rc-card-text-fields on purpose: the type toggle hides that
+   whole block for image cards, but Title (EN) and Link URL (EN) still apply. */
+.rc-card-en {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #dcdcde;
+}
+
+.rc-card-en-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 2px 0;
+  color: #50575e;
+  text-decoration: none;
+}
+
+.rc-card-en-toggle:hover {
+  color: #135e96;
+}
+
+/* Matches .rockaden-nav-lang__tag so the SV/EN pairing reads as one mechanism
+   across the settings page. */
+.rc-card-en-tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #646970;
+}
+
+.rc-card-en-state {
+  font-size: 10px;
+}
+
+/* Marks a card that already has a translation, so you can see which ones are
+   done without opening every section. */
+.rc-card-en-filled {
+  font-size: 11px;
+  color: #008a20;
+}
+
+.rc-card-en-fields {
+  margin-top: 8px;
+  padding-left: 1.5em;
+}
+
+.rc-card-en-fields .rc-card-content-en-textarea {
+  width: 100%;
 }
