@@ -4,7 +4,8 @@
  *
  * Labels are already resolved to the active locale server-side (config.mainNav
  * etc. + config.i18n), so there is no client-side language swapping. The
- * language switcher sets a cookie and reloads (see language.js).
+ * language switcher is a pair of links; the server sets the cookie and
+ * redirects, to the paired page where one is configured (see language.js).
  */
 (function () {
   var config = window.rockadenNav || {};
@@ -36,18 +37,20 @@
     switcher.className = 'rockaden-lang-switcher';
 
     ['sv', 'en'].forEach(function (lang) {
-      var btn = document.createElement('button');
-      btn.className = 'rockaden-lang-btn' + (lang === activeLang ? ' is-active' : '');
-      btn.textContent = lang.toUpperCase();
-      btn.setAttribute('aria-label', 'Switch to ' + lang.toUpperCase());
-      btn.addEventListener('click', function () {
-        // Sets the rc_locale cookie and reloads; the server then renders
-        // the whole page in the chosen language.
-        if (typeof window.rockadenSetLanguage === 'function') {
-          window.rockadenSetLanguage(lang);
-        }
-      });
-      switcher.appendChild(btn);
+      // A real link rather than a button, so the server can set the cookie and
+      // move the visitor to the paired page in one hop. Middle-click, keyboard
+      // and open-in-new-tab all work without any handler of our own.
+      var link = document.createElement('a');
+      link.className = 'rockaden-lang-btn' + (lang === activeLang ? ' is-active' : '');
+      link.href = typeof window.rockadenLanguageUrl === 'function'
+        ? window.rockadenLanguageUrl(lang) : '#';
+      link.rel = 'nofollow';
+      link.textContent = lang.toUpperCase();
+      link.setAttribute('aria-label', 'Switch to ' + lang.toUpperCase());
+      if (lang === activeLang) {
+        link.setAttribute('aria-current', 'true');
+      }
+      switcher.appendChild(link);
     });
 
     row.appendChild(switcher);
