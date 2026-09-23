@@ -233,6 +233,52 @@ class Rockaden_Theme_Settings {
 	}
 
 	/**
+	 * Both URL columns for every nav item that has a distinct English target.
+	 *
+	 * The mirror image of localize_nav_items(): that one collapses an item to
+	 * the active locale's single URL, this one keeps both, so the language
+	 * switcher can map the page you are on onto its counterpart.
+	 *
+	 * An item only counts when both sides are filled in, which is what keeps
+	 * single-language routes such as the news archive out of the mapping with
+	 * no special casing. The footer links and the CTA are included because they
+	 * are nav items in all but name; the footer block resolves them through
+	 * localize_nav_items() too, so the same link must not switch differently
+	 * depending on where it was clicked.
+	 *
+	 * @return array<int, array{sv: string, en: string}>
+	 */
+	public static function nav_url_pairs(): array {
+		$opts  = self::get_options();
+		$pairs = [];
+
+		foreach ( [ 'main_nav', 'more_nav', 'footer_nav' ] as $list ) {
+			foreach ( (array) ( $opts[ $list ] ?? [] ) as $item ) {
+				$item = (array) $item;
+				$sv   = (string) ( $item['url'] ?? '' );
+				$en   = (string) ( $item['urlEn'] ?? '' );
+				if ( '' !== trim( $sv ) && '' !== trim( $en ) ) {
+					$pairs[] = [
+						'sv' => $sv,
+						'en' => $en,
+					];
+				}
+			}
+		}
+
+		$cta_sv = (string) ( $opts['cta_url'] ?? '' );
+		$cta_en = (string) ( $opts['cta_url_en'] ?? '' );
+		if ( '' !== trim( $cta_sv ) && '' !== trim( $cta_en ) ) {
+			$pairs[] = [
+				'sv' => $cta_sv,
+				'en' => $cta_en,
+			];
+		}
+
+		return $pairs;
+	}
+
+	/**
 	 * Serve the English home page at / when the visitor's locale is English.
 	 *
 	 * WordPress stores a single page_on_front, so a per-locale home page has to

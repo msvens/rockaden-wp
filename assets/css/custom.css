@@ -401,7 +401,7 @@ html.dark .rockaden-more-dropdown {
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
 }
 
-.rockaden-more-dropdown a {
+.rockaden-more-dropdown > a {
   display: block;
   padding: 0.5rem 1rem;
   font-size: var(--wp--preset--font-size--small);
@@ -411,7 +411,7 @@ html.dark .rockaden-more-dropdown {
   transition: color 0.15s, background-color 0.15s;
 }
 
-.rockaden-more-dropdown a:hover {
+.rockaden-more-dropdown > a:hover {
   color: var(--wp--preset--color--on-surface);
   background-color: var(--wp--preset--color--surface-dim);
   text-decoration: none;
@@ -662,10 +662,16 @@ html.dark .rockaden-card:hover {
   padding: 0.25rem 0.5rem;
   color: var(--wp--preset--color--on-surface-muted);
   transition: color 0.15s, background-color 0.15s;
+  /* These are anchors, not buttons: reset the link defaults so the pill keeps
+     its shape in the dropdown and the drawer alike. */
+  display: inline-block;
+  line-height: 1;
+  text-decoration: none;
 }
 
 .rockaden-lang-btn:hover {
   color: var(--wp--preset--color--on-surface);
+  text-decoration: none;
 }
 
 .rockaden-lang-btn.is-active {
