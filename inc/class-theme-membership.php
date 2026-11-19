@@ -221,14 +221,30 @@ class Rockaden_Theme_Membership {
 	}
 
 	/**
-	 * Split a textarea into trimmed, non-empty, unique lines.
+	 * Split a textarea into clean, non-empty, unique lines.
+	 *
+	 * The /u flag is essential: without it \R also matches the single byte
+	 * 0x85, which is the second byte of "Å" in UTF-8, so every Å was cut in
+	 * half and the broken UTF-8 made the whole settings save fail.
+	 *
+	 * Lists are often pasted from a message, so each line also loses leading
+	 * list markers ("- ", "• ", "* ") and any Unicode whitespace, including
+	 * non-breaking spaces, at either end; runs of whitespace inside a name
+	 * become one space.
 	 *
 	 * @param string $text Raw textarea value.
 	 * @return array<int, string>
 	 */
 	public static function parse_lines( string $text ): array {
-		$lines = array_map( 'trim', preg_split( '/\R/', $text ) ?: [] );
-		return array_values( array_unique( array_filter( $lines, fn ( $line ) => '' !== $line ) ) );
+		$lines = [];
+		foreach ( preg_split( '/\R/u', $text ) ?: [] as $line ) {
+			$line = (string) preg_replace( '/^[\s\x{00A0}\x{200B}\x{FEFF}]*(?:[-•*–][\s\x{00A0}]+)?|[\s\x{00A0}\x{200B}\x{FEFF}]+$/u', '', $line );
+			$line = (string) preg_replace( '/[\s\x{00A0}]+/u', ' ', $line );
+			if ( '' !== $line ) {
+				$lines[] = $line;
+			}
+		}
+		return array_values( array_unique( $lines ) );
 	}
 
 	/**
