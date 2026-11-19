@@ -89,6 +89,14 @@ class Rockaden_Theme_Settings {
 			// Recipient for the feedback-form block. Empty falls back to the
 			// site admin email at send time.
 			'feedback_email'       => '',
+			// Membership-form block (Rockaden_Theme_Membership). The recipient
+			// falls back to feedback_email when empty. Schools are one per line
+			// and feed the Skolschack dropdown; requests store the school's name
+			// as text, so editing this list never breaks a stored request.
+			'membership_email'     => '',
+			'membership_schools'   => '',
+			// 'birthdate' or 'personnummer': which one the form collects.
+			'membership_id_field'  => 'birthdate',
 			// Emoji reactions under news posts. The list is space-separated;
 			// Rockaden_Theme_Reactions::emojis() parses and validates it.
 			'reactions_enabled'    => true,
@@ -481,6 +489,14 @@ class Rockaden_Theme_Settings {
 		$options['cta_url_en']     = sanitize_text_field( wp_unslash( $_POST['cta_url_en'] ?? '' ) );
 		$options['front_page_en']  = absint( wp_unslash( $_POST['front_page_en'] ?? 0 ) );
 		$options['feedback_email'] = sanitize_email( wp_unslash( $_POST['feedback_email'] ?? '' ) );
+
+		$options['membership_email']    = sanitize_email( wp_unslash( $_POST['membership_email'] ?? '' ) );
+		$options['membership_schools']  = implode(
+			"\n",
+			Rockaden_Theme_Membership::parse_lines( sanitize_textarea_field( wp_unslash( $_POST['membership_schools'] ?? '' ) ) )
+		);
+		$id_field                       = sanitize_key( wp_unslash( $_POST['membership_id_field'] ?? 'birthdate' ) );
+		$options['membership_id_field'] = 'personnummer' === $id_field ? 'personnummer' : 'birthdate';
 
 		$options['reactions_enabled']  = ! empty( $_POST['reactions_enabled'] );
 		$options['reactions_in_lists'] = ! empty( $_POST['reactions_in_lists'] );
@@ -1372,6 +1388,36 @@ class Rockaden_Theme_Settings {
 						<th scope="row">Recipient email</th>
 						<td>
 							<input type="email" name="feedback_email" value="<?php echo esc_attr( $options['feedback_email'] ); ?>" class="regular-text" placeholder="kontakt@example.com" />
+						</td>
+					</tr>
+				</table>
+
+				<!-- Membership form -->
+				<h2>Membership form</h2>
+				<p class="description">Settings for the Membership Form block. Requests are always saved under <strong>Medlemskap</strong> in the admin menu, where editors mark them handled.</p>
+				<table class="form-table">
+					<tr>
+						<th scope="row">Recipient email</th>
+						<td>
+							<input type="email" name="membership_email" value="<?php echo esc_attr( $options['membership_email'] ); ?>" class="regular-text" placeholder="<?php echo esc_attr( $options['feedback_email'] ?: 'info@example.com' ); ?>" />
+							<p class="description">Leave empty to use the Feedback recipient above. If both are empty, no notification is sent.</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Schools</th>
+						<td>
+							<textarea name="membership_schools" rows="6" class="large-text"><?php echo esc_textarea( $options['membership_schools'] ); ?></textarea>
+							<p class="description">One school per line, offered in the Skolschack dropdown. Leave empty to let people type the school name instead.</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row">Identify the member by</th>
+						<td>
+							<fieldset>
+								<label><input type="radio" name="membership_id_field" value="birthdate" <?php checked( $options['membership_id_field'], 'birthdate' ); ?> /> Birth date</label><br />
+								<label><input type="radio" name="membership_id_field" value="personnummer" <?php checked( $options['membership_id_field'], 'personnummer' ); ?> /> Full personnummer</label>
+							</fieldset>
+							<p class="description">Collect only what the member register needs. A personnummer is shown in the admin only, never in the notification email.</p>
 						</td>
 					</tr>
 				</table>

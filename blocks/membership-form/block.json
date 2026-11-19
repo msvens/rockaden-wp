@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "rockaden/membership-form",
+  "version": "0.1.0",
+  "title": "Membership Form",
+  "category": "widgets",
+  "icon": "id",
+  "description": "A form for asking to join the club, or to leave it. Each submission is stored as a request for an editor to handle and emailed to the club.",
+  "textdomain": "rockaden-theme",
+  "attributes": {
+    "variant": {
+      "type": "string",
+      "default": "join",
+      "enum": ["join", "leave"]
+    },
+    "category": {
+      "type": "string",
+      "default": "",
+      "enum": ["", "skolschack", "klubbschack", "vuxen", "pensionar"]
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"]
+  },
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php"
+}
