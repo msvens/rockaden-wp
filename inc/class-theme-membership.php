@@ -72,6 +72,9 @@ class Rockaden_Theme_Membership {
 		'rc_mr_phone',
 		'rc_mr_school',
 		'rc_mr_grade',
+		// The language the visitor used the site in (sv_SE / en_US). Missing
+		// on older requests, which then count as Swedish.
+		'rc_mr_locale',
 	];
 
 	/*
@@ -405,6 +408,7 @@ class Rockaden_Theme_Membership {
 			'phone'         => $join ? $text( 'phone', 30 ) : '',
 			'school'        => $school ? $text( 'school', 200 ) : '',
 			'grade'         => $school ? $text( 'grade', 20 ) : '',
+			'locale'        => self::$locale,
 			'message'       => trim( mb_substr( sanitize_textarea_field( (string) ( $params['message'] ?? '' ) ), 0, 5000 ) ),
 		];
 
@@ -701,6 +705,8 @@ class Rockaden_Theme_Membership {
 			'phone'         => [ __( 'Telefon', 'rockaden-theme' ), $data['phone'] ?? '' ],
 			'school'        => [ __( 'Skola', 'rockaden-theme' ), $data['school'] ?? '' ],
 			'grade'         => [ __( 'Årskurs/klass', 'rockaden-theme' ), $data['grade'] ?? '' ],
+			// Only shown when it is not Swedish, so it stands out when it matters.
+			'locale'        => [ __( 'Språk', 'rockaden-theme' ), self::used_english( $data ) ? __( 'Engelska', 'rockaden-theme' ) : '' ],
 		];
 		return array_filter( $rows, fn ( $row ) => '' !== $row[1] );
 	}
@@ -713,6 +719,23 @@ class Rockaden_Theme_Membership {
 	 */
 	private static function leave_check_text(): string {
 		return __( 'Formuläret kontrollerar inte vem som skickat det. Jämför namn, födelsedatum och e-post med medlemsregistret, och bekräfta med medlemmen (eller vårdnadshavaren) via kontaktuppgifterna i registret, inte genom att svara på det här mejlet. Stämmer något inte, eller känner medlemmen inte till begäran: ta inte bort medlemmen. Markera ändå förfrågan som hanterad.', 'rockaden-theme' );
+	}
+
+	/**
+	 * The hint shown to the club when the visitor used the site in English.
+	 */
+	private static function english_hint(): string {
+		return __( 'Obs: personen använde webbplatsen på engelska. Svara gärna på engelska.', 'rockaden-theme' );
+	}
+
+	/**
+	 * Whether the visitor used the site in English. The club's email and
+	 * admin view stay Swedish, but say so, so the reply can be in English.
+	 *
+	 * @param array<string, string> $data Record.
+	 */
+	private static function used_english( array $data ): bool {
+		return str_starts_with( $data['locale'] ?? '', 'en' );
 	}
 
 	/**
@@ -766,6 +789,10 @@ class Rockaden_Theme_Membership {
 
 				$html  = '<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;color:#111827;">';
 				$html .= '<p style="margin:0 0 16px;font-size:16px;font-weight:600;">' . esc_html( $intro ) . '</p>';
+				if ( self::used_english( $data ) ) {
+					$html .= '<p style="margin:-8px 0 16px;max-width:560px;padding:8px 12px;background:#dbeafe;border-left:4px solid #2563eb;">'
+						. esc_html( self::english_hint() ) . '</p>';
+				}
 				$html .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#f9fafb" style="max-width:560px;border-collapse:separate;border:1px solid #d1d5db;border-radius:6px;background:#f9fafb;">'
 					. '<tr><td colspan="2" style="padding:10px 16px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#374151;">'
 					. esc_html__( 'Uppgifter från formuläret', 'rockaden-theme' ) . '</td></tr>'
@@ -888,6 +915,9 @@ class Rockaden_Theme_Membership {
 		$data = self::load( $post->ID );
 		?>
 		<h2 style="padding:0 0 .5em;font-size:1.3em;"><?php echo esc_html( get_the_title( $post ) ); ?></h2>
+		<?php if ( self::used_english( $data ) ) : ?>
+			<div class="notice notice-info inline" style="max-width:40rem"><p><?php echo esc_html( self::english_hint() ); ?></p></div>
+		<?php endif; ?>
 		<table class="widefat striped" style="max-width:40rem">
 			<tbody>
 			<?php foreach ( self::describe( $data ) as $field => [ $label, $value ] ) : ?>
