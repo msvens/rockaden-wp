@@ -1,0 +1,76 @@
+<p class="rc-doc-sv">
+	<em>Menynamnen nedan visas på engelska. Har du svenska som adminspråk visas de översatta (t.ex. Appearance → Utseende).</em>
+</p>
+<p class="rc-doc-en">
+	<em>Menu names below are shown in English. If your admin language is Swedish they appear translated (e.g. Appearance → Utseende).</em>
+</p>
+
+<p class="rc-doc-sv">
+	Blocket <strong>Membership Form</strong> låter besökare anmäla sig som medlem, eller begära utträde. Varje inskick är en <em>förfrågan</em>: den sparas under <strong>Medlemskap</strong> i adminmenyn och mejlas till klubben. Någon i klubben för sedan in ändringen i medlemsregistret för hand och markerar förfrågan som hanterad. Formuläret ändrar aldrig något register självt.
+</p>
+<p class="rc-doc-en">
+	The <strong>Membership Form</strong> block lets visitors apply for membership, or ask to leave. Each submission is a <em>request</em>: it is saved under <strong>Medlemskap</strong> (Membership) in the admin menu and emailed to the club. Someone at the club then updates the member register by hand and marks the request handled. The form never changes any register itself.
+</p>
+
+<h2 class="rc-doc-sv">Steg 1: Inställningar</h2>
+<h2 class="rc-doc-en">Step 1: Settings</h2>
+
+<p class="rc-doc-sv">
+	Under <strong>Appearance → Rockaden</strong>, avsnittet <strong>Membership form</strong>:
+</p>
+<p class="rc-doc-en">
+	Under <strong>Appearance → Rockaden</strong>, in the <strong>Membership form</strong> section:
+</p>
+
+<ul>
+	<li><strong>Recipient email</strong> <span class="rc-doc-sv">— vart förfrågningarna mejlas. Tomt betyder samma adress som för feedback. Är båda tomma skickas inget mejl, men förfrågningarna sparas ändå.</span><span class="rc-doc-en">— where requests are emailed. Empty means the feedback address. If both are empty no email is sent, but requests are still saved.</span></li>
+	<li><strong>Schools</strong> <span class="rc-doc-sv">— en skola per rad, visas i listan för Skolschack. Lämnas den tom skriver man skolans namn själv. Förfrågningar sparar skolans namn som text, så du kan ändra listan när som helst.</span><span class="rc-doc-en">— one school per line, offered in the Skolschack list. Leave it empty to let people type the school name. Requests store the school's name as text, so the list can be changed at any time.</span></li>
+	<li><strong>Identify the member by</strong> <span class="rc-doc-sv">— födelsedatum eller fullständigt personnummer. Samla bara in det registret behöver. Ett personnummer visas bara i adminpanelen, aldrig i mejlet.</span><span class="rc-doc-en">— date of birth or full personnummer. Collect only what the register needs. A personnummer is shown in the admin only, never in the email.</span></li>
+</ul>
+
+<h2 class="rc-doc-sv">Steg 2: Lägg formuläret på en sida</h2>
+<h2 class="rc-doc-en">Step 2: Put the form on a page</h2>
+
+<p class="rc-doc-sv">
+	Skapa eller öppna en sida och lägg till blocket <strong>Membership Form</strong>. I blockets inställningar väljer du:
+</p>
+<p class="rc-doc-en">
+	Create or open a page and add the <strong>Membership Form</strong> block. In the block settings, choose:
+</p>
+<ul>
+	<li><strong>Request</strong> <span class="rc-doc-sv">— <em>Join</em> (anmälan) eller <em>Leave</em> (utträde).</span><span class="rc-doc-en">— <em>Join</em> or <em>Leave</em>.</span></li>
+	<li><strong>Category</strong> <span class="rc-doc-sv">— bara för anmälan: låt besökaren välja, eller lås kategorin, t.ex. till Skolschack på skolschacksidan. Då visas ingen kategorilista. Utträdesformuläret frågar inte efter kategori, eftersom en medlem bara kan ha en.</span><span class="rc-doc-en">— join only: let the visitor choose, or fix it, e.g. to Skolschack on the school chess page. The category list is then hidden. The leave form does not ask for a category, since a member can only have one.</span></li>
+</ul>
+<p class="rc-doc-sv">
+	Rubrik och introduktion lägger du som vanliga rubrik- och styckeblock runt formuläret. Den som skickar får ett kort bekräftelsemejl.
+</p>
+<p class="rc-doc-en">
+	Add a heading and introduction as ordinary heading and paragraph blocks around the form. The sender gets a short confirmation email.
+</p>
+
+<h2 class="rc-doc-sv">Steg 3: Hantera en förfrågan</h2>
+<h2 class="rc-doc-en">Step 3: Handle a request</h2>
+
+<p class="rc-doc-sv">
+	Mejlet innehåller en länk till förfrågan. Den kräver inloggning med redaktörsbehörighet (Editor) eller högre, och att öppna den ändrar ingenting. Gör ändringen i medlemsregistret och klicka sedan på <strong>Markera som hanterad</strong>. Råkade du klicka fel finns <strong>Markera som ny igen</strong>. Siffran vid <strong>Medlemskap</strong> i menyn visar hur många som är nya, och listan kan filtreras på status. Svarar du på mejlet går svaret till den som skickade förfrågan.
+</p>
+<p class="rc-doc-en">
+	The email links to the request. It requires signing in as an Editor or above, and opening it changes nothing. Update the member register, then click <strong>Markera som hanterad</strong> (Mark as handled). If you clicked by mistake, use <strong>Markera som ny igen</strong> (Mark as new again). The number next to <strong>Medlemskap</strong> in the menu shows how many are new, and the list can be filtered by status. Replying to the email reaches the person who sent the request.
+</p>
+
+<p class="rc-doc-sv">
+	<strong>Begäran om utträde:</strong> formuläret kontrollerar inte vem som skickat det, så vem som helst kan begära att någon annan tas bort. Jämför namn, födelsedatum och e-post med medlemsregistret, och bekräfta med medlemmen (eller vårdnadshavaren) via kontaktuppgifterna i registret, inte genom att svara på mejlet, eftersom svaret går till den som skickade begäran. Stämmer något inte, ta inte bort medlemmen. Markera förfrågan som hanterad ändå.
+</p>
+<p class="rc-doc-en">
+	<strong>Requests to leave:</strong> the form does not verify who sent it, so anyone could ask for someone else to be removed. Compare name, date of birth and email with the member register, and confirm with the member (or guardian) using the contact details in the register, not by replying to the email, since the reply goes to whoever sent the request. If anything does not match, do not remove the member. Mark the request handled anyway.
+</p>
+
+<h2 class="rc-doc-sv">Steg 4: Ta bort hanterade förfrågningar</h2>
+<h2 class="rc-doc-en">Step 4: Delete handled requests</h2>
+
+<p class="rc-doc-sv">
+	Förfrågningar innehåller personuppgifter, ofta om barn. Ta bort dem när de inte behövs längre: <strong>Move to Trash</strong> i listan eller på förfrågan. WordPress tömmer papperskorgen automatiskt efter 30 dagar.
+</p>
+<p class="rc-doc-en">
+	Requests contain personal data, often about children. Delete them once they are no longer needed: <strong>Move to Trash</strong> in the list or on the request. WordPress empties the trash automatically after 30 days.
+</p>

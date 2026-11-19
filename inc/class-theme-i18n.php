@@ -46,7 +46,7 @@ class Rockaden_Theme_I18n {
 	 *
 	 * @var string[]
 	 */
-	private const ALLOWED = [ 'sv_SE', 'en_US' ];
+	public const ALLOWED = [ 'sv_SE', 'en_US' ];
 
 	/**
 	 * Register hooks. Called from functions.php.

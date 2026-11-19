@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-23T10:54:19+00:00\n"
+"POT-Creation-Date: 2026-11-19T12:45:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: rockaden-theme\n"
@@ -40,6 +40,7 @@ msgid "https://rockaden.se"
 msgstr ""
 
 #: blocks/feedback-form/render.php:40
+#: blocks/membership-form/render.php:97
 msgid "Skickar…"
 msgstr ""
 
@@ -48,19 +49,27 @@ msgid "Tack! Ditt meddelande har skickats."
 msgstr ""
 
 #: blocks/feedback-form/render.php:42
+#: blocks/membership-form/render.php:99
 msgid "Något gick fel. Försök igen."
 msgstr ""
 
 #: blocks/feedback-form/render.php:45
+#: blocks/membership-form/render.php:220
 #: inc/class-theme-feedback.php:214
 #: inc/class-theme-feedback.php:267
+#: inc/class-theme-membership.php:692
 msgid "Namn"
 msgstr ""
 
 #: blocks/feedback-form/render.php:49
+#: blocks/membership-form/render.php:232
+#: blocks/membership-form/render.php:262
+#: blocks/membership-form/render.php:285
 #: inc/class-theme-feedback.php:216
 #: inc/class-theme-feedback.php:269
 #: inc/class-theme-feedback.php:288
+#: inc/class-theme-membership.php:698
+#: inc/class-theme-membership.php:1065
 msgid "E-post"
 msgstr ""
 
@@ -69,10 +78,13 @@ msgid "Valfritt – fyll i om du vill att vi ska kunna kontakta dig."
 msgstr ""
 
 #: blocks/feedback-form/render.php:54
+#: inc/class-theme-membership.php:759
+#: inc/class-theme-membership.php:920
 msgid "Meddelande"
 msgstr ""
 
 #: blocks/feedback-form/render.php:60
+#: blocks/membership-form/render.php:303
 msgid "Webbplats"
 msgstr ""
 
@@ -94,6 +106,142 @@ msgstr ""
 
 #: blocks/latest-news/render.php:60
 msgid "Läs mer"
+msgstr ""
+
+#: blocks/membership-form/render.php:98
+msgid "Tack! Vi har tagit emot din anmälan och skickat en bekräftelse till din e-post. Vi hör av oss när vi har gått igenom den."
+msgstr ""
+
+#: blocks/membership-form/render.php:98
+msgid "Tack! Vi har tagit emot din begäran om utträde och skickat en bekräftelse till din e-post. Vi hör av oss innan något ändras."
+msgstr ""
+
+#: blocks/membership-form/render.php:101
+#: blocks/membership-form/render.php:319
+msgid "Skicka begäran om utträde?"
+msgstr ""
+
+#: blocks/membership-form/render.php:108
+msgid "Obligatoriskt fält"
+msgstr ""
+
+#: blocks/membership-form/render.php:117
+#: inc/class-theme-membership.php:691
+#: inc/class-theme-membership.php:1064
+msgid "Kategori"
+msgstr ""
+
+#: blocks/membership-form/render.php:119
+msgid "Välj…"
+msgstr ""
+
+#: blocks/membership-form/render.php:133
+msgid "Förnamn"
+msgstr ""
+
+#: blocks/membership-form/render.php:141
+msgid "Efternamn"
+msgstr ""
+
+#: blocks/membership-form/render.php:153
+#: inc/class-theme-membership.php:744
+#: inc/class-theme-membership.php:909
+msgid "Personnummer"
+msgstr ""
+
+#: blocks/membership-form/render.php:159
+msgid "ÅÅÅÅMMDD-NNNN"
+msgstr ""
+
+#: blocks/membership-form/render.php:165
+#: inc/class-theme-membership.php:693
+msgid "Födelsedatum"
+msgstr ""
+
+#: blocks/membership-form/render.php:171
+msgid "ÅÅÅÅ-MM-DD"
+msgstr ""
+
+#: blocks/membership-form/render.php:180
+#: blocks/membership-form/render.php:184
+#: blocks/membership-form/render.php:196
+#: inc/class-theme-membership.php:702
+msgid "Skola"
+msgstr ""
+
+#: blocks/membership-form/render.php:186
+msgid "Välj skola…"
+msgstr ""
+
+#: blocks/membership-form/render.php:205
+#: inc/class-theme-membership.php:703
+msgid "Årskurs/klass"
+msgstr ""
+
+#: blocks/membership-form/render.php:216
+#: inc/class-theme-membership.php:694
+msgid "Vårdnadshavare"
+msgstr ""
+
+#: blocks/membership-form/render.php:243
+#: blocks/membership-form/render.php:271
+msgid "Telefon (valfritt)"
+msgstr ""
+
+#: blocks/membership-form/render.php:257
+msgid "Kontaktuppgifter"
+msgstr ""
+
+#: blocks/membership-form/render.php:291
+msgid "Vi skickar en bekräftelse hit."
+msgstr ""
+
+#: blocks/membership-form/render.php:297
+msgid "Meddelande (valfritt)"
+msgstr ""
+
+#: blocks/membership-form/render.php:308
+msgid "Skicka anmälan"
+msgstr ""
+
+#: blocks/membership-form/render.php:308
+msgid "Skicka begäran"
+msgstr ""
+
+#: blocks/membership-form/render.php:320
+msgid "Begäran skickas till klubben. Medlemskapet avslutas inte förrän vi har kontaktat dig och bekräftat den."
+msgstr ""
+
+#: blocks/membership-form/render.php:322
+msgid "Avbryt"
+msgstr ""
+
+#: blocks/membership-form/render.php:323
+msgid "Ja, skicka begäran"
+msgstr ""
+
+#: blocks/membership-form/render.php:334
+msgid "Tack för din anmälan!"
+msgstr ""
+
+#: blocks/membership-form/render.php:334
+msgid "Tack, vi har tagit emot din begäran"
+msgstr ""
+
+#: blocks/membership-form/render.php:340
+msgid "En bekräftelse är på väg till din e-post. Anmälan gås igenom av en person i klubben, så det kan dröja några dagar innan vi hör av oss. Medlemskapet börjar när vi har bekräftat det."
+msgstr ""
+
+#: blocks/membership-form/render.php:341
+msgid "En bekräftelse är på väg till din e-post. Begäran gås igenom av en person i klubben, så det kan dröja några dagar. Medlemskapet avslutas först när vi har kontaktat dig."
+msgstr ""
+
+#: blocks/membership-form/render.php:346
+msgid "Stäng"
+msgstr ""
+
+#: blocks/membership-form/render.php:350
+msgid "Aktivera JavaScript för att skicka formuläret."
 msgstr ""
 
 #: blocks/shop-grid/render.php:14
@@ -120,7 +268,7 @@ msgstr ""
 msgid "Köp"
 msgstr ""
 
-#: functions.php:224
+#: functions.php:229
 msgid "Rockaden"
 msgstr ""
 
@@ -166,6 +314,262 @@ msgstr ""
 msgid "Från"
 msgstr ""
 
+#: inc/class-theme-membership.php:91
+#: inc/class-theme-membership.php:95
+msgid "Medlemsförfrågningar"
+msgstr ""
+
+#: inc/class-theme-membership.php:92
+msgid "Medlemsförfrågan"
+msgstr ""
+
+#: inc/class-theme-membership.php:93
+msgid "Medlemskap"
+msgstr ""
+
+#: inc/class-theme-membership.php:94
+msgid "Visa förfrågan"
+msgstr ""
+
+#: inc/class-theme-membership.php:96
+msgid "Sök förfrågningar"
+msgstr ""
+
+#: inc/class-theme-membership.php:97
+msgid "Inga förfrågningar."
+msgstr ""
+
+#: inc/class-theme-membership.php:187
+msgid "Skolschack"
+msgstr ""
+
+#: inc/class-theme-membership.php:189
+msgid "Klubbschack"
+msgstr ""
+
+#: inc/class-theme-membership.php:191
+msgid "Vuxen medlem"
+msgstr ""
+
+#: inc/class-theme-membership.php:193
+msgid "Pensionär"
+msgstr ""
+
+#: inc/class-theme-membership.php:205
+msgid "Utträde"
+msgstr ""
+
+#: inc/class-theme-membership.php:206
+msgid "Anmälan"
+msgstr ""
+
+#: inc/class-theme-membership.php:352
+msgid "Kunde inte spara din förfrågan. Försök igen."
+msgstr ""
+
+#: inc/class-theme-membership.php:423
+msgid "Okänd typ av förfrågan."
+msgstr ""
+
+#: inc/class-theme-membership.php:426
+msgid "Välj en kategori."
+msgstr ""
+
+#: inc/class-theme-membership.php:429
+msgid "Fyll i förnamn."
+msgstr ""
+
+#: inc/class-theme-membership.php:432
+msgid "Fyll i efternamn."
+msgstr ""
+
+#: inc/class-theme-membership.php:444
+msgid "Fyll i vårdnadshavarens namn."
+msgstr ""
+
+#: inc/class-theme-membership.php:447
+msgid "Ange en giltig e-postadress."
+msgstr ""
+
+#: inc/class-theme-membership.php:452
+msgid "Ange ett giltigt telefonnummer eller lämna fältet tomt."
+msgstr ""
+
+#: inc/class-theme-membership.php:458
+msgid "Välj en skola."
+msgstr ""
+
+#: inc/class-theme-membership.php:461
+msgid "Fyll i årskurs eller klass."
+msgstr ""
+
+#: inc/class-theme-membership.php:539
+msgid "Fyll i födelsedatum."
+msgstr ""
+
+#: inc/class-theme-membership.php:542
+msgid "Skriv födelsedatum som ÅÅÅÅ-MM-DD, ÅÅÅÅMMDD eller ÅÅMMDD."
+msgstr ""
+
+#: inc/class-theme-membership.php:545
+#: inc/class-theme-membership.php:565
+msgid "Det datumet finns inte. Kontrollera år, månad och dag."
+msgstr ""
+
+#: inc/class-theme-membership.php:559
+msgid "Fyll i personnummer."
+msgstr ""
+
+#: inc/class-theme-membership.php:562
+msgid "Skriv personnumret som ÅÅÅÅMMDD-NNNN eller ÅÅMMDD-NNNN."
+msgstr ""
+
+#: inc/class-theme-membership.php:568
+msgid "Personnumret stämmer inte. Kontrollera det och försök igen."
+msgstr ""
+
+#: inc/class-theme-membership.php:690
+#: inc/class-theme-membership.php:1063
+msgid "Typ"
+msgstr ""
+
+#: inc/class-theme-membership.php:697
+msgid "E-post (vårdnadshavare)"
+msgstr ""
+
+#: inc/class-theme-membership.php:701
+msgid "Telefon"
+msgstr ""
+
+#: inc/class-theme-membership.php:715
+msgid "Formuläret kontrollerar inte vem som skickat det. Jämför namn, födelsedatum och e-post med medlemsregistret, och bekräfta med medlemmen (eller vårdnadshavaren) via kontaktuppgifterna i registret, inte genom att svara på det här mejlet. Stämmer något inte, eller känner medlemmen inte till begäran: ta inte bort medlemmen. Markera ändå förfrågan som hanterad."
+msgstr ""
+
+#: inc/class-theme-membership.php:744
+msgid "Visas i förfrågan i adminpanelen"
+msgstr ""
+
+#: inc/class-theme-membership.php:764
+msgid "Ny begäran om utträde via webbplatsens formulär."
+msgstr ""
+
+#: inc/class-theme-membership.php:765
+msgid "Ny anmälan via webbplatsens formulär."
+msgstr ""
+
+#: inc/class-theme-membership.php:771
+msgid "Uppgifter från formuläret"
+msgstr ""
+
+#: inc/class-theme-membership.php:775
+msgid "Kontrollera innan du tar bort någon"
+msgstr ""
+
+#: inc/class-theme-membership.php:779
+msgid "Öppna förfrågan"
+msgstr ""
+
+#: inc/class-theme-membership.php:780
+msgid "Markera den som hanterad när ändringen är gjord i medlemsregistret."
+msgstr ""
+
+#. translators: %s: site name.
+#: inc/class-theme-membership.php:812
+#, php-format
+msgid "Vi har tagit emot din begäran om utträde – %s"
+msgstr ""
+
+#. translators: %s: site name.
+#: inc/class-theme-membership.php:814
+#, php-format
+msgid "Tack! Vi har tagit emot din begäran om utträde ur %s."
+msgstr ""
+
+#. translators: %s: site name.
+#: inc/class-theme-membership.php:817
+#, php-format
+msgid "Vi har tagit emot din anmälan – %s"
+msgstr ""
+
+#. translators: 1: membership category, 2: site name.
+#: inc/class-theme-membership.php:819
+#, php-format
+msgid "Tack! Vi har tagit emot din anmälan till %1$s hos %2$s."
+msgstr ""
+
+#: inc/class-theme-membership.php:826
+msgid "Vi hör av oss när vi har behandlat den."
+msgstr ""
+
+#: inc/class-theme-membership.php:827
+msgid "Det här är ett automatiskt meddelande. Har du frågor kan du svara på det."
+msgstr ""
+
+#: inc/class-theme-membership.php:852
+#: inc/class-theme-membership.php:1062
+msgid "Förfrågan"
+msgstr ""
+
+#: inc/class-theme-membership.php:860
+#: inc/class-theme-membership.php:1066
+msgid "Status"
+msgstr ""
+
+#: inc/class-theme-membership.php:914
+#: inc/class-theme-membership.php:1068
+msgid "Mottagen"
+msgstr ""
+
+#: inc/class-theme-membership.php:950
+#: inc/class-theme-membership.php:1101
+msgid "Ny"
+msgstr ""
+
+#: inc/class-theme-membership.php:954
+#: inc/class-theme-membership.php:1133
+msgid "Markera som hanterad"
+msgstr ""
+
+#: inc/class-theme-membership.php:962
+#: inc/class-theme-membership.php:1099
+msgid "Hanterad"
+msgstr ""
+
+#. translators: %s: user display name.
+#: inc/class-theme-membership.php:967
+#, php-format
+msgid "av %s"
+msgstr ""
+
+#: inc/class-theme-membership.php:971
+#: inc/class-theme-membership.php:1133
+msgid "Markera som ny igen"
+msgstr ""
+
+#: inc/class-theme-membership.php:972
+msgid "Ta bort förfrågan (Flytta till papperskorgen) när den inte behövs längre."
+msgstr ""
+
+#: inc/class-theme-membership.php:984
+msgid "Du har inte behörighet att ändra den här förfrågan."
+msgstr ""
+
+#: inc/class-theme-membership.php:1125
+msgid "Visa"
+msgstr ""
+
+#: inc/class-theme-membership.php:1173
+msgid "Alla statusar"
+msgstr ""
+
+#: inc/class-theme-membership.php:1174
+msgid "Nya"
+msgstr ""
+
+#: inc/class-theme-membership.php:1175
+msgid "Hanterade"
+msgstr ""
+
 #: inc/class-theme-reactions.php:177
 msgid "Din reaktion kunde inte sparas. Försök igen."
 msgstr ""
@@ -178,79 +582,79 @@ msgstr ""
 msgid "Välj reaktion"
 msgstr ""
 
-#: inc/class-theme-settings.php:384
+#: inc/class-theme-settings.php:392
 msgid "Mer"
 msgstr ""
 
-#: inc/class-theme-settings.php:385
+#: inc/class-theme-settings.php:393
 msgid "Språk"
 msgstr ""
 
-#: inc/class-theme-settings.php:386
+#: inc/class-theme-settings.php:394
 msgid "Mörkt läge"
 msgstr ""
 
-#: inc/class-theme-settings.php:387
+#: inc/class-theme-settings.php:395
 msgid "Dokumentation"
 msgstr ""
 
-#: inc/class-theme-settings.php:1051
+#: inc/class-theme-settings.php:1067
 msgid "Section menu"
 msgstr ""
 
-#: inc/class-theme-settings.php:1075
+#: inc/class-theme-settings.php:1091
 msgid "This page does not use the “Page (Section Nav)” template, so the sidebar will not show on the front end. Pick that template in the Page panel to display it."
 msgstr ""
 
-#: inc/class-theme-settings.php:1081
+#: inc/class-theme-settings.php:1097
 msgid "This page isn’t part of a section yet. Give it the “Page (Section Nav)” template and add child pages (or make it a child of a section page)."
 msgstr ""
 
-#: inc/class-theme-settings.php:1100
+#: inc/class-theme-settings.php:1116
 msgid "The section parent page is always first."
 msgstr ""
 
-#: inc/class-theme-settings.php:1100
+#: inc/class-theme-settings.php:1116
 msgid "Top"
 msgstr ""
 
-#: inc/class-theme-settings.php:1103
+#: inc/class-theme-settings.php:1119
 msgid "Move up"
 msgstr ""
 
-#: inc/class-theme-settings.php:1104
+#: inc/class-theme-settings.php:1120
 msgid "Move down"
 msgstr ""
 
-#: inc/class-theme-settings.php:1114
+#: inc/class-theme-settings.php:1130
 msgid "Menu label"
 msgstr ""
 
-#: inc/class-theme-settings.php:1119
+#: inc/class-theme-settings.php:1135
 msgid "Hidden"
 msgstr ""
 
-#: inc/class-theme-settings.php:1125
+#: inc/class-theme-settings.php:1141
 msgid "Show in menu"
 msgstr ""
 
-#: inc/class-theme-settings.php:1133
+#: inc/class-theme-settings.php:1149
 msgid "Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. Changes save right away. The parent page is always first."
 msgstr ""
 
-#: inc/class-theme-settings.php:1135
+#: inc/class-theme-settings.php:1151
 msgid "The section menu is managed by users who can edit all pages."
 msgstr ""
 
-#: inc/class-theme-settings.php:1185
+#: inc/class-theme-settings.php:1201
 msgid "Saving…"
 msgstr ""
 
-#: inc/class-theme-settings.php:1186
+#: inc/class-theme-settings.php:1202
 msgid "Saved"
 msgstr ""
 
-#: inc/class-theme-settings.php:1187
+#: inc/class-theme-settings.php:1203
 msgid "Couldn’t save — reload and try again."
 msgstr ""
 
@@ -443,6 +847,16 @@ msgstr ""
 #: blocks/latest-news/block.json
 msgctxt "block description"
 msgid "Displays the latest news posts as cards with a link to the full archive."
+msgstr ""
+
+#: blocks/membership-form/block.json
+msgctxt "block title"
+msgid "Membership Form"
+msgstr ""
+
+#: blocks/membership-form/block.json
+msgctxt "block description"
+msgid "A form for asking to join the club, or to leave it. Each submission is stored as a request for an editor to handle and emailed to the club."
 msgstr ""
 
 #: blocks/page-title/block.json

@@ -37,6 +37,7 @@ require_once get_theme_file_path( 'inc/class-theme-settings.php' );
 require_once get_theme_file_path( 'inc/class-theme-setup.php' );
 require_once get_theme_file_path( 'inc/class-theme-shop.php' );
 require_once get_theme_file_path( 'inc/class-theme-feedback.php' );
+require_once get_theme_file_path( 'inc/class-theme-membership.php' );
 require_once get_theme_file_path( 'inc/class-theme-section-nav.php' );
 require_once get_theme_file_path( 'inc/class-theme-comments.php' );
 require_once get_theme_file_path( 'inc/class-theme-excerpt.php' );
@@ -68,6 +69,10 @@ add_action( 'rest_api_init', [ 'Rockaden_Theme_Feedback', 'register_routes' ] );
 add_action( 'add_meta_boxes', [ 'Rockaden_Theme_Feedback', 'add_meta_box' ] );
 add_filter( 'manage_rc_feedback_posts_columns', [ 'Rockaden_Theme_Feedback', 'columns' ] );
 add_action( 'manage_rc_feedback_posts_custom_column', [ 'Rockaden_Theme_Feedback', 'column_content' ], 10, 2 );
+
+// Membership requests (rc_member_request CPT, public REST endpoint behind the
+// membership-form block, emails, and the editor-only handled flow).
+Rockaden_Theme_Membership::hooks();
 
 // Emoji reactions on news posts (rc_reactions meta + public REST endpoint
 // behind the reactions block and the latest-news cards).
@@ -301,6 +306,15 @@ add_action(
 				'file'       => $docs_dir . 'guide-landing-hero.html',
 				'order'      => 70,
 			],
+			[
+				'slug'       => 'guide-medlemsformular',
+				'title_sv'   => 'Ta emot medlemsanmälningar',
+				'title_en'   => 'Receive membership requests',
+				'section_sv' => 'How-Tos',
+				'section_en' => 'How-Tos',
+				'file'       => $docs_dir . 'guide-medlemsformular.html',
+				'order'      => 80,
+			],
 		];
 		foreach ( $entries as $entry ) {
 			\Rockaden\Docs\DocsRegistry::register( $entry );
@@ -319,6 +333,7 @@ add_action(
 		register_block_type( get_theme_file_path( 'blocks/page-title' ) );
 		register_block_type( get_theme_file_path( 'blocks/shop-grid' ) );
 		register_block_type( get_theme_file_path( 'blocks/feedback-form' ) );
+		register_block_type( get_theme_file_path( 'blocks/membership-form' ) );
 		register_block_type( get_theme_file_path( 'blocks/footer-nav' ) );
 		register_block_type( get_theme_file_path( 'blocks/sidebar' ) );
 		register_block_type( get_theme_file_path( 'blocks/sidebar-card' ) );
