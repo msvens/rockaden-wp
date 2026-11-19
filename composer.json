@@ -18,7 +18,7 @@
         "wp-cli/i18n-command": "^2.7"
     },
     "scripts": {
-        "phpstan": "phpstan analyse --memory-limit=1G",
+        "phpstan": "phpstan analyse --memory-limit=2G",
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
         "lint:php": [
