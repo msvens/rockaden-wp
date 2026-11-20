@@ -89,6 +89,10 @@ class Rockaden_Theme_Settings {
 			// Recipient for the feedback-form block. Empty falls back to the
 			// site admin email at send time.
 			'feedback_email'       => '',
+			// Sender name on the emails the theme sends (feedback and membership
+			// forms). Empty uses the site name. The address stays WordPress's
+			// own (wordpress@<domain>); replies go by Reply-To.
+			'mail_from_name'       => '',
 			// Membership-form block (Rockaden_Theme_Membership). The recipient
 			// falls back to feedback_email when empty. Schools are one per line
 			// and feed the Skolschack dropdown; requests store the school's name
@@ -153,6 +157,37 @@ class Rockaden_Theme_Settings {
 			'footer_text'          => '© {year} SK Rockaden',
 			'footer_text_en'       => '',
 		];
+	}
+
+	/**
+	 * The sender name for the theme's emails: the setting, or the site name.
+	 */
+	public static function mail_from_name(): string {
+		$name = trim( (string) ( self::get_options()['mail_from_name'] ?? '' ) );
+		return '' !== $name ? $name : wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+	}
+
+	/**
+	 * Send one of the theme's emails with the configured sender name.
+	 *
+	 * The name is set only for this one call (filter added, then removed), so
+	 * WordPress's own emails and other plugins' keep theirs. Priority 20 so
+	 * it wins over a site-wide default set at the usual priority.
+	 *
+	 * @param string|array<int, string> $to      Recipient(s).
+	 * @param string                    $subject Subject.
+	 * @param string                    $body    Body.
+	 * @param array<int, string>        $headers Extra headers.
+	 */
+	public static function send_mail( $to, string $subject, string $body, array $headers = [] ): bool {
+		$name   = self::mail_from_name();
+		$filter = static fn (): string => $name;
+		add_filter( 'wp_mail_from_name', $filter, 20 );
+		try {
+			return wp_mail( $to, $subject, $body, $headers );
+		} finally {
+			remove_filter( 'wp_mail_from_name', $filter, 20 );
+		}
 	}
 
 	/**
@@ -489,6 +524,8 @@ class Rockaden_Theme_Settings {
 		$options['cta_url_en']     = sanitize_text_field( wp_unslash( $_POST['cta_url_en'] ?? '' ) );
 		$options['front_page_en']  = absint( wp_unslash( $_POST['front_page_en'] ?? 0 ) );
 		$options['feedback_email'] = sanitize_email( wp_unslash( $_POST['feedback_email'] ?? '' ) );
+
+		$options['mail_from_name'] = sanitize_text_field( wp_unslash( $_POST['mail_from_name'] ?? '' ) );
 
 		$options['membership_email']    = sanitize_email( wp_unslash( $_POST['membership_email'] ?? '' ) );
 		$options['membership_schools']  = implode(
@@ -1376,6 +1413,19 @@ class Rockaden_Theme_Settings {
 								]
 							);
 							?>
+						</td>
+					</tr>
+				</table>
+
+				<!-- Email -->
+				<h2>Email</h2>
+				<p class="description">Applies to the emails sent by the Feedback Form and Membership Form blocks. WordPress's own emails (password resets and so on) are not affected.</p>
+				<table class="form-table">
+					<tr>
+						<th scope="row">Sender name</th>
+						<td>
+							<input type="text" name="mail_from_name" value="<?php echo esc_attr( $options['mail_from_name'] ); ?>" class="regular-text" placeholder="<?php echo esc_attr( wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) ); ?>" />
+							<p class="description">The name shown as the sender. Leave empty to use the site name. The sending address itself does not change.</p>
 						</td>
 					</tr>
 				</table>

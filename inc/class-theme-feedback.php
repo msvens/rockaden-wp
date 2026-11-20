@@ -232,7 +232,7 @@ class Rockaden_Theme_Feedback {
 			$headers[] = 'Reply-To: ' . $email;
 		}
 
-		wp_mail( $recipient, $subject, $body, $headers );
+		Rockaden_Theme_Settings::send_mail( $recipient, $subject, $body, $headers );
 	}
 
 	/*
