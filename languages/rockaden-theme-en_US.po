@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rockaden Theme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/rockaden-wp\n"
-"POT-Creation-Date: 2026-11-20T10:25:06+00:00\n"
+"POT-Creation-Date: 2026-11-20T10:33:58+00:00\n"
 "PO-Revision-Date: 2026-05-26\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -173,7 +173,7 @@ msgid "ÅÅÅÅ-MM-DD"
 msgstr "YYYY-MM-DD"
 
 #: blocks/membership-form/render.php:236 blocks/membership-form/render.php:240
-#: blocks/membership-form/render.php:252 inc/class-theme-membership.php:823
+#: blocks/membership-form/render.php:252 inc/class-theme-membership.php:828
 msgid "Skola"
 msgstr "School"
 
@@ -181,7 +181,7 @@ msgstr "School"
 msgid "Välj skola…"
 msgstr "Choose a school…"
 
-#: blocks/membership-form/render.php:261 inc/class-theme-membership.php:824
+#: blocks/membership-form/render.php:261 inc/class-theme-membership.php:829
 msgid "Årskurs/klass"
 msgstr "Grade/class"
 
@@ -488,23 +488,23 @@ msgstr "Email (parent or guardian)"
 msgid "Telefon"
 msgstr "Phone"
 
-#: inc/class-theme-membership.php:825
+#: inc/class-theme-membership.php:823
 msgid "Adress"
 msgstr "Address"
 
-#: inc/class-theme-membership.php:826
+#: inc/class-theme-membership.php:824
 msgid "Vårdnadshavare 2"
 msgstr "Parent or guardian 2"
 
-#: inc/class-theme-membership.php:827
+#: inc/class-theme-membership.php:825
 msgid "E-post (vårdnadshavare 2)"
 msgstr "Email (parent or guardian 2)"
 
-#: inc/class-theme-membership.php:828
+#: inc/class-theme-membership.php:826
 msgid "Telefon (vårdnadshavare 2)"
 msgstr "Phone (parent or guardian 2)"
 
-#: inc/class-theme-membership.php:829
+#: inc/class-theme-membership.php:827
 msgid "Adress (vårdnadshavare 2)"
 msgstr "Address (parent or guardian 2)"
 
