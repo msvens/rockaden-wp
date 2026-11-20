@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rockaden Theme\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/rockaden-wp\n"
-"POT-Creation-Date: 2026-11-20T10:33:58+00:00\n"
+"POT-Creation-Date: 2026-11-20T10:53:31+00:00\n"
 "PO-Revision-Date: 2026-05-26\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
@@ -508,7 +508,7 @@ msgstr "Phone (parent or guardian 2)"
 msgid "Adress (vårdnadshavare 2)"
 msgstr "Address (parent or guardian 2)"
 
-#: inc/class-theme-membership.php:831 inc/class-theme-settings.php:393
+#: inc/class-theme-membership.php:831 inc/class-theme-settings.php:428
 msgid "Språk"
 msgstr "Language"
 
@@ -679,23 +679,23 @@ msgstr "Add reaction"
 msgid "Välj reaktion"
 msgstr "Choose a reaction"
 
-#: inc/class-theme-settings.php:392
+#: inc/class-theme-settings.php:427
 msgid "Mer"
 msgstr "More"
 
-#: inc/class-theme-settings.php:394
+#: inc/class-theme-settings.php:429
 msgid "Mörkt läge"
 msgstr "Dark mode"
 
-#: inc/class-theme-settings.php:395
+#: inc/class-theme-settings.php:430
 msgid "Dokumentation"
 msgstr "Documentation"
 
-#: inc/class-theme-settings.php:1067
+#: inc/class-theme-settings.php:1104
 msgid "Section menu"
 msgstr "Section menu"
 
-#: inc/class-theme-settings.php:1091
+#: inc/class-theme-settings.php:1128
 msgid ""
 "This page does not use the “Page (Section Nav)” template, so the sidebar "
 "will not show on the front end. Pick that template in the Page panel to "
@@ -705,7 +705,7 @@ msgstr ""
 "will not show on the front end. Pick that template in the Page panel to "
 "display it."
 
-#: inc/class-theme-settings.php:1097
+#: inc/class-theme-settings.php:1134
 msgid ""
 "This page isn’t part of a section yet. Give it the “Page (Section Nav)” "
 "template and add child pages (or make it a child of a section page)."
@@ -713,35 +713,35 @@ msgstr ""
 "This page isn’t part of a section yet. Give it the “Page (Section Nav)” "
 "template and add child pages (or make it a child of a section page)."
 
-#: inc/class-theme-settings.php:1116
+#: inc/class-theme-settings.php:1153
 msgid "The section parent page is always first."
 msgstr "The section parent page is always first."
 
-#: inc/class-theme-settings.php:1116
+#: inc/class-theme-settings.php:1153
 msgid "Top"
 msgstr "Top"
 
-#: inc/class-theme-settings.php:1119
+#: inc/class-theme-settings.php:1156
 msgid "Move up"
 msgstr "Move up"
 
-#: inc/class-theme-settings.php:1120
+#: inc/class-theme-settings.php:1157
 msgid "Move down"
 msgstr "Move down"
 
-#: inc/class-theme-settings.php:1130
+#: inc/class-theme-settings.php:1167
 msgid "Menu label"
 msgstr "Menu label"
 
-#: inc/class-theme-settings.php:1135
+#: inc/class-theme-settings.php:1172
 msgid "Hidden"
 msgstr "Hidden"
 
-#: inc/class-theme-settings.php:1141
+#: inc/class-theme-settings.php:1178
 msgid "Show in menu"
 msgstr "Show in menu"
 
-#: inc/class-theme-settings.php:1149
+#: inc/class-theme-settings.php:1186
 msgid ""
 "Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. "
 "Changes save right away. The parent page is always first."
@@ -749,19 +749,19 @@ msgstr ""
 "Reorder with ↑/↓, rename inline, or untick “Show in menu” to hide a page. "
 "Changes save right away. The parent page is always first."
 
-#: inc/class-theme-settings.php:1151
+#: inc/class-theme-settings.php:1188
 msgid "The section menu is managed by users who can edit all pages."
 msgstr "The section menu is managed by users who can edit all pages."
 
-#: inc/class-theme-settings.php:1201
+#: inc/class-theme-settings.php:1238
 msgid "Saving…"
 msgstr "Saving…"
 
-#: inc/class-theme-settings.php:1202
+#: inc/class-theme-settings.php:1239
 msgid "Saved"
 msgstr "Saved"
 
-#: inc/class-theme-settings.php:1203
+#: inc/class-theme-settings.php:1240
 msgid "Couldn’t save — reload and try again."
 msgstr "Couldn’t save — reload and try again."
 

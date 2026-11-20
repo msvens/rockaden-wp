@@ -950,7 +950,7 @@ class Rockaden_Theme_Membership {
 			}
 		);
 
-		wp_mail(
+		Rockaden_Theme_Settings::send_mail(
 			$recipient,
 			$subject,
 			$body,
@@ -1000,7 +1000,7 @@ class Rockaden_Theme_Membership {
 			$headers[] = 'Reply-To: ' . $recipient;
 		}
 
-		wp_mail( $data['email'], $subject, $body, $headers );
+		Rockaden_Theme_Settings::send_mail( $data['email'], $subject, $body, $headers );
 	}
 
 	/*
