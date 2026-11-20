@@ -44,6 +44,17 @@ class Rockaden_Theme_Membership {
 	private const STATUS_QUERY_VAR = 'rc_mr_status';
 
 	/**
+	 * Query vars behind the list's filter dropdowns. Except for the status,
+	 * each is named after the meta key it filters on.
+	 */
+	private const LIST_FILTERS = [
+		'rc_mr_status'   => true,
+		'rc_mr_kind'     => true,
+		'rc_mr_category' => true,
+		'rc_mr_school'   => true,
+	];
+
+	/**
 	 * Capability required to see or touch requests at all. The rows hold
 	 * personal data, some of it about children, so authors and contributors
 	 * (who have edit_posts) are deliberately kept out.
@@ -72,6 +83,19 @@ class Rockaden_Theme_Membership {
 		'rc_mr_phone',
 		'rc_mr_school',
 		'rc_mr_grade',
+		// Join requests: the member's address, or the family's (guardian's)
+		// for the junior categories. Postal code stored as five digits.
+		'rc_mr_street',
+		'rc_mr_postal_code',
+		'rc_mr_city',
+		// Junior categories: an optional second guardian, with an optional
+		// address of their own (empty = same as the first guardian's).
+		'rc_mr_guardian2_name',
+		'rc_mr_guardian2_email',
+		'rc_mr_guardian2_phone',
+		'rc_mr_guardian2_street',
+		'rc_mr_guardian2_postal_code',
+		'rc_mr_guardian2_city',
 		// The language the visitor used the site in (sv_SE / en_US). Missing
 		// on older requests, which then count as Swedish.
 		'rc_mr_locale',
@@ -424,11 +448,59 @@ class Rockaden_Theme_Membership {
 			'phone'         => $join ? $text( 'phone', 30 ) : '',
 			'school'        => $school ? $text( 'school', 200 ) : '',
 			'grade'         => $school ? $text( 'grade', 20 ) : '',
+			'street'        => $join ? $text( 'street', 200 ) : '',
+			'postal_code'   => $join ? self::normalize_postal_code( $text( 'postal_code', 20 ) ) : '',
+			'city'          => $join ? $text( 'city', 100 ) : '',
 			'locale'        => self::$locale,
 			'message'       => trim( mb_substr( sanitize_textarea_field( (string) ( $params['message'] ?? '' ) ), 0, 5000 ) ),
 		];
 
+		// Second guardian: junior join requests only. Their address is kept
+		// only when the form says they live somewhere else.
+		$second    = $junior;
+		$own_place = $second && ! empty( $params['guardian2_own_address'] );
+
+		$data['guardian2_name']        = $second ? $text( 'guardian2_name', 200 ) : '';
+		$data['guardian2_email']       = $second ? sanitize_email( (string) ( $params['guardian2_email'] ?? '' ) ) : '';
+		$data['guardian2_phone']       = $second ? $text( 'guardian2_phone', 30 ) : '';
+		$data['guardian2_street']      = $own_place ? $text( 'guardian2_street', 200 ) : '';
+		$data['guardian2_postal_code'] = $own_place ? self::normalize_postal_code( $text( 'guardian2_postal_code', 20 ) ) : '';
+		$data['guardian2_city']        = $own_place ? $text( 'guardian2_city', 100 ) : '';
+		// Not stored: only decides whether the address fields are required.
+		$data['guardian2_own_address'] = $own_place ? '1' : '';
+
 		return $data;
+	}
+
+	/**
+	 * Swedish postal codes are five digits, often written "123 45".
+	 *
+	 * @param string $raw As typed.
+	 * @return string Five digits, or $raw if it is not that.
+	 */
+	private static function normalize_postal_code( string $raw ): string {
+		$digits = (string) preg_replace( '/[\s\x{00A0}]+/u', '', $raw );
+		return 1 === preg_match( '/^\d{5}$/', $digits ) ? $digits : $raw;
+	}
+
+	/**
+	 * Check an address: all three parts present, and a valid postal code.
+	 *
+	 * @param array<string, string> $data   Sanitized record.
+	 * @param string                $prefix '' for the main address, 'guardian2_' for the second guardian's.
+	 * @return array{field: string, message: string}|null
+	 */
+	private static function check_address( array $data, string $prefix ): ?array {
+		if ( '' === $data[ $prefix . 'street' ] ) {
+			return self::problem( $prefix . 'street', __( 'Fyll i gatuadress.', 'rockaden-theme' ) );
+		}
+		if ( 1 !== preg_match( '/^\d{5}$/', $data[ $prefix . 'postal_code' ] ) ) {
+			return self::problem( $prefix . 'postal_code', __( 'Postnumret ska vara fem siffror, t.ex. 123 45.', 'rockaden-theme' ) );
+		}
+		if ( '' === $data[ $prefix . 'city' ] ) {
+			return self::problem( $prefix . 'city', __( 'Fyll i ort.', 'rockaden-theme' ) );
+		}
+		return null;
 	}
 
 	/**
@@ -470,6 +542,35 @@ class Rockaden_Theme_Membership {
 		// catch what cannot be a number at all.
 		if ( '' !== $data['phone'] && 1 !== preg_match( '/^\+?[0-9\s\-()]{6,30}$/', $data['phone'] ) ) {
 			return self::problem( 'phone', __( 'Ange ett giltigt telefonnummer eller lämna fältet tomt.', 'rockaden-theme' ) );
+		}
+
+		if ( $join ) {
+			$address = self::check_address( $data, '' );
+			if ( null !== $address ) {
+				return $address;
+			}
+		}
+
+		// The second guardian is optional, but once started it needs a name,
+		// a valid email if one is given, and a complete address if they live
+		// somewhere else.
+		$has_second = '' !== $data['guardian2_name'] || '' !== $data['guardian2_email'] || '' !== $data['guardian2_phone'] || '1' === $data['guardian2_own_address'];
+		if ( $has_second ) {
+			if ( '' === $data['guardian2_name'] ) {
+				return self::problem( 'guardian2_name', __( 'Fyll i den andra vårdnadshavarens namn.', 'rockaden-theme' ) );
+			}
+			if ( '' !== $data['guardian2_email'] && ! is_email( $data['guardian2_email'] ) ) {
+				return self::problem( 'guardian2_email', __( 'Ange en giltig e-postadress eller lämna fältet tomt.', 'rockaden-theme' ) );
+			}
+			if ( '' !== $data['guardian2_phone'] && 1 !== preg_match( '/^\+?[0-9\s\-()]{6,30}$/', $data['guardian2_phone'] ) ) {
+				return self::problem( 'guardian2_phone', __( 'Ange ett giltigt telefonnummer eller lämna fältet tomt.', 'rockaden-theme' ) );
+			}
+			if ( '1' === $data['guardian2_own_address'] ) {
+				$address = self::check_address( $data, 'guardian2_' );
+				if ( null !== $address ) {
+					return $address;
+				}
+			}
 		}
 
 		if ( $join && 'skolschack' === $data['category'] ) {
@@ -707,22 +808,27 @@ class Rockaden_Theme_Membership {
 	private static function describe( array $data ): array {
 		$junior = in_array( $data['category'] ?? '', self::JUNIOR_CATEGORIES, true );
 		$rows   = [
-			'kind'          => [ __( 'Typ', 'rockaden-theme' ), self::kind_label( $data['kind'] ?? '' ) ],
-			'category'      => [ __( 'Kategori', 'rockaden-theme' ), self::category_label( $data['category'] ?? '' ) ],
-			'name'          => [ __( 'Namn', 'rockaden-theme' ), trim( ( $data['first_name'] ?? '' ) . ' ' . ( $data['last_name'] ?? '' ) ) ],
-			'birthdate'     => [ __( 'Födelsedatum', 'rockaden-theme' ), $data['birthdate'] ?? '' ],
-			'guardian_name' => [ __( 'Vårdnadshavare', 'rockaden-theme' ), $data['guardian_name'] ?? '' ],
-			'email'         => [
+			'kind'              => [ __( 'Typ', 'rockaden-theme' ), self::kind_label( $data['kind'] ?? '' ) ],
+			'category'          => [ __( 'Kategori', 'rockaden-theme' ), self::category_label( $data['category'] ?? '' ) ],
+			'name'              => [ __( 'Namn', 'rockaden-theme' ), trim( ( $data['first_name'] ?? '' ) . ' ' . ( $data['last_name'] ?? '' ) ) ],
+			'birthdate'         => [ __( 'Födelsedatum', 'rockaden-theme' ), $data['birthdate'] ?? '' ],
+			'guardian_name'     => [ __( 'Vårdnadshavare', 'rockaden-theme' ), $data['guardian_name'] ?? '' ],
+			'email'             => [
 				'join' === ( $data['kind'] ?? '' ) && $junior
 					? __( 'E-post (vårdnadshavare)', 'rockaden-theme' )
 					: __( 'E-post', 'rockaden-theme' ),
 				$data['email'] ?? '',
 			],
-			'phone'         => [ __( 'Telefon', 'rockaden-theme' ), $data['phone'] ?? '' ],
-			'school'        => [ __( 'Skola', 'rockaden-theme' ), $data['school'] ?? '' ],
-			'grade'         => [ __( 'Årskurs/klass', 'rockaden-theme' ), $data['grade'] ?? '' ],
+			'phone'             => [ __( 'Telefon', 'rockaden-theme' ), $data['phone'] ?? '' ],
+			'address'           => [ __( 'Adress', 'rockaden-theme' ), self::format_address( $data, '' ) ],
+			'guardian2_name'    => [ __( 'Vårdnadshavare 2', 'rockaden-theme' ), $data['guardian2_name'] ?? '' ],
+			'guardian2_email'   => [ __( 'E-post (vårdnadshavare 2)', 'rockaden-theme' ), $data['guardian2_email'] ?? '' ],
+			'guardian2_phone'   => [ __( 'Telefon (vårdnadshavare 2)', 'rockaden-theme' ), $data['guardian2_phone'] ?? '' ],
+			'guardian2_address' => [ __( 'Adress (vårdnadshavare 2)', 'rockaden-theme' ), self::format_address( $data, 'guardian2_' ) ],
+			'school'            => [ __( 'Skola', 'rockaden-theme' ), $data['school'] ?? '' ],
+			'grade'             => [ __( 'Årskurs/klass', 'rockaden-theme' ), $data['grade'] ?? '' ],
 			// Only shown when it is not Swedish, so it stands out when it matters.
-			'locale'        => [ __( 'Språk', 'rockaden-theme' ), self::used_english( $data ) ? __( 'Engelska', 'rockaden-theme' ) : '' ],
+			'locale'            => [ __( 'Språk', 'rockaden-theme' ), self::used_english( $data ) ? __( 'Engelska', 'rockaden-theme' ) : '' ],
 		];
 		return array_filter( $rows, fn ( $row ) => '' !== $row[1] );
 	}
@@ -735,6 +841,23 @@ class Rockaden_Theme_Membership {
 	 */
 	private static function leave_check_text(): string {
 		return __( 'Formuläret kontrollerar inte vem som skickat det. Jämför namn, födelsedatum och e-post med medlemsregistret, och bekräfta med medlemmen (eller vårdnadshavaren) via kontaktuppgifterna i registret, inte genom att svara på det här mejlet. Stämmer något inte, eller känner medlemmen inte till begäran: ta inte bort medlemmen. Markera ändå förfrågan som hanterad.', 'rockaden-theme' );
+	}
+
+	/**
+	 * An address on one line, e.g. "Storgatan 1, 123 45 Stockholm", or ''.
+	 *
+	 * @param array<string, string> $data   Record.
+	 * @param string                $prefix '' or 'guardian2_'.
+	 */
+	private static function format_address( array $data, string $prefix ): string {
+		$street = $data[ $prefix . 'street' ] ?? '';
+		$postal = $data[ $prefix . 'postal_code' ] ?? '';
+		$city   = $data[ $prefix . 'city' ] ?? '';
+		if ( 1 === preg_match( '/^\d{5}$/', $postal ) ) {
+			$postal = substr( $postal, 0, 3 ) . ' ' . substr( $postal, 3 );
+		}
+		$place = trim( $postal . ' ' . $city );
+		return trim( $street . ( '' !== $street && '' !== $place ? ', ' : '' ) . $place );
 	}
 
 	/**
@@ -940,9 +1063,9 @@ class Rockaden_Theme_Membership {
 				<tr>
 					<th scope="row" style="width:12rem"><?php echo esc_html( $label ); ?></th>
 					<td>
-						<?php if ( 'email' === $field ) : ?>
+						<?php if ( 'email' === $field || 'guardian2_email' === $field ) : ?>
 							<a href="<?php echo esc_url( 'mailto:' . $value ); ?>"><?php echo esc_html( $value ); ?></a>
-						<?php elseif ( 'phone' === $field ) : ?>
+						<?php elseif ( 'phone' === $field || 'guardian2_phone' === $field ) : ?>
 							<a href="<?php echo esc_url( 'tel:' . preg_replace( '/[^0-9+]/', '', $value ) ); ?>"><?php echo esc_html( $value ); ?></a>
 						<?php else : ?>
 							<?php echo esc_html( $value ); ?>
@@ -1194,19 +1317,67 @@ class Rockaden_Theme_Membership {
 	}
 
 	/**
-	 * Make the status filter a public query var, so edit.php passes it from
+	 * Make the list filters public query vars, so edit.php passes them from
 	 * the URL into the list query.
 	 *
 	 * @param array<int, string> $vars Query vars.
 	 * @return array<int, string>
 	 */
 	public static function register_query_var( array $vars ): array {
-		$vars[] = self::STATUS_QUERY_VAR;
-		return $vars;
+		return array_merge( $vars, array_keys( self::LIST_FILTERS ) );
 	}
 
 	/**
-	 * Ny / Hanterad dropdown above the list.
+	 * The options for each list filter dropdown: value => label, '' first.
+	 *
+	 * @return array<string, array<string, string>> Query var => options.
+	 */
+	private static function filter_choices(): array {
+		$categories = [ '' => __( 'Alla kategorier', 'rockaden-theme' ) ];
+		foreach ( self::CATEGORIES as $category ) {
+			$categories[ $category ] = self::category_label( $category );
+		}
+
+		// Schools come from the requests themselves rather than from the
+		// settings, so a school since removed from the list can still be
+		// found. Requests are few and get deleted, so reading them is cheap.
+		$schools = [ '' => __( 'Alla skolor', 'rockaden-theme' ) ];
+		$ids     = get_posts(
+			[
+				'post_type'      => self::POST_TYPE,
+				'post_status'    => 'any',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			]
+		);
+		update_postmeta_cache( $ids );
+		$names = [];
+		foreach ( $ids as $id ) {
+			$school = (string) get_post_meta( (int) $id, 'rc_mr_school', true );
+			if ( '' !== $school ) {
+				$names[ $school ] = $school;
+			}
+		}
+		ksort( $names, SORT_LOCALE_STRING );
+
+		return [
+			self::STATUS_QUERY_VAR => [
+				''        => __( 'Alla statusar', 'rockaden-theme' ),
+				'new'     => __( 'Nya', 'rockaden-theme' ),
+				'handled' => __( 'Hanterade', 'rockaden-theme' ),
+			],
+			'rc_mr_kind'           => [
+				''      => __( 'Alla typer', 'rockaden-theme' ),
+				'join'  => self::kind_label( 'join' ),
+				'leave' => self::kind_label( 'leave' ),
+			],
+			'rc_mr_category'       => $categories,
+			'rc_mr_school'         => $schools + $names,
+		];
+	}
+
+	/**
+	 * Status, type, category and school dropdowns above the list.
 	 *
 	 * @param string $post_type Post type being listed.
 	 */
@@ -1214,21 +1385,23 @@ class Rockaden_Theme_Membership {
 		if ( self::POST_TYPE !== $post_type ) {
 			return;
 		}
-		$current = (string) get_query_var( self::STATUS_QUERY_VAR );
-		$choices = [
-			''        => __( 'Alla statusar', 'rockaden-theme' ),
-			'new'     => __( 'Nya', 'rockaden-theme' ),
-			'handled' => __( 'Hanterade', 'rockaden-theme' ),
-		];
-		echo '<select name="' . esc_attr( self::STATUS_QUERY_VAR ) . '">';
-		foreach ( $choices as $value => $label ) {
-			printf( '<option value="%s"%s>%s</option>', esc_attr( $value ), selected( $current, $value, false ), esc_html( $label ) );
+		foreach ( self::filter_choices() as $var => $choices ) {
+			// A school filter with no schools to choose from is just noise.
+			if ( 'rc_mr_school' === $var && count( $choices ) < 2 ) {
+				continue;
+			}
+			$current = (string) get_query_var( $var );
+			echo '<select name="' . esc_attr( $var ) . '">';
+			foreach ( $choices as $value => $label ) {
+				printf( '<option value="%s"%s>%s</option>', esc_attr( (string) $value ), selected( $current, (string) $value, false ), esc_html( $label ) );
+			}
+			echo '</select>';
 		}
-		echo '</select>';
 	}
 
 	/**
-	 * Apply the status filter to the admin list query.
+	 * Apply the list filters to the admin list query. Each one is a meta
+	 * condition; together they must all hold.
 	 *
 	 * @param WP_Query $query The query.
 	 */
@@ -1236,17 +1409,29 @@ class Rockaden_Theme_Membership {
 		if ( ! is_admin() || ! $query->is_main_query() || self::POST_TYPE !== $query->get( 'post_type' ) ) {
 			return;
 		}
+
+		$conditions = [];
+
 		$status = (string) $query->get( self::STATUS_QUERY_VAR );
 		if ( 'new' === $status || 'handled' === $status ) {
-			$query->set(
-				'meta_query',
-				[
-					[
-						'key'     => 'rc_mr_handled_at',
-						'compare' => 'new' === $status ? 'NOT EXISTS' : 'EXISTS',
-					],
-				]
-			);
+			$conditions[] = [
+				'key'     => 'rc_mr_handled_at',
+				'compare' => 'new' === $status ? 'NOT EXISTS' : 'EXISTS',
+			];
+		}
+
+		foreach ( [ 'rc_mr_kind', 'rc_mr_category', 'rc_mr_school' ] as $var ) {
+			$value = (string) $query->get( $var );
+			if ( '' !== $value ) {
+				$conditions[] = [
+					'key'   => $var,
+					'value' => $value,
+				];
+			}
+		}
+
+		if ( $conditions ) {
+			$query->set( 'meta_query', array_merge( [ 'relation' => 'AND' ], $conditions ) );
 		}
 	}
 }

@@ -87,6 +87,62 @@ $field = static function ( string $name, string $label, array $input = [], strin
 	<?php
 };
 
+/**
+ * Street, postal code and city. The same fields appear in two groups (the
+ * guardian's and an adult member's, only one ever enabled), and once more
+ * for a second guardian who lives elsewhere, hence the name prefix and the
+ * id suffix.
+ *
+ * @param string $prefix    Field name prefix: '' or 'guardian2_'.
+ * @param string $id_suffix Id suffix, to keep ids unique.
+ * @param bool   $required  Whether the browser should require the fields.
+ */
+$address_fields = static function ( string $prefix, string $id_suffix, bool $required ) use ( $field ): void {
+	// A separate autofill section, so the browser does not fill the second
+	// guardian's address with the first one's.
+	$section = '' === $prefix ? '' : 'section-guardian2 ';
+	$field(
+		$prefix . 'street',
+		__( 'Gatuadress', 'rockaden-theme' ),
+		[
+			'required'     => $required,
+			'maxlength'    => 200,
+			'autocomplete' => $section . 'street-address',
+		],
+		'',
+		$id_suffix
+	);
+	?>
+	<div class="rockaden-membership__row">
+		<?php
+		$field(
+			$prefix . 'postal_code',
+			__( 'Postnummer', 'rockaden-theme' ),
+			[
+				'required'     => $required,
+				'maxlength'    => 6,
+				'inputmode'    => 'numeric',
+				'autocomplete' => $section . 'postal-code',
+			],
+			'',
+			$id_suffix
+		);
+		$field(
+			$prefix . 'city',
+			__( 'Ort', 'rockaden-theme' ),
+			[
+				'required'     => $required,
+				'maxlength'    => 100,
+				'autocomplete' => $section . 'address-level2',
+			],
+			'',
+			$id_suffix
+		);
+		?>
+	</div>
+	<?php
+};
+
 $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membership-block' ] );
 ?>
 <div <?php echo wp_kses_post( $wrapper_attributes ); ?>>
@@ -251,6 +307,57 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 					);
 					?>
 				</div>
+				<?php $address_fields( '', '-guardian', true ); ?>
+
+				<?php
+				// Optional second guardian. Its fields are sent even while the
+				// disclosure is closed, but empty, and the server ignores an
+				// empty second guardian.
+				?>
+				<details class="rockaden-membership__more">
+					<summary><?php esc_html_e( 'Lägg till en vårdnadshavare till', 'rockaden-theme' ); ?></summary>
+					<?php
+					$field(
+						'guardian2_name',
+						__( 'Namn', 'rockaden-theme' ),
+						[
+							'maxlength'    => 200,
+							'autocomplete' => 'section-guardian2 name',
+						]
+					);
+					?>
+					<div class="rockaden-membership__row">
+						<?php
+						$field(
+							'guardian2_email',
+							__( 'E-post (valfritt)', 'rockaden-theme' ),
+							[
+								'type'         => 'email',
+								'autocomplete' => 'section-guardian2 email',
+							]
+						);
+						$field(
+							'guardian2_phone',
+							__( 'Telefon (valfritt)', 'rockaden-theme' ),
+							[
+								'type'         => 'tel',
+								'maxlength'    => 30,
+								'autocomplete' => 'section-guardian2 tel',
+							]
+						);
+						?>
+					</div>
+					<p class="rockaden-membership__check">
+						<label>
+							<input type="checkbox" name="guardian2_own_address" value="1" />
+							<?php esc_html_e( 'Bor på en annan adress', 'rockaden-theme' ); ?>
+						</label>
+					</p>
+					<?php // Enabled by view.js when the box is ticked. ?>
+					<fieldset class="rockaden-membership__group" data-own-address hidden disabled>
+						<?php $address_fields( 'guardian2_', '', true ); ?>
+					</fieldset>
+				</details>
 			</fieldset>
 
 			<fieldset class="rockaden-membership__group"<?php $group_attrs( [ 'vuxen', 'pensionar' ] ); ?>>
@@ -277,6 +384,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 					);
 					?>
 				</div>
+				<?php $address_fields( '', '', true ); ?>
 			</fieldset>
 		<?php else : ?>
 			<?php
