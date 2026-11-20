@@ -70,6 +70,12 @@
 			var inputs = form.querySelectorAll( '[name="' + name + '"]' );
 			for ( var i = 0; i < inputs.length; i++ ) {
 				if ( ! inputs[ i ].disabled && inputs[ i ].type !== 'hidden' ) {
+					// A field inside the closed second-guardian section
+					// cannot be focused until the section is open.
+					var more = inputs[ i ].closest( 'details' );
+					if ( more ) {
+						more.open = true;
+					}
 					inputs[ i ].classList.add( 'is-invalid' );
 					inputs[ i ].setAttribute( 'aria-invalid', 'true' );
 					inputs[ i ].focus();
@@ -93,6 +99,20 @@
 			} );
 			// Browsers restore form values on back/forward navigation.
 			applyCategory( category.value );
+		}
+
+		// Second guardian's own address: shown and required only when ticked.
+		var ownAddress = form.querySelector( '[name="guardian2_own_address"]' );
+		var ownAddressGroup = form.querySelector( '[data-own-address]' );
+		function applyOwnAddress() {
+			if ( ownAddress && ownAddressGroup ) {
+				ownAddressGroup.hidden = ! ownAddress.checked;
+				ownAddressGroup.disabled = ! ownAddress.checked;
+			}
+		}
+		if ( ownAddress ) {
+			ownAddress.addEventListener( 'change', applyOwnAddress );
+			applyOwnAddress();
 		}
 
 		form.addEventListener( 'input', function ( e ) {
@@ -186,6 +206,13 @@
 						if ( category ) {
 							applyCategory( '' );
 						}
+						applyOwnAddress();
+						Array.prototype.forEach.call(
+							form.querySelectorAll( 'details' ),
+							function ( d ) {
+								d.open = false;
+							}
+						);
 						setStatus( form.getAttribute( 'data-success' ) || '', 'success' );
 						submit.disabled = false;
 						if ( done ) {
