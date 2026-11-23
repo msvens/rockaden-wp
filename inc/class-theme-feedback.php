@@ -36,7 +36,7 @@ class Rockaden_Theme_Feedback {
 				'labels'              => [
 					'name'          => __( 'Feedback', 'rockaden-theme' ),
 					'singular_name' => __( 'Feedback', 'rockaden-theme' ),
-					'edit_item'     => __( 'Visa feedback', 'rockaden-theme' ),
+					'edit_item'     => __( 'View Feedback', 'rockaden-theme' ),
 					'all_items'     => __( 'Feedback', 'rockaden-theme' ),
 				],
 				// Submissions are received via the public REST endpoint and only
@@ -147,14 +147,14 @@ class Rockaden_Theme_Feedback {
 		if ( '' === $name || '' === $message ) {
 			return new WP_Error(
 				'rc_feedback_invalid',
-				__( 'Fyll i ditt namn och ett meddelande.', 'rockaden-theme' ),
+				__( 'Please fill in your name and a message.', 'rockaden-theme' ),
 				[ 'status' => 400 ]
 			);
 		}
 		if ( '' !== $email && ! is_email( $email ) ) {
 			return new WP_Error(
 				'rc_feedback_invalid_email',
-				__( 'Ange en giltig e-postadress eller lämna fältet tomt.', 'rockaden-theme' ),
+				__( 'Enter a valid email address or leave the field empty.', 'rockaden-theme' ),
 				[ 'status' => 400 ]
 			);
 		}
@@ -165,7 +165,7 @@ class Rockaden_Theme_Feedback {
 				'post_type'    => self::POST_TYPE,
 				'post_status'  => 'publish',
 				/* translators: %s: sender name. */
-				'post_title'   => sprintf( __( 'Feedback från %s', 'rockaden-theme' ), $name ),
+				'post_title'   => sprintf( __( 'Feedback from %s', 'rockaden-theme' ), $name ),
 				'post_content' => $message,
 			],
 			true
@@ -174,7 +174,7 @@ class Rockaden_Theme_Feedback {
 		if ( is_wp_error( $post_id ) ) {
 			return new WP_Error(
 				'rc_feedback_store_failed',
-				__( 'Kunde inte spara ditt meddelande. Försök igen.', 'rockaden-theme' ),
+				__( 'Could not save your message. Please try again.', 'rockaden-theme' ),
 				[ 'status' => 500 ]
 			);
 		}
@@ -208,12 +208,12 @@ class Rockaden_Theme_Feedback {
 		}
 
 		/* translators: %s: sender name. */
-		$subject = sprintf( __( 'Webbplatsfeedback från %s', 'rockaden-theme' ), $name );
+		$subject = sprintf( __( 'Website feedback from %s', 'rockaden-theme' ), $name );
 		$body    = sprintf(
 			"%s: %s\n%s: %s\n\n%s",
-			__( 'Namn', 'rockaden-theme' ),
+			__( 'Name', 'rockaden-theme' ),
 			$name,
-			__( 'E-post', 'rockaden-theme' ),
+			__( 'Email', 'rockaden-theme' ),
 			'' !== $email ? $email : '—',
 			$message
 		);
@@ -247,7 +247,7 @@ class Rockaden_Theme_Feedback {
 	public static function add_meta_box(): void {
 		add_meta_box(
 			'rc_feedback_contact',
-			__( 'Avsändare', 'rockaden-theme' ),
+			__( 'Sender', 'rockaden-theme' ),
 			[ self::class, 'render_meta_box' ],
 			self::POST_TYPE,
 			'side',
@@ -264,9 +264,9 @@ class Rockaden_Theme_Feedback {
 		$name  = (string) get_post_meta( $post->ID, 'rc_fb_name', true );
 		$email = (string) get_post_meta( $post->ID, 'rc_fb_email', true );
 		?>
-		<p><strong><?php esc_html_e( 'Namn', 'rockaden-theme' ); ?>:</strong><br /><?php echo esc_html( $name ); ?></p>
+		<p><strong><?php esc_html_e( 'Name', 'rockaden-theme' ); ?>:</strong><br /><?php echo esc_html( $name ); ?></p>
 		<p>
-			<strong><?php esc_html_e( 'E-post', 'rockaden-theme' ); ?>:</strong><br />
+			<strong><?php esc_html_e( 'Email', 'rockaden-theme' ); ?>:</strong><br />
 			<?php if ( $email ) : ?>
 				<a href="<?php echo esc_url( 'mailto:' . $email ); ?>"><?php echo esc_html( $email ); ?></a>
 			<?php endif; ?>
@@ -284,8 +284,8 @@ class Rockaden_Theme_Feedback {
 		$new = [];
 		foreach ( $columns as $key => $label ) {
 			if ( 'title' === $key ) {
-				$new[ $key ]        = __( 'Från', 'rockaden-theme' );
-				$new['rc_fb_email'] = __( 'E-post', 'rockaden-theme' );
+				$new[ $key ]        = __( 'From', 'rockaden-theme' );
+				$new['rc_fb_email'] = __( 'Email', 'rockaden-theme' );
 			} else {
 				$new[ $key ] = $label;
 			}

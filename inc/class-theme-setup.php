@@ -30,8 +30,8 @@ class Rockaden_Theme_Setup {
 	];
 
 	/**
-	 * Locales the landing page is seeded in. Swedish is the msgid source, so it
-	 * needs no catalogue; English has one under theme/languages/.
+	 * Locales the landing page is seeded in. English is the msgid source, so it
+	 * needs no catalogue; Swedish has one under languages/.
 	 */
 	private const LOCALE_SV = 'sv_SE';
 	private const LOCALE_EN = 'en_US';
@@ -187,7 +187,7 @@ class Rockaden_Theme_Setup {
 	 * switch_to_locale() alone is not enough either: the theme loads its own
 	 * textdomain with load_textdomain() and an explicit path, so it does not
 	 * follow WordPress's locale switch. The catalogue is unloaded and reloaded
-	 * by hand — verified, without it every locale renders Swedish.
+	 * by hand — verified, without it every locale renders in the request's language.
 	 *
 	 * @param string $locale Locale to render under, e.g. 'sv_SE' or 'en_US'.
 	 * @return string Resolved block markup.

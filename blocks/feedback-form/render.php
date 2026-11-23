@@ -37,34 +37,34 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-feedb
 		class="rockaden-feedback"
 		data-rest-url="<?php echo esc_url( rest_url( 'rockaden/v1/feedback' ) ); ?>"
 		data-nonce="<?php echo esc_attr( wp_create_nonce( 'wp_rest' ) ); ?>"
-		data-sending="<?php esc_attr_e( 'Skickar…', 'rockaden-theme' ); ?>"
-		data-success="<?php esc_attr_e( 'Tack! Ditt meddelande har skickats.', 'rockaden-theme' ); ?>"
-		data-error="<?php esc_attr_e( 'Något gick fel. Försök igen.', 'rockaden-theme' ); ?>"
+		data-sending="<?php esc_attr_e( 'Sending…', 'rockaden-theme' ); ?>"
+		data-success="<?php esc_attr_e( 'Thanks! Your message has been sent.', 'rockaden-theme' ); ?>"
+		data-error="<?php esc_attr_e( 'Something went wrong. Please try again.', 'rockaden-theme' ); ?>"
 	>
 		<p class="rockaden-feedback__field">
-			<label for="<?php echo esc_attr( $uid ); ?>-name"><?php esc_html_e( 'Namn', 'rockaden-theme' ); ?></label>
+			<label for="<?php echo esc_attr( $uid ); ?>-name"><?php esc_html_e( 'Name', 'rockaden-theme' ); ?></label>
 			<input type="text" id="<?php echo esc_attr( $uid ); ?>-name" name="name" required maxlength="200" autocomplete="name" />
 		</p>
 		<p class="rockaden-feedback__field">
-			<label for="<?php echo esc_attr( $uid ); ?>-email"><?php esc_html_e( 'E-post', 'rockaden-theme' ); ?></label>
+			<label for="<?php echo esc_attr( $uid ); ?>-email"><?php esc_html_e( 'Email', 'rockaden-theme' ); ?></label>
 			<input type="email" id="<?php echo esc_attr( $uid ); ?>-email" name="email" autocomplete="email" />
-			<span class="rockaden-feedback__hint"><?php esc_html_e( 'Valfritt – fyll i om du vill att vi ska kunna kontakta dig.', 'rockaden-theme' ); ?></span>
+			<span class="rockaden-feedback__hint"><?php esc_html_e( 'Optional — add it if you\'d like us to be able to contact you.', 'rockaden-theme' ); ?></span>
 		</p>
 		<p class="rockaden-feedback__field">
-			<label for="<?php echo esc_attr( $uid ); ?>-message"><?php esc_html_e( 'Meddelande', 'rockaden-theme' ); ?></label>
+			<label for="<?php echo esc_attr( $uid ); ?>-message"><?php esc_html_e( 'Message', 'rockaden-theme' ); ?></label>
 			<textarea id="<?php echo esc_attr( $uid ); ?>-message" name="message" rows="5" required maxlength="5000"></textarea>
 		</p>
 
 		<?php // Honeypot: hidden from people, tempting to bots. ?>
 		<div class="rockaden-feedback__hp" aria-hidden="true">
-			<label for="<?php echo esc_attr( $uid ); ?>-website"><?php esc_html_e( 'Webbplats', 'rockaden-theme' ); ?></label>
+			<label for="<?php echo esc_attr( $uid ); ?>-website"><?php esc_html_e( 'Website', 'rockaden-theme' ); ?></label>
 			<input type="text" id="<?php echo esc_attr( $uid ); ?>-website" name="website" tabindex="-1" autocomplete="off" />
 		</div>
 
-		<button type="submit" class="rockaden-feedback__submit"><?php esc_html_e( 'Skicka', 'rockaden-theme' ); ?></button>
+		<button type="submit" class="rockaden-feedback__submit"><?php esc_html_e( 'Send', 'rockaden-theme' ); ?></button>
 		<p class="rockaden-feedback__status" role="status" aria-live="polite"></p>
 	</form>
 
-	<noscript><?php esc_html_e( 'Aktivera JavaScript för att skicka feedback.', 'rockaden-theme' ); ?></noscript>
+	<noscript><?php esc_html_e( 'Please enable JavaScript to send feedback.', 'rockaden-theme' ); ?></noscript>
 	</div>
 </div>

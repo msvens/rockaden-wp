@@ -243,13 +243,13 @@ class Rockaden_Theme_Shop {
 		$how_to_order = get_post_meta( $post->ID, 'rc_how_to_order', true );
 		?>
 		<p>
-			<label for="rc_price"><strong><?php esc_html_e( 'Pris (icke-medlem)', 'rockaden-theme' ); ?></strong></label><br />
+			<label for="rc_price"><strong><?php esc_html_e( 'Price (non-member)', 'rockaden-theme' ); ?></strong></label><br />
 			<input type="text" id="rc_price" name="rc_price" value="<?php echo esc_attr( $price ); ?>" class="widefat" placeholder="910 kr" />
 		</p>
 		<p>
-			<label for="rc_member_price"><strong><?php esc_html_e( 'Medlemspris', 'rockaden-theme' ); ?></strong></label><br />
+			<label for="rc_member_price"><strong><?php esc_html_e( 'Member price', 'rockaden-theme' ); ?></strong></label><br />
 			<input type="text" id="rc_member_price" name="rc_member_price" value="<?php echo esc_attr( $member_price ); ?>" class="widefat" placeholder="780 kr" />
-			<span class="description"><?php esc_html_e( 'Lämna priset för icke-medlemmar tomt om varan bara säljs till medlemmar.', 'rockaden-theme' ); ?></span>
+			<span class="description"><?php esc_html_e( 'Leave the non-member price empty if the item is sold to members only.', 'rockaden-theme' ); ?></span>
 		</p>
 		<p>
 			<label for="rc_buy_url"><strong><?php esc_html_e( 'Buy URL', 'rockaden-theme' ); ?></strong></label><br />

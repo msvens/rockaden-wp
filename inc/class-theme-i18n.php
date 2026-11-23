@@ -335,7 +335,7 @@ class Rockaden_Theme_I18n {
 	}
 
 	/**
-	 * Load the theme's translations (Swedish-source msgids, en_US.mo for English).
+	 * Load the theme's translations (English msgids, sv_SE.mo for Swedish).
 	 *
 	 * We use load_textdomain() directly with an explicit path because
 	 * load_theme_textdomain() in WP 6.5+ doesn't reliably populate the

@@ -422,12 +422,12 @@ class Rockaden_Theme_Settings {
 			'headerStyle'        => $opts['header_style'],
 			'headerDensity'      => $opts['header_density'],
 			'headerBorderWidth'  => $opts['header_border_width'],
-			// Header UI labels, translated server-side (theme domain, Swedish source).
+			// Header UI labels, translated server-side (theme domain).
 			'i18n'               => [
-				'more'     => __( 'Mer', 'rockaden-theme' ),
-				'language' => __( 'Språk', 'rockaden-theme' ),
-				'darkMode' => __( 'Mörkt läge', 'rockaden-theme' ),
-				'docs'     => __( 'Dokumentation', 'rockaden-theme' ),
+				'more'     => __( 'More', 'rockaden-theme' ),
+				'language' => __( 'Language', 'rockaden-theme' ),
+				'darkMode' => __( 'Dark mode', 'rockaden-theme' ),
+				'docs'     => __( 'Documentation', 'rockaden-theme' ),
 			],
 		];
 	}

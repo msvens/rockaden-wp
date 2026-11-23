@@ -103,7 +103,7 @@ $address_fields = static function ( string $prefix, string $id_suffix, bool $req
 	$section = '' === $prefix ? '' : 'section-guardian2 ';
 	$field(
 		$prefix . 'street',
-		__( 'Gatuadress', 'rockaden-theme' ),
+		__( 'Street address', 'rockaden-theme' ),
 		[
 			'required'     => $required,
 			'maxlength'    => 200,
@@ -117,7 +117,7 @@ $address_fields = static function ( string $prefix, string $id_suffix, bool $req
 		<?php
 		$field(
 			$prefix . 'postal_code',
-			__( 'Postnummer', 'rockaden-theme' ),
+			__( 'Postal code', 'rockaden-theme' ),
 			[
 				'required'     => $required,
 				'maxlength'    => 6,
@@ -129,7 +129,7 @@ $address_fields = static function ( string $prefix, string $id_suffix, bool $req
 		);
 		$field(
 			$prefix . 'city',
-			__( 'Ort', 'rockaden-theme' ),
+			__( 'City', 'rockaden-theme' ),
 			[
 				'required'     => $required,
 				'maxlength'    => 100,
@@ -150,18 +150,18 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 		class="rockaden-membership"
 		data-context-url="<?php echo esc_url( rest_url( 'rockaden/v1/member-requests/context' ) ); ?>"
 		data-submit-url="<?php echo esc_url( rest_url( 'rockaden/v1/member-requests' ) ); ?>"
-		data-sending="<?php esc_attr_e( 'Skickar…', 'rockaden-theme' ); ?>"
-		data-success="<?php echo esc_attr( $is_join ? __( 'Tack! Vi har tagit emot din anmälan och skickat en bekräftelse till din e-post. Vi hör av oss när vi har gått igenom den.', 'rockaden-theme' ) : __( 'Tack! Vi har tagit emot din begäran om utträde och skickat en bekräftelse till din e-post. Vi hör av oss innan något ändras.', 'rockaden-theme' ) ); ?>"
-		data-error="<?php esc_attr_e( 'Något gick fel. Försök igen.', 'rockaden-theme' ); ?>"
+		data-sending="<?php esc_attr_e( 'Sending…', 'rockaden-theme' ); ?>"
+		data-success="<?php echo esc_attr( $is_join ? __( 'Thank you! We have received your application and sent a confirmation to your email. We will be in touch once we have reviewed it.', 'rockaden-theme' ) : __( 'Thank you! We have received your request to leave and sent a confirmation to your email. We will be in touch before anything changes.', 'rockaden-theme' ) ); ?>"
+		data-error="<?php esc_attr_e( 'Something went wrong. Please try again.', 'rockaden-theme' ); ?>"
 		<?php if ( ! $is_join ) : ?>
-			data-confirm-fallback="<?php esc_attr_e( 'Skicka begäran om utträde?', 'rockaden-theme' ); ?>"
+			data-confirm-fallback="<?php esc_attr_e( 'Send the request to leave?', 'rockaden-theme' ); ?>"
 		<?php endif; ?>
 	>
 		<input type="hidden" name="kind" value="<?php echo esc_attr( $variant ); ?>" />
 		<input type="hidden" name="locale" value="<?php echo esc_attr( Rockaden_Theme_I18n::current_locale() ); ?>" />
 
 		<p class="rockaden-membership__legend-note">
-			<span aria-hidden="true">*</span> <?php esc_html_e( 'Obligatoriskt fält', 'rockaden-theme' ); ?>
+			<span aria-hidden="true">*</span> <?php esc_html_e( 'Required field', 'rockaden-theme' ); ?>
 		</p>
 
 		<?php if ( ! $is_join ) : ?>
@@ -170,9 +170,9 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 			<input type="hidden" name="category" value="<?php echo esc_attr( $fixed ); ?>" />
 		<?php else : ?>
 			<p class="rockaden-membership__field">
-				<label for="<?php echo esc_attr( $uid ); ?>-category"><?php esc_html_e( 'Kategori', 'rockaden-theme' ); ?><?php $required_marker(); ?></label>
+				<label for="<?php echo esc_attr( $uid ); ?>-category"><?php esc_html_e( 'Category', 'rockaden-theme' ); ?><?php $required_marker(); ?></label>
 				<select id="<?php echo esc_attr( $uid ); ?>-category" name="category" required>
-					<option value=""><?php esc_html_e( 'Välj…', 'rockaden-theme' ); ?></option>
+					<option value=""><?php esc_html_e( 'Choose…', 'rockaden-theme' ); ?></option>
 					<?php foreach ( Rockaden_Theme_Membership::CATEGORIES as $category ) : ?>
 						<option value="<?php echo esc_attr( $category ); ?>"><?php echo esc_html( Rockaden_Theme_Membership::category_label( $category ) ); ?></option>
 					<?php endforeach; ?>
@@ -186,7 +186,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 				<?php
 				$field(
 					'first_name',
-					__( 'Förnamn', 'rockaden-theme' ),
+					__( 'First name', 'rockaden-theme' ),
 					[
 						'required'  => true,
 						'maxlength' => 100,
@@ -194,7 +194,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 				);
 				$field(
 					'last_name',
-					__( 'Efternamn', 'rockaden-theme' ),
+					__( 'Last name', 'rockaden-theme' ),
 					[
 						'required'  => true,
 						'maxlength' => 100,
@@ -206,25 +206,25 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 			if ( $use_pnr ) {
 				$field(
 					'personnummer',
-					__( 'Personnummer', 'rockaden-theme' ),
+					__( 'Personal identity number', 'rockaden-theme' ),
 					[
 						'required'     => true,
 						'maxlength'    => 15,
 						'inputmode'    => 'numeric',
 						'autocomplete' => 'off',
-						'placeholder'  => __( 'ÅÅÅÅMMDD-NNNN', 'rockaden-theme' ),
+						'placeholder'  => __( 'YYYYMMDD-NNNN', 'rockaden-theme' ),
 					]
 				);
 			} else {
 				$field(
 					'birthdate',
-					__( 'Födelsedatum', 'rockaden-theme' ),
+					__( 'Date of birth', 'rockaden-theme' ),
 					[
 						'required'     => true,
 						'maxlength'    => 10,
 						'inputmode'    => 'numeric',
 						'autocomplete' => 'off',
-						'placeholder'  => __( 'ÅÅÅÅ-MM-DD', 'rockaden-theme' ),
+						'placeholder'  => __( 'YYYY-MM-DD', 'rockaden-theme' ),
 					]
 				);
 			}
@@ -233,13 +233,13 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 
 		<?php if ( $is_join ) : ?>
 			<fieldset class="rockaden-membership__group"<?php $group_attrs( [ 'skolschack' ] ); ?>>
-				<legend><?php esc_html_e( 'Skola', 'rockaden-theme' ); ?></legend>
+				<legend><?php esc_html_e( 'School', 'rockaden-theme' ); ?></legend>
 				<div class="rockaden-membership__row">
 					<?php if ( $schools ) : ?>
 						<p class="rockaden-membership__field">
-							<label for="<?php echo esc_attr( $uid ); ?>-school"><?php esc_html_e( 'Skola', 'rockaden-theme' ); ?><?php $required_marker(); ?></label>
+							<label for="<?php echo esc_attr( $uid ); ?>-school"><?php esc_html_e( 'School', 'rockaden-theme' ); ?><?php $required_marker(); ?></label>
 							<select id="<?php echo esc_attr( $uid ); ?>-school" name="school" required>
-								<option value=""><?php esc_html_e( 'Välj skola…', 'rockaden-theme' ); ?></option>
+								<option value=""><?php esc_html_e( 'Choose a school…', 'rockaden-theme' ); ?></option>
 								<?php foreach ( $schools as $school ) : ?>
 									<option value="<?php echo esc_attr( $school ); ?>"><?php echo esc_html( $school ); ?></option>
 								<?php endforeach; ?>
@@ -249,7 +249,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 					else :
 						$field(
 							'school',
-							__( 'Skola', 'rockaden-theme' ),
+							__( 'School', 'rockaden-theme' ),
 							[
 								'required'  => true,
 								'maxlength' => 200,
@@ -258,7 +258,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 					endif;
 					$field(
 						'grade',
-						__( 'Årskurs/klass', 'rockaden-theme' ),
+						__( 'Grade/class', 'rockaden-theme' ),
 						[
 							'required'  => true,
 							'maxlength' => 20,
@@ -269,11 +269,11 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 			</fieldset>
 
 			<fieldset class="rockaden-membership__group"<?php $group_attrs( Rockaden_Theme_Membership::JUNIOR_CATEGORIES ); ?>>
-				<legend><?php esc_html_e( 'Vårdnadshavare', 'rockaden-theme' ); ?></legend>
+				<legend><?php esc_html_e( 'Parent or guardian', 'rockaden-theme' ); ?></legend>
 				<?php
 				$field(
 					'guardian_name',
-					__( 'Namn', 'rockaden-theme' ),
+					__( 'Name', 'rockaden-theme' ),
 					[
 						'required'     => true,
 						'maxlength'    => 200,
@@ -285,7 +285,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 					<?php
 					$field(
 						'email',
-						__( 'E-post', 'rockaden-theme' ),
+						__( 'Email', 'rockaden-theme' ),
 						[
 							'type'         => 'email',
 							'required'     => true,
@@ -296,7 +296,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 					);
 					$field(
 						'phone',
-						__( 'Telefon (valfritt)', 'rockaden-theme' ),
+						__( 'Phone (optional)', 'rockaden-theme' ),
 						[
 							'type'         => 'tel',
 							'maxlength'    => 30,
@@ -315,11 +315,11 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 				// empty second guardian.
 				?>
 				<details class="rockaden-membership__more">
-					<summary><?php esc_html_e( 'Lägg till en vårdnadshavare till', 'rockaden-theme' ); ?></summary>
+					<summary><?php esc_html_e( 'Add another parent or guardian', 'rockaden-theme' ); ?></summary>
 					<?php
 					$field(
 						'guardian2_name',
-						__( 'Namn', 'rockaden-theme' ),
+						__( 'Name', 'rockaden-theme' ),
 						[
 							'maxlength'    => 200,
 							'autocomplete' => 'section-guardian2 name',
@@ -330,7 +330,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 						<?php
 						$field(
 							'guardian2_email',
-							__( 'E-post (valfritt)', 'rockaden-theme' ),
+							__( 'Email (optional)', 'rockaden-theme' ),
 							[
 								'type'         => 'email',
 								'autocomplete' => 'section-guardian2 email',
@@ -338,7 +338,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 						);
 						$field(
 							'guardian2_phone',
-							__( 'Telefon (valfritt)', 'rockaden-theme' ),
+							__( 'Phone (optional)', 'rockaden-theme' ),
 							[
 								'type'         => 'tel',
 								'maxlength'    => 30,
@@ -350,7 +350,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 					<p class="rockaden-membership__check">
 						<label>
 							<input type="checkbox" name="guardian2_own_address" value="1" />
-							<?php esc_html_e( 'Bor på en annan adress', 'rockaden-theme' ); ?>
+							<?php esc_html_e( 'Lives at a different address', 'rockaden-theme' ); ?>
 						</label>
 					</p>
 					<?php // Enabled by view.js when the box is ticked. ?>
@@ -361,12 +361,12 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 			</fieldset>
 
 			<fieldset class="rockaden-membership__group"<?php $group_attrs( [ 'vuxen', 'pensionar' ] ); ?>>
-				<legend><?php esc_html_e( 'Kontaktuppgifter', 'rockaden-theme' ); ?></legend>
+				<legend><?php esc_html_e( 'Contact details', 'rockaden-theme' ); ?></legend>
 				<div class="rockaden-membership__row">
 					<?php
 					$field(
 						'email',
-						__( 'E-post', 'rockaden-theme' ),
+						__( 'Email', 'rockaden-theme' ),
 						[
 							'type'         => 'email',
 							'required'     => true,
@@ -375,7 +375,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 					);
 					$field(
 						'phone',
-						__( 'Telefon (valfritt)', 'rockaden-theme' ),
+						__( 'Phone (optional)', 'rockaden-theme' ),
 						[
 							'type'         => 'tel',
 							'maxlength'    => 30,
@@ -390,30 +390,30 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 			<?php
 			$field(
 				'email',
-				__( 'E-post', 'rockaden-theme' ),
+				__( 'Email', 'rockaden-theme' ),
 				[
 					'type'         => 'email',
 					'required'     => true,
 					'autocomplete' => 'email',
 				],
-				__( 'Vi skickar en bekräftelse hit.', 'rockaden-theme' )
+				__( 'We will send a confirmation here.', 'rockaden-theme' )
 			);
 			?>
 		<?php endif; ?>
 
 		<p class="rockaden-membership__field">
-			<label for="<?php echo esc_attr( $uid ); ?>-message"><?php esc_html_e( 'Meddelande (valfritt)', 'rockaden-theme' ); ?></label>
+			<label for="<?php echo esc_attr( $uid ); ?>-message"><?php esc_html_e( 'Message (optional)', 'rockaden-theme' ); ?></label>
 			<textarea id="<?php echo esc_attr( $uid ); ?>-message" name="message" rows="4" maxlength="5000"></textarea>
 		</p>
 
 		<?php // Honeypot: hidden from people, tempting to bots. ?>
 		<div class="rockaden-membership__hp" aria-hidden="true">
-			<label for="<?php echo esc_attr( $uid ); ?>-website"><?php esc_html_e( 'Webbplats', 'rockaden-theme' ); ?></label>
+			<label for="<?php echo esc_attr( $uid ); ?>-website"><?php esc_html_e( 'Website', 'rockaden-theme' ); ?></label>
 			<input type="text" id="<?php echo esc_attr( $uid ); ?>-website" name="website" tabindex="-1" autocomplete="off" />
 		</div>
 
 		<button type="submit" class="rockaden-membership__submit" disabled>
-			<?php echo esc_html( $is_join ? __( 'Skicka anmälan', 'rockaden-theme' ) : __( 'Skicka begäran', 'rockaden-theme' ) ); ?>
+			<?php echo esc_html( $is_join ? __( 'Send application', 'rockaden-theme' ) : __( 'Send request', 'rockaden-theme' ) ); ?>
 		</button>
 		<p class="rockaden-membership__status" role="status" aria-live="polite"></p>
 	</form>
@@ -424,11 +424,11 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 	if ( ! $is_join ) :
 		?>
 		<dialog class="rockaden-membership__dialog rockaden-membership__confirm" aria-labelledby="<?php echo esc_attr( $uid ); ?>-confirm-title">
-			<h2 id="<?php echo esc_attr( $uid ); ?>-confirm-title" class="rockaden-membership__dialog-title"><?php esc_html_e( 'Skicka begäran om utträde?', 'rockaden-theme' ); ?></h2>
-			<p><?php esc_html_e( 'Begäran skickas till klubben. Medlemskapet avslutas inte förrän vi har kontaktat dig och bekräftat den.', 'rockaden-theme' ); ?></p>
+			<h2 id="<?php echo esc_attr( $uid ); ?>-confirm-title" class="rockaden-membership__dialog-title"><?php esc_html_e( 'Send the request to leave?', 'rockaden-theme' ); ?></h2>
+			<p><?php esc_html_e( 'The request goes to the club. The membership does not end until we have contacted you and confirmed it.', 'rockaden-theme' ); ?></p>
 			<div class="rockaden-membership__dialog-actions">
-				<button type="button" class="rockaden-membership__submit" data-confirm="cancel"><?php esc_html_e( 'Avbryt', 'rockaden-theme' ); ?></button>
-				<button type="button" class="rockaden-membership__submit" data-confirm="ok"><?php esc_html_e( 'Ja, skicka begäran', 'rockaden-theme' ); ?></button>
+				<button type="button" class="rockaden-membership__submit" data-confirm="cancel"><?php esc_html_e( 'Cancel', 'rockaden-theme' ); ?></button>
+				<button type="button" class="rockaden-membership__submit" data-confirm="ok"><?php esc_html_e( 'Yes, send the request', 'rockaden-theme' ); ?></button>
 			</div>
 		</dialog>
 	<?php endif; ?>
@@ -439,21 +439,21 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => 'rockaden-membe
 	?>
 	<dialog class="rockaden-membership__dialog rockaden-membership__done" aria-labelledby="<?php echo esc_attr( $uid ); ?>-done-title">
 		<h2 id="<?php echo esc_attr( $uid ); ?>-done-title" class="rockaden-membership__dialog-title">
-			<?php echo esc_html( $is_join ? __( 'Tack för din anmälan!', 'rockaden-theme' ) : __( 'Tack, vi har tagit emot din begäran', 'rockaden-theme' ) ); ?>
+			<?php echo esc_html( $is_join ? __( 'Thank you for your application!', 'rockaden-theme' ) : __( 'Thank you, we have received your request', 'rockaden-theme' ) ); ?>
 		</h2>
 		<p>
 			<?php
 			echo esc_html(
 				$is_join
-					? __( 'En bekräftelse är på väg till din e-post. Anmälan gås igenom av en person i klubben, så det kan dröja några dagar innan vi hör av oss. Medlemskapet börjar när vi har bekräftat det.', 'rockaden-theme' )
-					: __( 'En bekräftelse är på väg till din e-post. Begäran gås igenom av en person i klubben, så det kan dröja några dagar. Medlemskapet avslutas först när vi har kontaktat dig.', 'rockaden-theme' )
+					? __( 'A confirmation is on its way to your email. A person at the club reviews each application, so it may take a few days before we are in touch. Your membership starts once we have confirmed it.', 'rockaden-theme' )
+					: __( 'A confirmation is on its way to your email. A person at the club reviews each request, so it may take a few days. Your membership only ends once we have contacted you.', 'rockaden-theme' )
 			);
 			?>
 		</p>
 		<div class="rockaden-membership__dialog-actions">
-			<button type="button" class="rockaden-membership__submit" data-done="close"><?php esc_html_e( 'Stäng', 'rockaden-theme' ); ?></button>
+			<button type="button" class="rockaden-membership__submit" data-done="close"><?php esc_html_e( 'Close', 'rockaden-theme' ); ?></button>
 		</div>
 	</dialog>
 
-	<noscript><?php esc_html_e( 'Aktivera JavaScript för att skicka formuläret.', 'rockaden-theme' ); ?></noscript>
+	<noscript><?php esc_html_e( 'Please enable JavaScript to send the form.', 'rockaden-theme' ); ?></noscript>
 </div>

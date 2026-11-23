@@ -3,7 +3,7 @@
  * Title: Landing Why Section
  * Slug: rockaden-theme/landing-why
  * Categories: rockaden
- * Description: "Why Rockaden?" section with feature cards on the left and image on the right.
+ * Description: \"Why Rockaden?\" section with feature cards on the left and image on the right.
  *
  * Uses native wp:columns. Only the right column has an explicit width (40%);
  * the left column has no width and uses Gutenberg's default `flex-grow: 1`
@@ -37,7 +37,7 @@
 <!-- wp:column {"className":"rockaden-landing-why__cards-col"} -->
 <div class="wp-block-column rockaden-landing-why__cards-col">
 <!-- wp:heading {"level":2,"className":"rockaden-landing-why__heading"} -->
-<h2 class="wp-block-heading rockaden-landing-why__heading"><?php esc_html_e( 'Varför välja SK Rockaden?', 'rockaden-theme' ); ?></h2>
+<h2 class="wp-block-heading rockaden-landing-why__heading"><?php esc_html_e( 'Why choose SK Rockaden?', 'rockaden-theme' ); ?></h2>
 <!-- /wp:heading -->
 
 <!-- wp:group {"className":"rockaden-feature-card","layout":{"type":"flex","flexWrap":"nowrap"}} -->
@@ -47,11 +47,11 @@
 
 <!-- wp:group {"className":"rockaden-feature-card__body","layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group rockaden-feature-card__body"><!-- wp:heading {"level":3,"className":"rockaden-feature-card__title"} -->
-<h3 class="wp-block-heading rockaden-feature-card__title"><?php esc_html_e( 'Träningsgrupper för alla åldrar', 'rockaden-theme' ); ?></h3>
+<h3 class="wp-block-heading rockaden-feature-card__title"><?php esc_html_e( 'Training groups for all ages', 'rockaden-theme' ); ?></h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"className":"rockaden-feature-card__text"} -->
-<p class="rockaden-feature-card__text"><?php esc_html_e( 'Nybörjare till elit', 'rockaden-theme' ); ?></p>
+<p class="rockaden-feature-card__text"><?php esc_html_e( 'Beginner to elite', 'rockaden-theme' ); ?></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group -->
@@ -63,11 +63,11 @@
 
 <!-- wp:group {"className":"rockaden-feature-card__body","layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group rockaden-feature-card__body"><!-- wp:heading {"level":3,"className":"rockaden-feature-card__title"} -->
-<h3 class="wp-block-heading rockaden-feature-card__title"><?php esc_html_e( 'Tjejgrupp – trygg miljö och gemenskap', 'rockaden-theme' ); ?></h3>
+<h3 class="wp-block-heading rockaden-feature-card__title"><?php esc_html_e( 'Girls\' group — safe environment and community', 'rockaden-theme' ); ?></h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"className":"rockaden-feature-card__text"} -->
-<p class="rockaden-feature-card__text"><?php esc_html_e( 'Gemenskap och fler tjejer på schackbrädet', 'rockaden-theme' ); ?></p>
+<p class="rockaden-feature-card__text"><?php esc_html_e( 'Community and more girls at the chessboard', 'rockaden-theme' ); ?></p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group --></div>
 <!-- /wp:group -->
@@ -79,7 +79,7 @@
 
 <!-- wp:group {"className":"rockaden-feature-card__body","layout":{"type":"flex","orientation":"vertical"}} -->
 <div class="wp-block-group rockaden-feature-card__body"><!-- wp:heading {"level":3,"className":"rockaden-feature-card__title"} -->
-<h3 class="wp-block-heading rockaden-feature-card__title"><?php esc_html_e( 'Centralt i Hägersten', 'rockaden-theme' ); ?></h3>
+<h3 class="wp-block-heading rockaden-feature-card__title"><?php esc_html_e( 'Central in Hägersten', 'rockaden-theme' ); ?></h3>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"className":"rockaden-feature-card__text"} -->

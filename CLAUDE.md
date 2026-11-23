@@ -43,10 +43,13 @@ npx wp-env start          # http://localhost:8888 (admin/password); mounts ../ch
 
 ```bash
 pnpm run check            # PHPStan level 6 + phpcs (WordPress standard, text domain rockaden-theme) + i18n:check
-pnpm i18n                 # regenerate catalogues; edit only languages/rockaden-theme-en_US.po; READ EVERY FUZZY (msgmerge guesses wrong)
+pnpm i18n                 # regenerate catalogues; edit only languages/rockaden-theme-sv_SE.po; READ EVERY FUZZY (msgmerge guesses wrong)
 pnpm package              # dist/rockaden-theme.zip with root folder rockaden-theme (the install slug)
 ```
 
+- Source strings are **English**; Swedish lives in `languages/rockaden-theme-sv_SE.po` — the same
+  convention as the plugin. `i18n:check` fails on a string translated to itself (= written in the
+  wrong language); genuinely identical ones go in `sameInTranslation` in `scripts/lib/packages.mjs`
 - Never add phpstan-ignore / phpcs:ignore / eslint-disable silently — discuss first
 - Theme JS is deliberately no-build and unlinted (ES5 style)
 - `pnpm package` runs `composer install --no-dev`; re-run `composer install` afterwards
