@@ -54,8 +54,9 @@ pnpm run check     # PHPStan + phpcs + translations
 
 ### Translations
 
-Source strings are **Swedish**; the catalogue is `languages/rockaden-theme-en_US.po` for the
-visitor SV/EN switch, the only file you edit. Everything else is generated:
+Source strings are **English**, the WordPress convention and the same as the plugin; the catalogue
+is `languages/rockaden-theme-sv_SE.po` for the visitor SV/EN switch, the only file you edit.
+Everything else is generated:
 
 ```bash
 pnpm i18n          # re-extract, merge into the .po, regenerate .mo/.l10n.php

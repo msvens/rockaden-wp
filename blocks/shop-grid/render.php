@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 $count      = isset( $attributes['count'] ) ? (int) $attributes['count'] : 0;
 $more_url   = (string) ( $attributes['moreUrl'] ?? '/shop' );
-$more_label = (string) ( $attributes['moreLabel'] ?? __( 'Mer schackmateriel', 'rockaden-theme' ) );
+$more_label = (string) ( $attributes['moreLabel'] ?? __( 'More chess equipment', 'rockaden-theme' ) );
 $layout     = isset( $attributes['layout'] ) && 'column' === $attributes['layout'] ? 'column' : 'grid';
 $condensed  = isset( $attributes['display'] ) && 'condensed' === $attributes['display'];
 
@@ -67,7 +67,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => $classes ] );
 						<?php if ( ! $condensed ) : ?>
 							<?php if ( 'out_of_stock' === ( $item['stockStatus'] ?? 'in_stock' ) ) : ?>
 								<p class="rockaden-shop-card__stock rockaden-shop-card__stock--out">
-									<?php esc_html_e( 'Slut i lager', 'rockaden-theme' ); ?>
+									<?php esc_html_e( 'Out of stock', 'rockaden-theme' ); ?>
 								</p>
 							<?php endif; ?>
 							<?php
@@ -80,13 +80,13 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => $classes ] );
 								<p class="rockaden-shop-card__price">
 									<?php if ( $item['price'] ) : ?>
 										<span class="rockaden-shop-card__price-row">
-											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Pris', 'rockaden-theme' ); ?></span>
+											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Price', 'rockaden-theme' ); ?></span>
 											<span class="rockaden-shop-card__price-value"><?php echo esc_html( $item['price'] ); ?></span>
 										</span>
 									<?php endif; ?>
 									<?php if ( $item['memberPrice'] ) : ?>
 										<span class="rockaden-shop-card__price-row rockaden-shop-card__price-row--member">
-											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Rockaden medlem', 'rockaden-theme' ); ?></span>
+											<span class="rockaden-shop-card__price-label"><?php esc_html_e( 'Rockaden member', 'rockaden-theme' ); ?></span>
 											<span class="rockaden-shop-card__price-value"><?php echo esc_html( $item['memberPrice'] ); ?></span>
 										</span>
 									<?php endif; ?>
@@ -104,7 +104,7 @@ $wrapper_attributes = get_block_wrapper_attributes( [ 'class' => $classes ] );
 							<?php endif; ?>
 							<?php if ( $item['buyUrl'] ) : ?>
 								<a href="<?php echo esc_url( $item['buyUrl'] ); ?>" class="rockaden-shop-card__buy">
-									<?php esc_html_e( 'Köp', 'rockaden-theme' ); ?>
+									<?php esc_html_e( 'Buy', 'rockaden-theme' ); ?>
 								</a>
 							<?php endif; ?>
 						<?php endif; ?>

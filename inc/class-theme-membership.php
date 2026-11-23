@@ -115,13 +115,13 @@ class Rockaden_Theme_Membership {
 			self::POST_TYPE,
 			[
 				'labels'              => [
-					'name'          => __( 'Medlemsförfrågningar', 'rockaden-theme' ),
-					'singular_name' => __( 'Medlemsförfrågan', 'rockaden-theme' ),
-					'menu_name'     => __( 'Medlemskap', 'rockaden-theme' ),
-					'edit_item'     => __( 'Visa förfrågan', 'rockaden-theme' ),
-					'all_items'     => __( 'Medlemsförfrågningar', 'rockaden-theme' ),
-					'search_items'  => __( 'Sök förfrågningar', 'rockaden-theme' ),
-					'not_found'     => __( 'Inga förfrågningar.', 'rockaden-theme' ),
+					'name'          => __( 'Membership requests', 'rockaden-theme' ),
+					'singular_name' => __( 'Membership request', 'rockaden-theme' ),
+					'menu_name'     => __( 'Membership', 'rockaden-theme' ),
+					'edit_item'     => __( 'View request', 'rockaden-theme' ),
+					'all_items'     => __( 'Membership requests', 'rockaden-theme' ),
+					'search_items'  => __( 'Search requests', 'rockaden-theme' ),
+					'not_found'     => __( 'No requests.', 'rockaden-theme' ),
 				],
 				// Received through the public REST endpoint, reviewed in the admin
 				// only: no front-end pages, archive or rewrite.
@@ -211,13 +211,13 @@ class Rockaden_Theme_Membership {
 	public static function category_label( string $category ): string {
 		switch ( $category ) {
 			case 'skolschack':
-				return __( 'Skolschack', 'rockaden-theme' );
+				return __( 'School chess', 'rockaden-theme' );
 			case 'klubbschack':
-				return __( 'Klubbschack', 'rockaden-theme' );
+				return __( 'Club chess', 'rockaden-theme' );
 			case 'vuxen':
-				return __( 'Vuxen medlem', 'rockaden-theme' );
+				return __( 'Adult member', 'rockaden-theme' );
 			case 'pensionar':
-				return __( 'Pensionär', 'rockaden-theme' );
+				return __( 'Senior (retired)', 'rockaden-theme' );
 		}
 		return $category;
 	}
@@ -229,8 +229,8 @@ class Rockaden_Theme_Membership {
 	 */
 	public static function kind_label( string $kind ): string {
 		return 'leave' === $kind
-			? __( 'Utträde', 'rockaden-theme' )
-			: __( 'Anmälan', 'rockaden-theme' );
+			? __( 'Leave', 'rockaden-theme' )
+			: __( 'Application', 'rockaden-theme' );
 	}
 
 	/**
@@ -384,7 +384,7 @@ class Rockaden_Theme_Membership {
 			[
 				'post_type'    => self::POST_TYPE,
 				'post_status'  => 'publish',
-				'post_title'   => self::in_source_language( fn () => self::title( $data ) ),
+				'post_title'   => self::in_swedish( fn () => self::title( $data ) ),
 				'post_content' => $data['message'],
 			],
 			true
@@ -392,7 +392,7 @@ class Rockaden_Theme_Membership {
 		if ( is_wp_error( $post_id ) ) {
 			return new WP_Error(
 				'rc_member_request_store_failed',
-				__( 'Kunde inte spara din förfrågan. Försök igen.', 'rockaden-theme' ),
+				__( 'Could not save your request. Please try again.', 'rockaden-theme' ),
 				[ 'status' => 500 ]
 			);
 		}
@@ -492,13 +492,13 @@ class Rockaden_Theme_Membership {
 	 */
 	private static function check_address( array $data, string $prefix ): ?array {
 		if ( '' === $data[ $prefix . 'street' ] ) {
-			return self::problem( $prefix . 'street', __( 'Fyll i gatuadress.', 'rockaden-theme' ) );
+			return self::problem( $prefix . 'street', __( 'Enter the street address.', 'rockaden-theme' ) );
 		}
 		if ( 1 !== preg_match( '/^\d{5}$/', $data[ $prefix . 'postal_code' ] ) ) {
-			return self::problem( $prefix . 'postal_code', __( 'Postnumret ska vara fem siffror, t.ex. 123 45.', 'rockaden-theme' ) );
+			return self::problem( $prefix . 'postal_code', __( 'The postal code should be five digits, e.g. 123 45.', 'rockaden-theme' ) );
 		}
 		if ( '' === $data[ $prefix . 'city' ] ) {
-			return self::problem( $prefix . 'city', __( 'Fyll i ort.', 'rockaden-theme' ) );
+			return self::problem( $prefix . 'city', __( 'Enter the city.', 'rockaden-theme' ) );
 		}
 		return null;
 	}
@@ -512,16 +512,16 @@ class Rockaden_Theme_Membership {
 	 */
 	private static function validate( array $data ): ?array {
 		if ( '' === $data['kind'] ) {
-			return self::problem( 'kind', __( 'Okänd typ av förfrågan.', 'rockaden-theme' ) );
+			return self::problem( 'kind', __( 'Unknown kind of request.', 'rockaden-theme' ) );
 		}
 		if ( 'join' === $data['kind'] && ! in_array( $data['category'], self::CATEGORIES, true ) ) {
-			return self::problem( 'category', __( 'Välj en kategori.', 'rockaden-theme' ) );
+			return self::problem( 'category', __( 'Choose a category.', 'rockaden-theme' ) );
 		}
 		if ( '' === $data['first_name'] ) {
-			return self::problem( 'first_name', __( 'Fyll i förnamn.', 'rockaden-theme' ) );
+			return self::problem( 'first_name', __( 'Enter a first name.', 'rockaden-theme' ) );
 		}
 		if ( '' === $data['last_name'] ) {
-			return self::problem( 'last_name', __( 'Fyll i efternamn.', 'rockaden-theme' ) );
+			return self::problem( 'last_name', __( 'Enter a last name.', 'rockaden-theme' ) );
 		}
 
 		$identity = self::uses_personnummer()
@@ -533,15 +533,15 @@ class Rockaden_Theme_Membership {
 
 		$join = 'join' === $data['kind'];
 		if ( $join && in_array( $data['category'], self::JUNIOR_CATEGORIES, true ) && '' === $data['guardian_name'] ) {
-			return self::problem( 'guardian_name', __( 'Fyll i vårdnadshavarens namn.', 'rockaden-theme' ) );
+			return self::problem( 'guardian_name', __( 'Enter the parent\'s or guardian\'s name.', 'rockaden-theme' ) );
 		}
 		if ( '' === $data['email'] || ! is_email( $data['email'] ) ) {
-			return self::problem( 'email', __( 'Ange en giltig e-postadress.', 'rockaden-theme' ) );
+			return self::problem( 'email', __( 'Enter a valid email address.', 'rockaden-theme' ) );
 		}
 		// Loose on purpose: people write phone numbers in many ways. Only
 		// catch what cannot be a number at all.
 		if ( '' !== $data['phone'] && 1 !== preg_match( '/^\+?[0-9\s\-()]{6,30}$/', $data['phone'] ) ) {
-			return self::problem( 'phone', __( 'Ange ett giltigt telefonnummer eller lämna fältet tomt.', 'rockaden-theme' ) );
+			return self::problem( 'phone', __( 'Enter a valid phone number or leave the field empty.', 'rockaden-theme' ) );
 		}
 
 		if ( $join ) {
@@ -557,13 +557,13 @@ class Rockaden_Theme_Membership {
 		$has_second = '' !== $data['guardian2_name'] || '' !== $data['guardian2_email'] || '' !== $data['guardian2_phone'] || '1' === $data['guardian2_own_address'];
 		if ( $has_second ) {
 			if ( '' === $data['guardian2_name'] ) {
-				return self::problem( 'guardian2_name', __( 'Fyll i den andra vårdnadshavarens namn.', 'rockaden-theme' ) );
+				return self::problem( 'guardian2_name', __( 'Enter the second parent\'s or guardian\'s name.', 'rockaden-theme' ) );
 			}
 			if ( '' !== $data['guardian2_email'] && ! is_email( $data['guardian2_email'] ) ) {
-				return self::problem( 'guardian2_email', __( 'Ange en giltig e-postadress eller lämna fältet tomt.', 'rockaden-theme' ) );
+				return self::problem( 'guardian2_email', __( 'Enter a valid email address or leave the field empty.', 'rockaden-theme' ) );
 			}
 			if ( '' !== $data['guardian2_phone'] && 1 !== preg_match( '/^\+?[0-9\s\-()]{6,30}$/', $data['guardian2_phone'] ) ) {
-				return self::problem( 'guardian2_phone', __( 'Ange ett giltigt telefonnummer eller lämna fältet tomt.', 'rockaden-theme' ) );
+				return self::problem( 'guardian2_phone', __( 'Enter a valid phone number or leave the field empty.', 'rockaden-theme' ) );
 			}
 			if ( '1' === $data['guardian2_own_address'] ) {
 				$address = self::check_address( $data, 'guardian2_' );
@@ -576,10 +576,10 @@ class Rockaden_Theme_Membership {
 		if ( $join && 'skolschack' === $data['category'] ) {
 			$schools = self::schools();
 			if ( '' === $data['school'] || ( $schools && ! in_array( $data['school'], $schools, true ) ) ) {
-				return self::problem( 'school', __( 'Välj en skola.', 'rockaden-theme' ) );
+				return self::problem( 'school', __( 'Choose a school.', 'rockaden-theme' ) );
 			}
 			if ( '' === $data['grade'] ) {
-				return self::problem( 'grade', __( 'Fyll i årskurs eller klass.', 'rockaden-theme' ) );
+				return self::problem( 'grade', __( 'Enter the grade or class.', 'rockaden-theme' ) );
 			}
 		}
 
@@ -657,13 +657,13 @@ class Rockaden_Theme_Membership {
 	 */
 	private static function check_birthdate( string $birthdate ): ?array {
 		if ( '' === $birthdate ) {
-			return self::problem( 'birthdate', __( 'Fyll i födelsedatum.', 'rockaden-theme' ) );
+			return self::problem( 'birthdate', __( 'Enter the date of birth.', 'rockaden-theme' ) );
 		}
 		if ( 1 !== preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $birthdate, $m ) ) {
-			return self::problem( 'birthdate', __( 'Skriv födelsedatum som ÅÅÅÅ-MM-DD, ÅÅÅÅMMDD eller ÅÅMMDD.', 'rockaden-theme' ) );
+			return self::problem( 'birthdate', __( 'Write the date of birth as YYYY-MM-DD, YYYYMMDD or YYMMDD.', 'rockaden-theme' ) );
 		}
 		if ( ! self::is_real_date( (int) $m[1], (int) $m[2], (int) $m[3] ) ) {
-			return self::problem( 'birthdate', __( 'Det datumet finns inte. Kontrollera år, månad och dag.', 'rockaden-theme' ) );
+			return self::problem( 'birthdate', __( 'That date does not exist. Check the year, month and day.', 'rockaden-theme' ) );
 		}
 		return null;
 	}
@@ -677,16 +677,16 @@ class Rockaden_Theme_Membership {
 	 */
 	private static function check_personnummer( string $personnummer ): ?array {
 		if ( '' === $personnummer ) {
-			return self::problem( 'personnummer', __( 'Fyll i personnummer.', 'rockaden-theme' ) );
+			return self::problem( 'personnummer', __( 'Enter the personal identity number.', 'rockaden-theme' ) );
 		}
 		if ( 1 !== preg_match( '/^(\d{4})(\d{2})(\d{2})\d{4}$/', $personnummer, $m ) ) {
-			return self::problem( 'personnummer', __( 'Skriv personnumret som ÅÅÅÅMMDD-NNNN eller ÅÅMMDD-NNNN.', 'rockaden-theme' ) );
+			return self::problem( 'personnummer', __( 'Write the personal identity number as YYYYMMDD-NNNN or YYMMDD-NNNN.', 'rockaden-theme' ) );
 		}
 		if ( ! self::is_real_date( (int) $m[1], (int) $m[2], (int) $m[3] ) ) {
-			return self::problem( 'personnummer', __( 'Det datumet finns inte. Kontrollera år, månad och dag.', 'rockaden-theme' ) );
+			return self::problem( 'personnummer', __( 'That date does not exist. Check the year, month and day.', 'rockaden-theme' ) );
 		}
 		if ( ! self::luhn_is_valid( substr( $personnummer, 2 ) ) ) {
-			return self::problem( 'personnummer', __( 'Personnumret stämmer inte. Kontrollera det och försök igen.', 'rockaden-theme' ) );
+			return self::problem( 'personnummer', __( 'That personal identity number does not look right. Check it and try again.', 'rockaden-theme' ) );
 		}
 		return null;
 	}
@@ -743,8 +743,8 @@ class Rockaden_Theme_Membership {
 	*/
 
 	/**
-	 * Load the theme's catalogue for $locale. The source strings are Swedish,
-	 * so for sv_SE (which has no catalogue) unloading is all it takes.
+	 * Load the theme's catalogue for $locale. The source strings are English,
+	 * so for en_US (which has no catalogue) unloading is all it takes.
 	 *
 	 * The theme loads its catalogue with load_textdomain() and an explicit path
 	 * (see Rockaden_Theme_I18n::load_textdomain), so switch_to_locale() would
@@ -761,16 +761,15 @@ class Rockaden_Theme_Membership {
 	}
 
 	/**
-	 * Run $build in the source language, Swedish, whatever language the
-	 * visitor used, then switch back. The club's mailbox and admin list are
-	 * always in Swedish.
+	 * Run $build in Swedish, whatever language the visitor used, then switch
+	 * back. The club's mailbox and admin list are always in Swedish.
 	 *
 	 * @template T
 	 * @param callable(): T $build Builds the text.
 	 * @return T
 	 */
-	private static function in_source_language( callable $build ) {
-		unload_textdomain( 'rockaden-theme' );
+	private static function in_swedish( callable $build ) {
+		self::use_locale( 'sv_SE' );
 		try {
 			return $build();
 		} finally {
@@ -808,27 +807,27 @@ class Rockaden_Theme_Membership {
 	private static function describe( array $data ): array {
 		$junior = in_array( $data['category'] ?? '', self::JUNIOR_CATEGORIES, true );
 		$rows   = [
-			'kind'              => [ __( 'Typ', 'rockaden-theme' ), self::kind_label( $data['kind'] ?? '' ) ],
-			'category'          => [ __( 'Kategori', 'rockaden-theme' ), self::category_label( $data['category'] ?? '' ) ],
-			'name'              => [ __( 'Namn', 'rockaden-theme' ), trim( ( $data['first_name'] ?? '' ) . ' ' . ( $data['last_name'] ?? '' ) ) ],
-			'birthdate'         => [ __( 'Födelsedatum', 'rockaden-theme' ), $data['birthdate'] ?? '' ],
-			'guardian_name'     => [ __( 'Vårdnadshavare', 'rockaden-theme' ), $data['guardian_name'] ?? '' ],
+			'kind'              => [ __( 'Type', 'rockaden-theme' ), self::kind_label( $data['kind'] ?? '' ) ],
+			'category'          => [ __( 'Category', 'rockaden-theme' ), self::category_label( $data['category'] ?? '' ) ],
+			'name'              => [ __( 'Name', 'rockaden-theme' ), trim( ( $data['first_name'] ?? '' ) . ' ' . ( $data['last_name'] ?? '' ) ) ],
+			'birthdate'         => [ __( 'Date of birth', 'rockaden-theme' ), $data['birthdate'] ?? '' ],
+			'guardian_name'     => [ __( 'Parent or guardian', 'rockaden-theme' ), $data['guardian_name'] ?? '' ],
 			'email'             => [
 				'join' === ( $data['kind'] ?? '' ) && $junior
-					? __( 'E-post (vårdnadshavare)', 'rockaden-theme' )
-					: __( 'E-post', 'rockaden-theme' ),
+					? __( 'Email (parent or guardian)', 'rockaden-theme' )
+					: __( 'Email', 'rockaden-theme' ),
 				$data['email'] ?? '',
 			],
-			'phone'             => [ __( 'Telefon', 'rockaden-theme' ), $data['phone'] ?? '' ],
-			'address'           => [ __( 'Adress', 'rockaden-theme' ), self::format_address( $data, '' ) ],
-			'guardian2_name'    => [ __( 'Vårdnadshavare 2', 'rockaden-theme' ), $data['guardian2_name'] ?? '' ],
-			'guardian2_email'   => [ __( 'E-post (vårdnadshavare 2)', 'rockaden-theme' ), $data['guardian2_email'] ?? '' ],
-			'guardian2_phone'   => [ __( 'Telefon (vårdnadshavare 2)', 'rockaden-theme' ), $data['guardian2_phone'] ?? '' ],
-			'guardian2_address' => [ __( 'Adress (vårdnadshavare 2)', 'rockaden-theme' ), self::format_address( $data, 'guardian2_' ) ],
-			'school'            => [ __( 'Skola', 'rockaden-theme' ), $data['school'] ?? '' ],
-			'grade'             => [ __( 'Årskurs/klass', 'rockaden-theme' ), $data['grade'] ?? '' ],
+			'phone'             => [ __( 'Phone', 'rockaden-theme' ), $data['phone'] ?? '' ],
+			'address'           => [ __( 'Address', 'rockaden-theme' ), self::format_address( $data, '' ) ],
+			'guardian2_name'    => [ __( 'Parent or guardian 2', 'rockaden-theme' ), $data['guardian2_name'] ?? '' ],
+			'guardian2_email'   => [ __( 'Email (parent or guardian 2)', 'rockaden-theme' ), $data['guardian2_email'] ?? '' ],
+			'guardian2_phone'   => [ __( 'Phone (parent or guardian 2)', 'rockaden-theme' ), $data['guardian2_phone'] ?? '' ],
+			'guardian2_address' => [ __( 'Address (parent or guardian 2)', 'rockaden-theme' ), self::format_address( $data, 'guardian2_' ) ],
+			'school'            => [ __( 'School', 'rockaden-theme' ), $data['school'] ?? '' ],
+			'grade'             => [ __( 'Grade/class', 'rockaden-theme' ), $data['grade'] ?? '' ],
 			// Only shown when it is not Swedish, so it stands out when it matters.
-			'locale'            => [ __( 'Språk', 'rockaden-theme' ), self::used_english( $data ) ? __( 'Engelska', 'rockaden-theme' ) : '' ],
+			'locale'            => [ __( 'Language', 'rockaden-theme' ), self::used_english( $data ) ? __( 'English', 'rockaden-theme' ) : '' ],
 		];
 		return array_filter( $rows, fn ( $row ) => '' !== $row[1] );
 	}
@@ -840,7 +839,7 @@ class Rockaden_Theme_Membership {
 	 * the email and on the request in wp-admin.
 	 */
 	private static function leave_check_text(): string {
-		return __( 'Formuläret kontrollerar inte vem som skickat det. Jämför namn, födelsedatum och e-post med medlemsregistret, och bekräfta med medlemmen (eller vårdnadshavaren) via kontaktuppgifterna i registret, inte genom att svara på det här mejlet. Stämmer något inte, eller känner medlemmen inte till begäran: ta inte bort medlemmen. Markera ändå förfrågan som hanterad.', 'rockaden-theme' );
+		return __( 'The form does not verify who sent it. Compare name, date of birth and email with the member register, and confirm with the member (or guardian) using the contact details in the register, not by replying to this email. If anything does not match, or the member does not know about the request, do not remove the member. Mark the request handled anyway.', 'rockaden-theme' );
 	}
 
 	/**
@@ -864,7 +863,7 @@ class Rockaden_Theme_Membership {
 	 * The hint shown to the club when the visitor used the site in English.
 	 */
 	private static function english_hint(): string {
-		return __( 'Obs: personen använde webbplatsen på engelska. Svara gärna på engelska.', 'rockaden-theme' );
+		return __( 'Note: this person used the site in English. Please reply in English.', 'rockaden-theme' );
 	}
 
 	/**
@@ -899,11 +898,11 @@ class Rockaden_Theme_Membership {
 		// visitor this request runs as.
 		$url = admin_url( 'post.php?post=' . $post_id . '&action=edit' );
 
-		[ $subject, $body ] = self::in_source_language(
+		[ $subject, $body ] = self::in_swedish(
 			function () use ( $data, $url ): array {
 				$rows = self::describe( $data );
 				if ( '' !== $data['personnummer'] ) {
-					$rows['personnummer'] = [ __( 'Personnummer', 'rockaden-theme' ), __( 'Visas i förfrågan i adminpanelen', 'rockaden-theme' ) ];
+					$rows['personnummer'] = [ __( 'Personal identity number', 'rockaden-theme' ), __( 'Shown in the request in the admin', 'rockaden-theme' ) ];
 				}
 
 				// The submitted data sits in its own framed card so it reads as
@@ -918,13 +917,13 @@ class Rockaden_Theme_Membership {
 						. '<td style="' . $value_cell . '">' . esc_html( $value ) . '</td></tr>';
 				}
 				if ( '' !== $data['message'] ) {
-					$card .= '<tr><td style="' . $label_cell . '">' . esc_html__( 'Meddelande', 'rockaden-theme' ) . '</td>'
+					$card .= '<tr><td style="' . $label_cell . '">' . esc_html__( 'Message', 'rockaden-theme' ) . '</td>'
 						. '<td style="' . $value_cell . '">' . nl2br( esc_html( $data['message'] ) ) . '</td></tr>';
 				}
 
 				$intro = 'leave' === $data['kind']
-					? __( 'Ny begäran om utträde via webbplatsens formulär.', 'rockaden-theme' )
-					: __( 'Ny anmälan via webbplatsens formulär.', 'rockaden-theme' );
+					? __( 'New request to leave via the website form.', 'rockaden-theme' )
+					: __( 'New application via the website form.', 'rockaden-theme' );
 
 				$html  = '<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.5;color:#111827;">';
 				$html .= '<p style="margin:0 0 16px;font-size:16px;font-weight:600;">' . esc_html( $intro ) . '</p>';
@@ -934,16 +933,16 @@ class Rockaden_Theme_Membership {
 				}
 				$html .= '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#f9fafb" style="max-width:560px;border-collapse:separate;border:1px solid #d1d5db;border-radius:6px;background:#f9fafb;">'
 					. '<tr><td colspan="2" style="padding:10px 16px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:#374151;">'
-					. esc_html__( 'Uppgifter från formuläret', 'rockaden-theme' ) . '</td></tr>'
+					. esc_html__( 'Details from the form', 'rockaden-theme' ) . '</td></tr>'
 					. $card . '</table>';
 				if ( 'leave' === $data['kind'] ) {
 					$html .= '<div style="margin:20px 0 0;max-width:560px;padding:12px 16px;background:#fef3c7;border-left:4px solid #d97706;">'
-						. '<p style="margin:0 0 6px;font-weight:600;">' . esc_html__( 'Kontrollera innan du tar bort någon', 'rockaden-theme' ) . '</p>'
+						. '<p style="margin:0 0 6px;font-weight:600;">' . esc_html__( 'Check before removing anyone', 'rockaden-theme' ) . '</p>'
 						. '<p style="margin:0;">' . esc_html( self::leave_check_text() ) . '</p></div>';
 				}
 				$html .= '<p style="margin:24px 0 8px;"><a href="' . esc_url( $url ) . '" style="display:inline-block;padding:10px 18px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:4px;font-weight:600;">'
-					. esc_html__( 'Öppna förfrågan', 'rockaden-theme' ) . '</a></p>';
-				$html .= '<p style="margin:0;color:#6b7280;font-size:13px;">' . esc_html__( 'Markera den som hanterad när ändringen är gjord i medlemsregistret.', 'rockaden-theme' ) . '</p>';
+					. esc_html__( 'Open the request', 'rockaden-theme' ) . '</a></p>';
+				$html .= '<p style="margin:0;color:#6b7280;font-size:13px;">' . esc_html__( 'Mark it handled once the member register has been updated.', 'rockaden-theme' ) . '</p>';
 				$html .= '</div>';
 
 				return [ self::title( $data ), $html ];
@@ -975,22 +974,22 @@ class Rockaden_Theme_Membership {
 
 		if ( 'leave' === $data['kind'] ) {
 			/* translators: %s: site name. */
-			$subject = sprintf( __( 'Vi har tagit emot din begäran om utträde – %s', 'rockaden-theme' ), $site );
+			$subject = sprintf( __( 'We have received your request to leave – %s', 'rockaden-theme' ), $site );
 			/* translators: %s: site name. */
-			$intro = sprintf( __( 'Tack! Vi har tagit emot din begäran om utträde ur %s.', 'rockaden-theme' ), $site );
+			$intro = sprintf( __( 'Thank you! We have received your request to leave %s.', 'rockaden-theme' ), $site );
 		} else {
 			/* translators: %s: site name. */
-			$subject = sprintf( __( 'Vi har tagit emot din anmälan – %s', 'rockaden-theme' ), $site );
+			$subject = sprintf( __( 'We have received your application – %s', 'rockaden-theme' ), $site );
 			/* translators: 1: membership category, 2: site name. */
-			$intro = sprintf( __( 'Tack! Vi har tagit emot din anmälan till %1$s hos %2$s.', 'rockaden-theme' ), self::category_label( $data['category'] ), $site );
+			$intro = sprintf( __( 'Thank you! We have received your application for %1$s at %2$s.', 'rockaden-theme' ), self::category_label( $data['category'] ), $site );
 		}
 
 		$body = implode(
 			"\n\n",
 			[
 				$intro,
-				__( 'Vi hör av oss när vi har behandlat den.', 'rockaden-theme' ),
-				__( 'Det här är ett automatiskt meddelande. Har du frågor kan du svara på det.', 'rockaden-theme' ),
+				__( 'We will be in touch once we have handled it.', 'rockaden-theme' ),
+				__( 'This is an automatic message. If you have any questions, just reply to it.', 'rockaden-theme' ),
 			]
 		);
 
@@ -1015,7 +1014,7 @@ class Rockaden_Theme_Membership {
 	public static function add_meta_boxes(): void {
 		add_meta_box(
 			'rc_mr_details',
-			__( 'Förfrågan', 'rockaden-theme' ),
+			__( 'Request', 'rockaden-theme' ),
 			[ self::class, 'render_details_box' ],
 			self::POST_TYPE,
 			'normal',
@@ -1075,18 +1074,18 @@ class Rockaden_Theme_Membership {
 			<?php endforeach; ?>
 			<?php if ( '' !== $data['personnummer'] ) : ?>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Personnummer', 'rockaden-theme' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Personal identity number', 'rockaden-theme' ); ?></th>
 					<td><?php echo esc_html( substr( $data['personnummer'], 0, 8 ) . '-' . substr( $data['personnummer'], 8 ) ); ?></td>
 				</tr>
 			<?php endif; ?>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Mottagen', 'rockaden-theme' ); ?></th>
+					<th scope="row"><?php esc_html_e( 'Received', 'rockaden-theme' ); ?></th>
 					<td><?php echo esc_html( get_the_date( 'Y-m-d H:i', $post ) ); ?></td>
 				</tr>
 			</tbody>
 		</table>
 		<?php if ( '' !== trim( $post->post_content ) ) : ?>
-			<h3><?php esc_html_e( 'Meddelande', 'rockaden-theme' ); ?></h3>
+			<h3><?php esc_html_e( 'Message', 'rockaden-theme' ); ?></h3>
 			<div style="max-width:40rem;white-space:pre-wrap"><?php echo esc_html( $post->post_content ); ?></div>
 		<?php endif; ?>
 		<?php
@@ -1116,11 +1115,11 @@ class Rockaden_Theme_Membership {
 		$handled_at = (int) get_post_meta( $post->ID, 'rc_mr_handled_at', true );
 		if ( ! $handled_at ) {
 			?>
-			<p><strong><?php esc_html_e( 'Ny', 'rockaden-theme' ); ?></strong></p>
+			<p><strong><?php echo esc_html_x( 'New', 'request status', 'rockaden-theme' ); ?></strong></p>
 			<?php if ( 'leave' === get_post_meta( $post->ID, 'rc_mr_kind', true ) ) : ?>
 				<div class="notice notice-warning inline"><p><?php echo esc_html( self::leave_check_text() ); ?></p></div>
 			<?php endif; ?>
-			<p><a class="button button-primary" href="<?php echo esc_url( self::status_url( $post->ID, 'handled' ) ); ?>"><?php esc_html_e( 'Markera som hanterad', 'rockaden-theme' ); ?></a></p>
+			<p><a class="button button-primary" href="<?php echo esc_url( self::status_url( $post->ID, 'handled' ) ); ?>"><?php esc_html_e( 'Mark as handled', 'rockaden-theme' ); ?></a></p>
 			<?php
 			return;
 		}
@@ -1128,17 +1127,17 @@ class Rockaden_Theme_Membership {
 		$user = get_userdata( (int) get_post_meta( $post->ID, 'rc_mr_handled_by', true ) );
 		?>
 		<p>
-			<strong><?php esc_html_e( 'Hanterad', 'rockaden-theme' ); ?></strong>
+			<strong><?php echo esc_html_x( 'Handled', 'request status', 'rockaden-theme' ); ?></strong>
 			<?php echo esc_html( wp_date( 'Y-m-d H:i', $handled_at ) ); ?>
 			<?php if ( $user ) : ?>
 				<?php
 				/* translators: %s: user display name. */
-				echo esc_html( sprintf( __( 'av %s', 'rockaden-theme' ), $user->display_name ) );
+				echo esc_html( sprintf( __( 'by %s', 'rockaden-theme' ), $user->display_name ) );
 				?>
 			<?php endif; ?>
 		</p>
-		<p><a class="button" href="<?php echo esc_url( self::status_url( $post->ID, 'new' ) ); ?>"><?php esc_html_e( 'Markera som ny igen', 'rockaden-theme' ); ?></a></p>
-		<p class="description"><?php esc_html_e( 'Ta bort förfrågan (Flytta till papperskorgen) när den inte behövs längre.', 'rockaden-theme' ); ?></p>
+		<p><a class="button" href="<?php echo esc_url( self::status_url( $post->ID, 'new' ) ); ?>"><?php esc_html_e( 'Mark as new again', 'rockaden-theme' ); ?></a></p>
+		<p class="description"><?php esc_html_e( 'Delete the request (Move to Trash) once it is no longer needed.', 'rockaden-theme' ); ?></p>
 		<?php
 	}
 
@@ -1150,7 +1149,7 @@ class Rockaden_Theme_Membership {
 		check_admin_referer( self::STATUS_ACTION . '_' . $post_id );
 
 		if ( self::POST_TYPE !== get_post_type( $post_id ) || ! current_user_can( 'edit_post', $post_id ) ) {
-			wp_die( esc_html__( 'Du har inte behörighet att ändra den här förfrågan.', 'rockaden-theme' ), 403 );
+			wp_die( esc_html__( 'You are not allowed to change this request.', 'rockaden-theme' ), 403 );
 		}
 
 		$to = isset( $_GET['to'] ) ? sanitize_key( wp_unslash( $_GET['to'] ) ) : '';
@@ -1228,13 +1227,13 @@ class Rockaden_Theme_Membership {
 		$new = [];
 		foreach ( $columns as $key => $label ) {
 			if ( 'title' === $key ) {
-				$new['title']          = __( 'Förfrågan', 'rockaden-theme' );
-				$new['rc_mr_kind']     = __( 'Typ', 'rockaden-theme' );
-				$new['rc_mr_category'] = __( 'Kategori', 'rockaden-theme' );
-				$new['rc_mr_email']    = __( 'E-post', 'rockaden-theme' );
+				$new['title']          = __( 'Request', 'rockaden-theme' );
+				$new['rc_mr_kind']     = __( 'Type', 'rockaden-theme' );
+				$new['rc_mr_category'] = __( 'Category', 'rockaden-theme' );
+				$new['rc_mr_email']    = __( 'Email', 'rockaden-theme' );
 				$new['rc_mr_status']   = __( 'Status', 'rockaden-theme' );
 			} elseif ( 'date' === $key ) {
-				$new['date'] = __( 'Mottagen', 'rockaden-theme' );
+				$new['date'] = __( 'Received', 'rockaden-theme' );
 			} else {
 				$new[ $key ] = $label;
 			}
@@ -1265,9 +1264,9 @@ class Rockaden_Theme_Membership {
 			case 'rc_mr_status':
 				$handled_at = (int) get_post_meta( $post_id, 'rc_mr_handled_at', true );
 				if ( $handled_at ) {
-					echo esc_html( __( 'Hanterad', 'rockaden-theme' ) . ' ' . wp_date( 'Y-m-d', $handled_at ) );
+					echo esc_html( _x( 'Handled', 'request status', 'rockaden-theme' ) . ' ' . wp_date( 'Y-m-d', $handled_at ) );
 				} else {
-					echo '<strong>' . esc_html__( 'Ny', 'rockaden-theme' ) . '</strong>';
+					echo '<strong>' . esc_html_x( 'New', 'request status', 'rockaden-theme' ) . '</strong>';
 				}
 				break;
 		}
@@ -1291,7 +1290,7 @@ class Rockaden_Theme_Membership {
 			$actions['edit'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( (string) get_edit_post_link( $post->ID ) ),
-				esc_html__( 'Visa', 'rockaden-theme' )
+				esc_html__( 'View', 'rockaden-theme' )
 			);
 		}
 		if ( current_user_can( 'edit_post', $post->ID ) ) {
@@ -1299,7 +1298,7 @@ class Rockaden_Theme_Membership {
 			$actions['rc_mr_status'] = sprintf(
 				'<a href="%s">%s</a>',
 				esc_url( self::status_url( $post->ID, $handled ? 'new' : 'handled' ) ),
-				$handled ? esc_html__( 'Markera som ny igen', 'rockaden-theme' ) : esc_html__( 'Markera som hanterad', 'rockaden-theme' )
+				$handled ? esc_html__( 'Mark as new again', 'rockaden-theme' ) : esc_html__( 'Mark as handled', 'rockaden-theme' )
 			);
 		}
 		return $actions;
@@ -1333,7 +1332,7 @@ class Rockaden_Theme_Membership {
 	 * @return array<string, array<string, string>> Query var => options.
 	 */
 	private static function filter_choices(): array {
-		$categories = [ '' => __( 'Alla kategorier', 'rockaden-theme' ) ];
+		$categories = [ '' => __( 'All categories', 'rockaden-theme' ) ];
 		foreach ( self::CATEGORIES as $category ) {
 			$categories[ $category ] = self::category_label( $category );
 		}
@@ -1341,7 +1340,7 @@ class Rockaden_Theme_Membership {
 		// Schools come from the requests themselves rather than from the
 		// settings, so a school since removed from the list can still be
 		// found. Requests are few and get deleted, so reading them is cheap.
-		$schools = [ '' => __( 'Alla skolor', 'rockaden-theme' ) ];
+		$schools = [ '' => __( 'All schools', 'rockaden-theme' ) ];
 		$ids     = get_posts(
 			[
 				'post_type'      => self::POST_TYPE,
@@ -1362,12 +1361,12 @@ class Rockaden_Theme_Membership {
 
 		return [
 			self::STATUS_QUERY_VAR => [
-				''        => __( 'Alla statusar', 'rockaden-theme' ),
-				'new'     => __( 'Nya', 'rockaden-theme' ),
-				'handled' => __( 'Hanterade', 'rockaden-theme' ),
+				''        => __( 'All statuses', 'rockaden-theme' ),
+				'new'     => _x( 'New', 'request filter', 'rockaden-theme' ),
+				'handled' => _x( 'Handled', 'request filter', 'rockaden-theme' ),
 			],
 			'rc_mr_kind'           => [
-				''      => __( 'Alla typer', 'rockaden-theme' ),
+				''      => __( 'All types', 'rockaden-theme' ),
 				'join'  => self::kind_label( 'join' ),
 				'leave' => self::kind_label( 'leave' ),
 			],

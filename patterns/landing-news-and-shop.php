@@ -21,7 +21,7 @@
 <!-- wp:column {"className":"rockaden-landing-news-shop__news"} -->
 <div class="wp-block-column rockaden-landing-news-shop__news">
 <!-- wp:heading {"level":2,"className":"rockaden-landing-news-shop__heading"} -->
-<h2 class="wp-block-heading rockaden-landing-news-shop__heading"><?php esc_html_e( 'Senaste nyheter', 'rockaden-theme' ); ?></h2>
+<h2 class="wp-block-heading rockaden-landing-news-shop__heading"><?php esc_html_e( 'Latest news', 'rockaden-theme' ); ?></h2>
 <!-- /wp:heading -->
 
 <!-- wp:rockaden/latest-news {"count":3} /-->
@@ -31,13 +31,13 @@
 <!-- wp:column {"className":"rockaden-landing-news-shop__shop"} -->
 <div class="wp-block-column rockaden-landing-news-shop__shop">
 <!-- wp:heading {"level":2,"className":"rockaden-landing-news-shop__heading"} -->
-<h2 class="wp-block-heading rockaden-landing-news-shop__heading"><?php esc_html_e( 'Schackmateriel', 'rockaden-theme' ); ?></h2>
+<h2 class="wp-block-heading rockaden-landing-news-shop__heading"><?php esc_html_e( 'Chess equipment', 'rockaden-theme' ); ?></h2>
 <!-- /wp:heading -->
 
 <!-- wp:rockaden/shop-grid {"count":3,"layout":"column","display":"condensed"} /-->
 
 <!-- wp:heading {"level":2,"className":"rockaden-landing-news-shop__heading rockaden-landing-news-shop__heading--secondary"} -->
-<h2 class="wp-block-heading rockaden-landing-news-shop__heading rockaden-landing-news-shop__heading--secondary"><?php esc_html_e( 'Kommande aktiviteter', 'rockaden-theme' ); ?></h2>
+<h2 class="wp-block-heading rockaden-landing-news-shop__heading rockaden-landing-news-shop__heading--secondary"><?php esc_html_e( 'Upcoming activities', 'rockaden-theme' ); ?></h2>
 <!-- /wp:heading -->
 
 <!-- wp:rockaden/upcoming-events {"count":3} /-->

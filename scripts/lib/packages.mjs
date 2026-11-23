@@ -14,9 +14,24 @@ export const PACKAGES = [
 		name: 'theme',
 		dir: '.',
 		domain: 'rockaden-theme',
-		// Reversed relative to the plugin: Swedish source, English catalogue.
-		locales: [ 'en_US' ],
+		// English source, Swedish catalogue: the same convention as the plugin.
+		locales: [ 'sv_SE' ],
 		exclude: 'node_modules,vendor,docs,dist,scripts',
+		// Strings that are spelled the same in English and Swedish. Anything
+		// else translated to itself fails i18n:check.
+		sameInTranslation: [
+			'Rockaden',
+			'Rockaden Theme',
+			'SK Rockaden',
+			'https://github.com/msvens/rockaden-wp',
+			'https://rockaden.se',
+			'Feedback',
+			'Status',
+			'Junior',
+			'Allsvenskan',
+			'Geist Sans',
+			'Riksdalergatan 2 / Sparbanksvägen 31',
+		],
 		tsSources: [],
 		// The theme ships no JS translations; its few JS strings are passed in
 		// already-translated via wp_localize_script or data-* attributes.

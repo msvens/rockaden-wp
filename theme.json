@@ -24,7 +24,7 @@
         { "slug": "cat-tournament", "color": "#dc2626", "name": "Tournament" },
         { "slug": "cat-junior", "color": "#16a34a", "name": "Junior" },
         { "slug": "cat-allsvenskan", "color": "#7c3aed", "name": "Allsvenskan" },
-        { "slug": "cat-skolschack", "color": "#ea580c", "name": "Skolschack" }
+        { "slug": "cat-skolschack", "color": "#ea580c", "name": "School chess" }
       ]
     },
     "typography": {

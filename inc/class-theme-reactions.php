@@ -174,7 +174,7 @@ class Rockaden_Theme_Reactions {
 		<div class="rockaden-reactions"
 			data-post-id="<?php echo esc_attr( (string) $post_id ); ?>"
 			data-rest-url="<?php echo esc_url( rest_url( self::REST_NAMESPACE . '/reactions/' . $post_id ) ); ?>"
-			data-error="<?php esc_attr_e( 'Din reaktion kunde inte sparas. Försök igen.', 'rockaden-theme' ); ?>">
+			data-error="<?php esc_attr_e( 'Your reaction could not be saved. Please try again.', 'rockaden-theme' ); ?>">
 			<div class="rockaden-reactions__given">
 				<?php foreach ( $counts as $emoji => $count ) : ?>
 					<span class="rockaden-reactions__pill" data-emoji="<?php echo esc_attr( $emoji ); ?>">
@@ -183,14 +183,14 @@ class Rockaden_Theme_Reactions {
 					</span>
 				<?php endforeach; ?>
 			</div>
-			<button type="button" class="rockaden-reactions__add" aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e( 'Lägg till reaktion', 'rockaden-theme' ); ?>" disabled>
+			<button type="button" class="rockaden-reactions__add" aria-haspopup="true" aria-expanded="false" aria-label="<?php esc_attr_e( 'Add reaction', 'rockaden-theme' ); ?>" disabled>
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
 					<path d="M18.3 5.2a4.8 4.8 0 0 0-6.8 0L10.6 6.1l-.9-.9a4.8 4.8 0 0 0-6.8 6.8l.9.9 6.8 6.8 6.8-6.8.9-.9a4.8 4.8 0 0 0 0-6.8z" />
 					<circle cx="19" cy="5" r="4.75" fill="var(--wp--preset--color--surface, #ffffff)" stroke="none" />
 					<path d="M19 2.75v4.5M16.75 5h4.5" stroke-width="2" />
 				</svg>
 			</button>
-			<div class="rockaden-reactions__picker" role="group" aria-label="<?php esc_attr_e( 'Välj reaktion', 'rockaden-theme' ); ?>" hidden>
+			<div class="rockaden-reactions__picker" role="group" aria-label="<?php esc_attr_e( 'Choose a reaction', 'rockaden-theme' ); ?>" hidden>
 				<?php foreach ( $emojis as $emoji ) : ?>
 					<button type="button" class="rockaden-reactions__option" data-emoji="<?php echo esc_attr( $emoji ); ?>" aria-pressed="false"><?php echo esc_html( $emoji ); ?></button>
 				<?php endforeach; ?>
